@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07070f">
+<title>Daniel Walsh — AI Consultancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070f;
+  --bg2: #0d0f1c;
+  --bg3: #111326;
+  --amber: #f0a030;
+  --amber-dim: #a06c18;
+  --amber-glow: rgba(240,160,48,0.12);
+  --white: #f0f0f8;
+  --muted: rgba(240,240,248,0.45);
+  --border: rgba(240,240,248,0.08);
+  --border-amber: rgba(240,160,48,0.25);
+  --navy: #0a1628;
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+/* ─── TYPOGRAPHY ─── */
+.display { font-family: 'Space Grotesk', sans-serif; }
+h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 40px;
+  background: rgba(7,7,15,0.75);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: padding .3s;
+}
+nav.scrolled { padding: 14px 40px; }
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; color: var(--white);
+}
+.logo-mark {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--amber);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 16px; color: #07070f;
+  letter-spacing: -0.5px;
+}
+.logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+.logo-text span { color: var(--amber); }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; letter-spacing: 0.01em; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--amber); color: #07070f;
+  border: none; padding: 10px 22px; border-radius: 8px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.nav-cta:hover { background: #ffb84d; transform: translateY(-1px); }
+
+/* ─── HERO ─── */
+#hero {
+  min-height: 100vh; position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 40px 80px;
+  overflow: hidden;
+}
+#mesh-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; }
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border-amber);
+  background: var(--amber-glow);
+  padding: 6px 16px; border-radius: 100px;
+  font-size: 12px; font-weight: 500; color: var(--amber);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+.hero-title {
+  font-size: clamp(44px, 7vw, 80px);
+  font-weight: 700; line-height: 1.05; letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.hero-title .accent { color: var(--amber); }
+.hero-title .dim { color: var(--muted); }
+.hero-sub {
+  font-size: 18px; color: var(--muted); line-height: 1.7;
+  max-width: 560px; margin: 0 auto 48px; font-weight: 400;
+}
+.hero-actions { display: flex; align-items: center; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--amber); color: #07070f;
+  border: none; padding: 14px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: #ffb84d; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(240,160,48,0.35); }
+.btn-ghost {
+  background: transparent; color: var(--white);
+  border: 1px solid var(--border); padding: 14px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 500;
+  cursor: pointer; transition: all .2s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost:hover { border-color: rgba(240,240,248,0.3); background: rgba(240,240,248,0.05); }
+.scroll-hint {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--amber), transparent); animation: scrollLine 2s ease-in-out infinite; }
+@keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+/* ─── CREDENTIALS BAR ─── */
+#credentials {
+  background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 28px 40px;
+  display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap;
+}
+.cred-item { display: flex; align-items: center; gap: 14px; }
+.cred-logo-wrap { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.cred-logo-wrap svg { width: 44px; height: 44px; border-radius: 9px; }
+.google-svg { background: #fff; padding: 6px; border-radius: 8px; box-sizing: border-box; }
+.oxford-logo-box {
+  width: 44px; height: 44px; border-radius: 9px;
+  background: #002147; display: flex; align-items: center; justify-content: center;
+  padding: 6px; box-sizing: border-box;
+}
+.cred-text { font-size: 13px; }
+.cred-text strong { display: block; color: var(--white); font-weight: 600; font-size: 14px; font-family: 'Space Grotesk', sans-serif; }
+.cred-text span { color: var(--muted); }
+.cred-divider { width: 1px; height: 40px; background: var(--border); }
+
+/* ─── SECTIONS ─── */
+section { padding: 80px 40px; }
+.section-inner { max-width: 1280px; margin: 0 auto; }
+.section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--amber); }
+.section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; line-height: 1.1; }
+.section-sub { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.7; }
+
+/* ─── SERVICES ─── */
+#services { background: var(--bg); }
+.services-intro { margin-bottom: 40px; }
+.services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.service-card {
+  background: var(--bg2); padding: 40px 36px;
+  cursor: pointer; transition: background .25s;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--amber); transform: scaleX(0); transition: transform .3s; transform-origin: left;
+}
+.service-card:hover { background: var(--bg3); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  width: 44px; height: 44px; border-radius: 11px;
+  background: var(--amber-glow); border: 1px solid var(--border-amber);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; flex-shrink: 0;
+}
+.service-icon svg { width: 22px; height: 22px; stroke: var(--amber); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.service-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.3px; }
+.service-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+.service-card p { flex: 1; }
+.service-price { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500; color: var(--amber); margin-top: auto; }
+.service-arrow { position: absolute; bottom: 32px; right: 32px; color: var(--border); font-size: 20px; transition: all .25s; }
+.service-card:hover .service-arrow { color: var(--amber); transform: translate(3px,-3px); }
+
+/* ─── PROCESS ─── */
+#process { background: var(--bg2); }
+.process-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: stretch; margin-top: 48px; }
+.process-steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex; gap: 24px; padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: all .2s;
+}
+.step:first-child { padding-top: 0; }
+.step:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0; width: 36px; height: 36px;
+  border: 1px solid var(--border-amber);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--amber);
+}
+.step-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.step-content p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.process-visual {
+  background: var(--bg3); border-radius: var(--radius-lg); border: 1px solid var(--border);
+  height: 100%; min-height: 380px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.process-visual svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+@keyframes floatDot1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(4px,-6px)} }
+@keyframes floatDot2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-5px,4px)} }
+@keyframes floatDot3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(3px,5px)} }
+@keyframes drawLine { from{stroke-dashoffset:200} to{stroke-dashoffset:0} }
+@keyframes pulseNode { 0%,100%{r:6} 50%{r:8} }
+
+/* ─── BOOKING ─── */
+#booking { background: var(--bg); }
+.booking-layout { display: grid; grid-template-columns: 320px 1fr; gap: 48px; align-items: start; }
+
+/* Service selector panel */
+.booking-info-panel { position: sticky; top: 88px; }
+.bip-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
+.bip-services { display: flex; flex-direction: column; gap: 6px; margin-bottom: 32px; }
+.bip-service {
+  padding: 14px 16px; border-radius: 10px;
+  background: var(--bg2); border: 1px solid var(--border);
+  cursor: pointer; transition: all .2s;
+}
+.bip-service:hover { border-color: var(--border-amber); background: var(--bg3); }
+.bip-service.active { border-color: var(--amber); background: var(--amber-glow); }
+.bip-service-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+.bip-service-price { font-size: 12px; color: var(--muted); }
+.bip-service.active .bip-service-price { color: var(--amber); }
+.bip-details { display: flex; flex-direction: column; gap: 10px; }
+.bip-detail-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.bip-detail-icon { font-size: 14px; width: 20px; flex-shrink: 0; }
+
+/* Right side steps */
+.booking-right { display: flex; flex-direction: column; gap: 0; }
+.booking-step { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 16px; }
+.step-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 24px; }
+.step-num-badge {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: var(--amber); color: #07070f;
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--white); }
+.step-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.step-back {
+  margin-left: auto; background: none; border: 1px solid var(--border);
+  color: var(--muted); font-size: 12px; padding: 6px 12px; border-radius: 7px;
+  cursor: pointer; transition: all .2s; white-space: nowrap; font-family: 'Inter', sans-serif;
+}
+.step-back:hover { color: var(--white); border-color: rgba(240,240,248,0.3); }
+
+/* Calendar */
+.cal-card { background: var(--bg3); border-radius: 12px; padding: 20px; }
+.cal-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.cal-month-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--white); }
+.cal-arrow {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border); color: var(--white);
+  font-size: 20px; cursor: pointer; transition: all .2s; line-height: 1;
+  display: flex; align-items: center; justify-content: center; padding: 0;
+}
+.cal-arrow:hover { border-color: var(--amber); color: var(--amber); }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
+.cal-weekdays span { text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; padding: 4px 0; text-transform: uppercase; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-day {
+  height: 38px; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 13px; font-weight: 500;
+  cursor: default; border: none; background: none;
+  color: rgba(240,240,248,0.18); transition: all .15s;
+  font-family: 'Inter', sans-serif;
+}
+.cal-day.available { color: var(--white); cursor: pointer; }
+.cal-day.available:hover { background: var(--amber-glow); color: var(--amber); }
+.cal-day.selected { background: var(--amber) !important; color: #07070f !important; font-weight: 700; border-radius: 8px; }
+.cal-day.today.available { color: var(--amber); border: 1px solid rgba(240,160,48,0.35); }
+
+/* Time slots */
+.slots-wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.slot {
+  padding: 11px 6px; border-radius: 8px;
+  background: var(--bg3); border: 1px solid var(--border);
+  text-align: center; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all .15s; color: var(--white);
+  font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.01em;
+}
+.slot:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-glow); }
+.slot.selected { background: var(--amber); color: #07070f; border-color: var(--amber); }
+.slot.taken { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+
+/* Details form */
+.details-form { display: flex; flex-direction: column; gap: 12px; }
+.details-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.df-group label { display: block; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.df-group input {
+  width: 100%; padding: 11px 14px; border-radius: 9px;
+  background: var(--bg3); border: 1px solid var(--border); color: var(--white);
+  font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: border-color .2s;
+}
+.df-group input:focus { border-color: var(--amber); }
+.df-group input::placeholder { color: rgba(240,240,248,0.25); }
+
+/* Booking summary bar */
+.booking-summary-bar {
+  display: flex; align-items: stretch; gap: 0;
+  background: var(--bg3); border: 1px solid var(--border-amber);
+  border-radius: 10px; overflow: hidden; margin: 4px 0;
+}
+.bsb-item { flex: 1; padding: 14px 16px; display: flex; flex-direction: column; gap: 3px; }
+.bsb-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.bsb-val { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--white); }
+.bsb-price { color: var(--amber) !important; font-size: 15px !important; }
+.bsb-divider { width: 1px; background: var(--border); margin: 12px 0; }
+
+.confirm-btn {
+  width: 100%; padding: 15px; background: var(--amber); color: #07070f;
+  border: none; border-radius: 10px; font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; letter-spacing: -0.2px;
+}
+.confirm-btn:hover { background: #ffb84d; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(240,160,48,0.3); }
+.secure-note { text-align: center; font-size: 11px; color: rgba(240,240,248,0.3); }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px); z-index: 300;
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 40px 36px; max-width: 440px; width: 100%;
+  animation: modalIn .2s ease-out;
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:none} }
+.modal h3 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.modal-summary { background: var(--bg3); border-radius: 10px; padding: 4px 0; margin-bottom: 24px; }
+.ms-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; font-size: 14px; border-bottom: 1px solid var(--border); }
+.ms-row:last-child { border-bottom: none; }
+.ms-row span { color: var(--muted); }
+.ms-row strong { color: var(--white); font-weight: 600; }
+.ms-total { background: var(--amber-glow); }
+.ms-total strong { color: var(--amber); font-size: 18px; }
+.modal-pay-btn {
+  width: 100%; padding: 14px; background: var(--amber); color: #07070f;
+  border: none; border-radius: 10px; font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; margin-bottom: 10px;
+}
+.modal-pay-btn:hover { background: #ffb84d; }
+.modal-cancel { width: 100%; padding: 11px; background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 9px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: all .2s; }
+.modal-cancel:hover { color: var(--white); border-color: rgba(240,240,248,0.2); }
+.success-state { text-align: center; padding: 10px 0; }
+.success-icon { font-size: 52px; margin-bottom: 16px; }
+.success-state h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.success-state p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+/* ─── CHAT ─── */
+
+#chat-widget {
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+}
+.chat-btn {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--amber); color: #07070f;
+  border: none; cursor: pointer; font-size: 22px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(240,160,48,0.4);
+  transition: all .2s; position: relative;
+}
+.chat-btn:hover { transform: scale(1.08); }
+.chat-badge {
+  position: absolute; top: -2px; right: -2px; width: 12px; height: 12px;
+  border-radius: 50%; background: #22c55e; border: 2px solid var(--bg);
+}
+.chat-panel {
+  width: 360px; height: 480px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  display: none; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.chat-panel.open { display: flex; animation: chatIn .25s ease-out; }
+@keyframes chatIn { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:none} }
+.chat-head {
+  padding: 16px 20px; background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.chat-head-info { display: flex; align-items: center; gap: 10px; }
+.chat-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--amber); color: #07070f;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700;
+}
+.chat-head-text strong { display: block; font-size: 14px; font-weight: 600; }
+.chat-head-text span { font-size: 12px; color: #22c55e; }
+.chat-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 4px; transition: color .2s; }
+.chat-close:hover { color: var(--white); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.msg { max-width: 80%; display: flex; flex-direction: column; gap: 4px; }
+.msg.ai { align-self: flex-start; }
+.msg.user { align-self: flex-end; }
+.msg-bubble {
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 13px; line-height: 1.5;
+}
+.msg.ai .msg-bubble { background: var(--bg3); color: var(--white); border-radius: 4px 12px 12px 12px; }
+.msg.user .msg-bubble { background: var(--amber); color: #07070f; border-radius: 12px 4px 12px 12px; font-weight: 500; }
+.msg-time { font-size: 11px; color: var(--muted); }
+.chat-input-area {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; align-items: center;
+}
+.chat-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; color: var(--white);
+  font-family: 'Inter', sans-serif; font-size: 13px; outline: none;
+  transition: border-color .2s; resize: none; max-height: 80px;
+}
+.chat-input:focus { border-color: var(--border-amber); }
+.chat-send {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--amber); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #07070f; transition: all .2s; flex-shrink: 0;
+}
+.chat-send:hover { background: #ffb84d; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 12px 14px; }
+.typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: dot 1.4s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dot { 0%,80%,100%{transform:scale(0.7);opacity:.4} 40%{transform:scale(1);opacity:1} }
+
+
+
+/* ─── RESPONSIVE ─── */
+/* ═══════════════════════════════
+   RESPONSIVE — TABLET (≤900px)
+═══════════════════════════════ */
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .booking-layout{grid-template-columns:1fr;}
+  .booking-info-panel{position:static;}
+  .process-grid{grid-template-columns:1fr;}
+  .process-visual{display:none;}
+  .footer-inner{flex-direction:column;gap:40px;padding:48px 32px 32px;}
+  .footer-cols{gap:40px;}
+  .settings-grid{grid-template-columns:1fr;}
+  .cal-layout{grid-template-columns:1fr;}
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE — MOBILE (≤600px)
+═══════════════════════════════ */
+@media(max-width:600px){
+
+  /* ── Nav ── */
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .nav-cta{padding:9px 16px;font-size:13px;}
+  .logo-text{font-size:16px;}
+  .logo-mark{width:32px;height:32px;font-size:13px;border-radius:8px;}
+
+  /* ── Sections ── */
+  section{padding:60px 20px;}
+  .section-inner{max-width:100%;}
+  .section-title{font-size:clamp(22px,6vw,32px);letter-spacing:-0.5px;}
+
+  /* ── Hero ── */
+  #hero{padding:100px 24px 60px;}
+  .hero-title{font-size:clamp(36px,10vw,52px);letter-spacing:-1px;}
+  .hero-sub{font-size:16px;}
+  .hero-actions{flex-direction:column;align-items:stretch;}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center;padding:14px 20px;}
+  .scroll-hint{display:none;}
+
+  /* ── Credentials ── */
+  #credentials{flex-direction:column;gap:20px;padding:28px 24px;align-items:flex-start;}
+  .cred-divider{display:none;}
+  .cred-item{gap:12px;}
+
+  /* ── Services ── */
+  .services-grid{grid-template-columns:1fr;grid-template-rows:auto;}
+  .service-card{padding:28px 24px;}
+  .service-arrow{display:none;}
+
+  /* ── Process ── */
+  .process-grid{grid-template-columns:1fr;gap:32px;}
+  .process-visual{display:none;}
+  .process-steps{gap:0;}
+  .step{padding:20px 0;gap:16px;}
+  .step-num{width:32px;height:32px;font-size:12px;}
+
+  /* ── Booking ── */
+  .booking-layout{grid-template-columns:1fr;gap:24px;}
+  .booking-info-panel{position:static;}
+  .bip-services{gap:8px;}
+  .bip-service{padding:12px 14px;}
+  .bip-service-name{font-size:13px;}
+  .booking-right{gap:0;}
+  .booking-step{padding:20px 16px;margin-bottom:12px;border-radius:12px;}
+  .step-header{gap:10px;margin-bottom:16px;}
+  .step-back{font-size:11px;padding:5px 10px;}
+  .cal-card{padding:16px;}
+  .cal-weekdays span{font-size:9px;}
+  .cal-day{height:34px;font-size:11px;}
+  .slots-wrap{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .slot{padding:9px 4px;font-size:11px;}
+  .details-row{grid-template-columns:1fr;}
+  .booking-summary-bar{flex-direction:column;gap:0;}
+  .bsb-item{padding:10px 14px;}
+  .bsb-divider{width:auto;height:1px;margin:0 14px;}
+  .confirm-btn{font-size:14px;padding:14px;}
+  .bip-details{display:none;}
+
+  /* ── Modal ── */
+  .modal{padding:28px 20px;margin:16px;}
+  .modal h3{font-size:18px;}
+
+  /* ── Chat ── */
+  #chat-widget{bottom:16px;right:16px;}
+  .chat-panel{width:calc(100vw - 32px);height:420px;}
+  .chat-btn{width:48px;height:48px;font-size:18px;}
+
+  /* ── Footer ── */
+  .footer-inner{padding:40px 20px 28px;flex-direction:column;gap:32px;}
+  .footer-cols{flex-direction:column;gap:28px;}
+  .footer-col{gap:8px;}
+  .footer-bottom{padding:16px 20px;flex-direction:column;gap:8px;text-align:center;}
+
+  /* ── Admin ── */
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+  .admin-cal-controls{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr;}
+  .topbar{padding:0 16px;}
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE — SMALL (≤380px)
+═══════════════════════════════ */
+@media(max-width:380px){
+  .hero-title{font-size:32px;}
+  .slots-wrap{grid-template-columns:repeat(2,1fr);}
+  .cal-day{height:30px;font-size:10px;}
+  .cal-weekdays span{font-size:8px;}
+  .nav-cta{display:none;}
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 64px 40px 48px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 60px;
+}
+.footer-brand { max-width: 280px; flex-shrink: 0; }
+.footer-logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; color: var(--white); }
+.footer-wordmark span { color: var(--amber); }
+.footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.footer-email { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-email:hover { color: var(--amber); }
+.footer-cols { display: flex; gap: 60px; flex-shrink: 0; }
+.footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 140px; }
+.footer-col-title {
+  font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.footer-col a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-col a:hover { color: var(--amber); }
+.footer-bottom {
+  max-width: 1100px; margin: 0 auto;
+  padding: 20px 40px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: rgba(240,240,248,0.28);
+}
+.footer-bottom a { color: rgba(240,240,248,0.28); text-decoration: none; transition: color .2s; }
+.footer-bottom a:hover { color: var(--amber); }
+
+/* ─── BOOKING DETAIL CHECKS ─── */
+.bip-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(240,160,48,0.15); border: 1px solid var(--border-amber);
+  color: var(--amber); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; line-height: 1;
+}
+.bip-detail-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+
+/* ─── LINKEDIN ─── */
+.nav-linkedin {
+  color: var(--muted); display: flex; align-items: center;
+  transition: color .2s; text-decoration: none;
+}
+.nav-linkedin:hover { color: var(--amber); }
+.footer-linkedin {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: color .2s; margin-top: 8px;
+}
+.footer-linkedin:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <div class="logo-mark">DW</div>
+    <div class="logo-text">danielwalsh<span>.ai</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#process">Process</a>
+    <a href="#booking">Book</a>
+  </div>
+  <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="nav-linkedin" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+  <a href="#booking" class="nav-cta">Book a session →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="mesh-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI Consultancy · London</div>
+    <h1 class="hero-title display">
+      The intelligence<br>
+      <span class="dim">your business</span><br>
+      <span class="accent">deserves.</span>
+    </h1>
+    <p class="hero-sub">
+      Oxford, Google & MIT-certified AI strategy for organisations ready to move beyond the hype and build something real.
+    </p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-primary">Book a discovery call →</a>
+      <a href="#services" class="btn-ghost">View services</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<div id="credentials">
+  <div class="cred-item">
+    <div class="cred-logo-wrap google-wrap">
+      <svg viewBox="0 0 24 24" class="google-svg" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+    </div>
+    <div class="cred-text">
+      <strong>Google Certified</strong>
+      <span>AI &amp; Machine Learning</span>
+    </div>
+  </div>
+  <div class="cred-divider"></div>
+  <div class="cred-item">
+    <div class="cred-logo-wrap oxford-wrap">
+      <div class="oxford-logo-box">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;">
+          <!-- Oxford shield: navy background -->
+          <rect width="80" height="80" rx="10" fill="#002147"/>
+          <!-- Shield outline -->
+          <path d="M18 14 L62 14 L62 50 Q62 66 40 72 Q18 66 18 50 Z" fill="#002147" stroke="#C8A45A" stroke-width="2"/>
+          <!-- Three crowns (simplified) -->
+          <g fill="#C8A45A">
+            <!-- Top left crown -->
+            <path d="M25 24 L25 32 L33 32 L33 24 L31 27 L29 24 L27 27 Z"/>
+            <!-- Top right crown -->
+            <path d="M47 24 L47 32 L55 32 L55 24 L53 27 L51 24 L49 27 Z"/>
+            <!-- Bottom crown -->
+            <path d="M36 42 L36 50 L44 50 L44 42 L42 45 L40 42 L38 45 Z"/>
+          </g>
+          <!-- Open book -->
+          <g fill="none" stroke="#C8A45A" stroke-width="1.5">
+            <path d="M28 55 Q40 52 52 55 L52 63 Q40 60 28 63 Z"/>
+            <line x1="40" y1="52" x2="40" y2="63"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="cred-text">
+      <strong>Oxford University</strong>
+      <span>Artificial Intelligence</span>
+    </div>
+  </div>
+  <div class="cred-divider"></div>
+  <div class="cred-item">
+    <div class="cred-logo-wrap mit-wrap">
+      <svg viewBox="0 0 48 48" class="mit-svg" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="8" fill="#A31F34"/>
+        <text x="24" y="29" text-anchor="middle" fill="#ffffff" font-family="Arial,sans-serif" font-size="18" font-weight="900" letter-spacing="1">MIT</text>
+      </svg>
+    </div>
+    <div class="cred-text">
+      <strong>MIT Certification</strong>
+      <span>Artificial Intelligence</span>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="services-intro">
+      <div class="section-label">What I do</div>
+      <h2 class="section-title">Four ways to transform<br>your organisation with AI.</h2>
+      <p class="section-sub">Each engagement is scoped precisely. No bloated retainers. No buzzword audits. Just outcomes.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" onclick="selectService('Strategy & Advisory', 1200)">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+        <h3>Strategy &amp; Advisory</h3>
+        <p>A clear, board-ready AI roadmap built around your actual business model — not a template. Where to start, what to avoid, how to measure.</p>
+        <div class="service-price">£500 / 60-min session</div>
+        <div class="service-arrow">↗</div>
+      </div>
+      <div class="service-card" onclick="selectService('AI Implementation', 3500)">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>AI Implementation</h3>
+        <p>Hands-on build and deployment of AI systems — from LLM integrations to custom pipelines. I design it, build it, and hand it over working.</p>
+        <div class="service-price">£1,500 / day</div>
+        <div class="service-arrow">↗</div>
+      </div>
+      <div class="service-card" onclick="selectService('Training & Workshops', 950)">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Training & Workshops</h3>
+        <p>Half-day or full-day sessions that turn your team from AI-curious to AI-capable. Tailored to your industry. Practical, not theoretical.</p>
+        <div class="service-price">£1,200 / day</div>
+        <div class="service-arrow">↗</div>
+      </div>
+      <div class="service-card" onclick="selectService('Fractional AI Officer', 4500)">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <h3>Fractional AI Officer</h3>
+        <p>Your embedded AI lead without the full-time cost. Attend your exec meetings, drive your AI agenda, and own delivery across the business.</p>
+        <div class="service-price">£5,000 / month · 25 hrs · 12-month minimum</div>
+        <div class="service-arrow">↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Rigorous process.<br>Predictable outcomes.</h2>
+    <div class="process-grid">
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Discovery call</h4>
+            <p>Thirty minutes to understand your business, challenges, and ambitions. No pitch, no pressure.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Diagnosis</h4>
+            <p>I map your current state against AI opportunity areas with a precision rarely seen outside enterprise consulting.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Proposal & scoping</h4>
+            <p>A fixed-price, fixed-scope proposal. You know exactly what you're getting before we begin.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Execution & handover</h4>
+            <p>Delivery with weekly check-ins and a clean, documented handover your team can own.</p>
+          </div>
+        </div>
+      </div>
+      <div class="process-visual" id="orbit-visual">
+        <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;position:absolute;inset:0;">
+          <defs>
+            <radialGradient id="cGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f0a030" stop-opacity="0.22"/>
+              <stop offset="100%" stop-color="#f0a030" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="nGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f0a030" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#f0a030" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Connector lines from centre to each node -->
+          <line x1="250" y1="190" x2="82"  y2="72"  stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="250" y1="190" x2="418" y2="72"  stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="250" y1="190" x2="82"  y2="308" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="250" y1="190" x2="418" y2="308" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+
+          <!-- NODE 1 — top left -->
+          <circle cx="82" cy="72" r="58" fill="url(#nGlow)"/>
+          <circle cx="82" cy="72" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="82" y="64" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">01</text>
+          <text x="82" y="81" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DISCOVERY</text>
+
+          <!-- NODE 2 — top right -->
+          <circle cx="418" cy="72" r="58" fill="url(#nGlow)"/>
+          <circle cx="418" cy="72" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="418" y="64" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">02</text>
+          <text x="418" y="81" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DIAGNOSIS</text>
+
+          <!-- NODE 3 — bottom left -->
+          <circle cx="82" cy="308" r="58" fill="url(#nGlow)"/>
+          <circle cx="82" cy="308" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="82" y="300" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">03</text>
+          <text x="82" y="317" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">PROPOSAL</text>
+
+          <!-- NODE 4 — bottom right -->
+          <circle cx="418" cy="308" r="58" fill="url(#nGlow)"/>
+          <circle cx="418" cy="308" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="418" y="300" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">04</text>
+          <text x="418" y="317" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">EXECUTION</text>
+
+          <!-- CENTRAL NODE -->
+          <circle cx="250" cy="190" r="70" fill="url(#cGlow)"/>
+          <circle cx="250" cy="190" r="50" fill="rgba(13,15,28,0.97)" stroke="rgba(240,160,48,0.55)" stroke-width="1.5"/>
+          <circle cx="250" cy="190" r="34" fill="rgba(240,160,48,0.06)" stroke="rgba(240,160,48,0.25)" stroke-width="1"/>
+          <text x="250" y="184" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.5">DW</text>
+          <text x="250" y="200" text-anchor="middle" fill="rgba(240,160,48,0.45)" font-family="'Space Grotesk',sans-serif" font-size="10" letter-spacing="1">.ai</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-inner">
+    <div class="section-label">Book a session</div>
+    <h2 class="section-title">Ready to begin?</h2>
+    <p class="section-sub" style="margin-bottom:56px;">Pick a time, fill in your details. Payment handled instantly via GoCardless. No back-and-forth.</p>
+
+    <div class="booking-layout">
+
+      <!-- LEFT: info panel -->
+      <div class="booking-info-panel">
+        <div class="bip-service-selector">
+          <div class="bip-label">Select a service</div>
+          <div class="bip-services">
+            <div class="bip-service active" onclick="setService(this,'Discovery Call','0')" data-price="0">
+              <div class="bip-service-name">Discovery Call</div>
+              <div class="bip-service-price">Free · 30 min</div>
+            </div>
+            <div class="bip-service" onclick="setService(this,'Strategy &amp; Advisory','500')" data-price="1200">
+              <div class="bip-service-name">Strategy &amp; Advisory</div>
+              <div class="bip-service-price">£500 · 60 min</div>
+            </div>
+            <div class="bip-service" onclick="setService(this,'AI Implementation','1500')" data-price="3500">
+              <div class="bip-service-name">AI Implementation</div>
+              <div class="bip-service-price">£1,500 · per day</div>
+            </div>
+            <div class="bip-service" onclick="setService(this,'Training &amp; Workshops','1200')" data-price="950">
+              <div class="bip-service-name">Training &amp; Workshops</div>
+              <div class="bip-service-price">£1,200 · per day</div>
+            </div>
+            <div class="bip-service" onclick="setService(this,'Fractional AI Officer','5000')" data-price="4500">
+              <div class="bip-service-name">Fractional AI Officer</div>
+              <div class="bip-service-price">£5,000 / month</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bip-details">
+          <div class="bip-detail-row"><span class="bip-check">✓</span><span>Secure payment via GoCardless</span></div>
+          <div class="bip-detail-row"><span class="bip-check">✓</span><span>Instant confirmation &amp; video link</span></div>
+          <div class="bip-detail-row"><span class="bip-check">✓</span><span>Reschedule up to 24hrs before</span></div>
+          <div class="bip-detail-row"><span class="bip-check">✓</span><span>100% confidential</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: calendar + flow -->
+      <div class="booking-right">
+
+        <!-- STEP 1: Calendar -->
+        <div class="booking-step" id="step-calendar">
+          <div class="step-header">
+            <div class="step-num-badge">1</div>
+            <div>
+              <div class="step-title">Choose a date</div>
+              <div class="step-hint">Available weekdays shown</div>
+            </div>
+          </div>
+          <div class="cal-card">
+            <div class="cal-topbar">
+              <button class="cal-arrow" onclick="changeMonth(-1)">&#8249;</button>
+              <span class="cal-month-title" id="cal-month-label">June 2026</span>
+              <button class="cal-arrow" onclick="changeMonth(1)">&#8250;</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Time slots -->
+        <div class="booking-step" id="step-time" style="display:none;">
+          <div class="step-header">
+            <div class="step-num-badge">2</div>
+            <div>
+              <div class="step-title">Pick a time</div>
+              <div class="step-hint" id="step-time-hint">—</div>
+            </div>
+            <button class="step-back" onclick="goBack('step-calendar','step-time')">← Change date</button>
+          </div>
+          <div class="slots-wrap" id="slots-grid"></div>
+        </div>
+
+        <!-- STEP 3: Your details -->
+        <div class="booking-step" id="step-details" style="display:none;">
+          <div class="step-header">
+            <div class="step-num-badge">3</div>
+            <div>
+              <div class="step-title">Your details</div>
+              <div class="step-hint" id="step-details-hint">—</div>
+            </div>
+            <button class="step-back" onclick="goBack('step-time','step-details')">← Change time</button>
+          </div>
+          <div class="details-form">
+            <div class="details-row">
+              <div class="df-group">
+                <label>Full name</label>
+                <input type="text" id="book-name" placeholder="Your name" autocomplete="name">
+              </div>
+              <div class="df-group">
+                <label>Email</label>
+                <input type="email" id="book-email" placeholder="you@company.com" autocomplete="email">
+              </div>
+            </div>
+            <div class="df-group">
+              <label>Company (optional)</label>
+              <input type="text" id="book-company" placeholder="Your company">
+            </div>
+            <div class="booking-summary-bar">
+              <div class="bsb-item"><span class="bsb-label">Service</span><span class="bsb-val" id="bsb-service">—</span></div>
+              <div class="bsb-divider"></div>
+              <div class="bsb-item"><span class="bsb-label">Date</span><span class="bsb-val" id="bsb-date">—</span></div>
+              <div class="bsb-divider"></div>
+              <div class="bsb-item"><span class="bsb-label">Time</span><span class="bsb-val" id="bsb-time">—</span></div>
+              <div class="bsb-divider"></div>
+              <div class="bsb-item"><span class="bsb-label">Total</span><span class="bsb-val bsb-price" id="bsb-price">—</span></div>
+            </div>
+            <button class="confirm-btn" onclick="openPayModal()">Confirm &amp; Pay securely →</button>
+            <p class="secure-note">Payments processed by GoCardless · TLS encrypted · No card details stored</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="logo-mark" style="width:34px;height:34px;font-size:13px;border-radius:9px;flex-shrink:0;">DW</div>
+        <span class="footer-wordmark">danielwalsh<span>.ai</span></span>
+      </div>
+      <p class="footer-tagline">Oxford · Google · MIT certified<br>AI consultancy · London</p>
+      <a href="mailto:hello@danielwalsh.ai" class="footer-email">hello@danielwalsh.ai</a>
+      <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="footer-linkedin"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <a href="#services">Strategy &amp; Advisory</a>
+        <a href="#services">AI Implementation</a>
+        <a href="#services">Training &amp; Workshops</a>
+        <a href="#services">Fractional AI Officer</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <a href="#process">How it works</a>
+        <a href="#booking">Book a session</a>
+        <a href="mailto:hello@danielwalsh.ai">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Daniel Walsh AI Consultancy Ltd. All rights reserved.</span>
+    <span><a href="mailto:hello@danielwalsh.ai">hello@danielwalsh.ai</a></span>
+  </div>
+</footer>
+
+<!-- CHAT WIDGET -->
+<div id="chat-widget">
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-head">
+      <div class="chat-head-info">
+        <div class="chat-avatar">DW</div>
+        <div class="chat-head-text">
+          <strong>Daniel Walsh AI</strong>
+          <span>● Online now</span>
+        </div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">×</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ask anything about AI for your business…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+      <button class="chat-send" onclick="sendChat()">↑</button>
+    </div>
+  </div>
+  <button class="chat-btn" onclick="toggleChat()">
+    💬
+    <div class="chat-badge"></div>
+  </button>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="pay-modal">
+  <div class="modal">
+    <div id="modal-content">
+      
+      <h3>Confirm &amp; Pay</h3>
+      <p class="modal-sub">Review your booking before payment is processed via GoCardless.</p>
+      <div class="modal-summary">
+        <div class="ms-row"><span>Service</span><strong id="modal-service">—</strong></div>
+        <div class="ms-row"><span>Date</span><strong id="modal-date">—</strong></div>
+        <div class="ms-row"><span>Time</span><strong id="modal-time">—</strong></div>
+        <div class="ms-row ms-total"><span>Total</span><strong id="modal-total">—</strong></div>
+      </div>
+      <button class="modal-pay-btn" onclick="processPayment()">Pay now via GoCardless →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════ NEURAL MESH ════ */
+(function(){
+  const canvas=document.getElementById('mesh-canvas');
+  const hero=document.getElementById('hero');
+  const ctx=canvas.getContext('2d');
+  let W,H,nodes=[],mouse={x:-999,y:-999};
+  const N=60,CONN=145,MR=180;
+  function resize(){
+    const r=hero.getBoundingClientRect();
+    W=canvas.width=r.width;
+    H=canvas.height=r.height;
+  }
+  function init(){
+    nodes=[];
+    for(let i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
+      let dx=mouse.x-n.x,dy=mouse.y-n.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<MR){let f=(1-d/MR)*.015;n.vx-=dx*f;n.vy-=dy*f;}
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(240,160,48,0.5)';ctx.fill();
+    });
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      let dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<CONN){let a=(1-d/CONN)*0.18;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(240,160,48,${a})`;ctx.lineWidth=.6;ctx.stroke();}
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',()=>{resize();init();});
+  hero.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
+  hero.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
+  window.addEventListener('load',()=>{resize();init();draw();});
+})();
+
+/* ════ NAV ════ */
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60));
+
+/* ════ CALENDAR ════ */
+const today=new Date(2026,5,21);
+let viewMonth=today.getMonth(),viewYear=today.getFullYear();
+let selectedDate=null,selectedSlot=null;
+let selectedServiceName='Discovery Call',selectedServicePrice=0;
+const UNAVAIL_DAYS=[0,6];
+const UNAVAIL_DATES=new Set(['2026-06-25','2026-06-26','2026-07-04','2026-07-10']);
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const ALL_SLOTS=['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
+const TAKEN={'2026-06-23':['09:00','10:00','14:00'],'2026-06-24':['09:30','11:00'],'2026-07-01':['09:00','09:30','10:00']};
+
+function dk(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+
+function renderCalendar(){
+  document.getElementById('cal-month-label').textContent=MONTHS[viewMonth]+' '+viewYear;
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML='';
+  const firstDow=new Date(viewYear,viewMonth,1).getDay();
+  const offset=firstDow===0?6:firstDow-1;
+  const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+  for(let i=0;i<offset;i++){const e=document.createElement('div');e.className='cal-day';grid.appendChild(e);}
+  for(let d=1;d<=daysInMonth;d++){
+    const btn=document.createElement('button');
+    btn.className='cal-day';
+    btn.textContent=d;
+    const key=dk(viewYear,viewMonth,d);
+    const date=new Date(viewYear,viewMonth,d);
+    const isPast=date<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isWeekend=UNAVAIL_DAYS.includes(date.getDay());
+    const isBlocked=UNAVAIL_DATES.has(key);
+    const isToday=d===today.getDate()&&viewMonth===today.getMonth()&&viewYear===today.getFullYear();
+    if(isToday)btn.classList.add('today');
+    if(!isPast&&!isWeekend&&!isBlocked){
+      btn.classList.add('available');
+      if(selectedDate===key)btn.classList.add('selected');
+      btn.onclick=()=>pickDate(key,d);
+    }
+    grid.appendChild(btn);
+  }
+}
+
+function pickDate(key,d){
+  selectedDate=key;selectedSlot=null;
+  renderCalendar();
+  const dateObj=new Date(key+'T12:00:00');
+  document.getElementById('step-time-hint').textContent=dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  showStep('step-time');
+  const taken=TAKEN[key]||[];
+  const grid=document.getElementById('slots-grid');
+  grid.innerHTML='';
+  ALL_SLOTS.forEach(s=>{
+    const el=document.createElement('div');
+    el.className='slot'+(taken.includes(s)?' taken':'');
+    el.textContent=s;
+    if(!taken.includes(s))el.onclick=function(){pickSlot(s,this);};
+    grid.appendChild(el);
+  });
+}
+
+function pickSlot(slot,el){
+  selectedSlot=slot;
+  document.querySelectorAll('.slot').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  const dateObj=new Date(selectedDate+'T12:00:00');
+  const dateStr=dateObj.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('step-details-hint').textContent=dateStr+' · '+slot;
+  document.getElementById('bsb-service').textContent=selectedServiceName;
+  document.getElementById('bsb-date').textContent=dateStr;
+  document.getElementById('bsb-time').textContent=slot;
+  document.getElementById('bsb-price').textContent=selectedServicePrice==0?'Free':'£'+parseInt(selectedServicePrice).toLocaleString();
+  showStep('step-details');
+}
+
+function showStep(id){
+  document.getElementById(id).style.display='block';
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function goBack(showId,hideId){
+  document.getElementById(hideId).style.display='none';
+  if(hideId==='step-time')document.getElementById('step-details').style.display='none';
+}
+
+function changeMonth(dir){
+  viewMonth+=dir;
+  if(viewMonth>11){viewMonth=0;viewYear++;}
+  if(viewMonth<0){viewMonth=11;viewYear--;}
+  renderCalendar();
+}
+
+/* ════ SERVICE SELECTOR ════ */
+function setService(el,name,price){
+  document.querySelectorAll('.bip-service').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  selectedServiceName=name;selectedServicePrice=price;
+  document.getElementById('bsb-service').textContent=name;
+  document.getElementById('bsb-price').textContent=price==0?'Free':'£'+parseInt(price).toLocaleString();
+}
+
+/* ════ PAYMENT MODAL ════ */
+function openPayModal(){
+  const name=document.getElementById('book-name').value.trim();
+  const email=document.getElementById('book-email').value.trim();
+  if(!name){document.getElementById('book-name').focus();return;}
+  if(!email){document.getElementById('book-email').focus();return;}
+  const dateObj=new Date(selectedDate+'T12:00:00');
+  document.getElementById('modal-service').textContent=selectedServiceName;
+  document.getElementById('modal-date').textContent=dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('modal-time').textContent=selectedSlot;
+  document.getElementById('modal-total').textContent=selectedServicePrice==0?'Free':'£'+parseInt(selectedServicePrice).toLocaleString();
+  document.getElementById('pay-modal').classList.add('open');
+}
+function closePayModal(){document.getElementById('pay-modal').classList.remove('open');}
+async function processPayment(){
+  const btn=document.querySelector('.modal-pay-btn');
+  btn.textContent='Processing…';btn.disabled=true;
+  try{
+    const res=await fetch('/api/bookings/initiate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:document.getElementById('book-name').value.trim(),
+        email:document.getElementById('book-email').value.trim(),
+        company:document.getElementById('book-company').value.trim(),
+        service:selectedServiceName,
+        price:selectedServicePrice,
+        date:selectedDate,
+        time_slot:selectedSlot
+      })
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Booking failed');
+    if(data.free){
+      // Free discovery call — confirmed immediately
+      document.getElementById('modal-content').innerHTML='<div class="success-state"><div class="success-icon">✅</div><h3>Booking confirmed!</h3><p>A confirmation has been sent to your email. Daniel will be in touch with a video link shortly.</p></div>';
+      setTimeout(()=>{closePayModal();location.reload();},5000);
+    } else {
+      // Paid booking — redirect to GoCardless
+      window.location.href=data.redirectUrl;
+    }
+  }catch(err){
+    btn.textContent='Pay now via GoCardless →';btn.disabled=false;
+    alert(err.message||'Something went wrong. Please try again.');
+  }
+}
+document.getElementById('pay-modal').addEventListener('click',function(e){if(e.target===this)closePayModal();});
+
+// Handle return from GoCardless
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('confirmed')==='true'){
+    setTimeout(()=>{
+      document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+      alert('Payment confirmed! Check your email for your booking details.');
+    },500);
+    window.history.replaceState({},'','/');
+  }
+  if(params.get('error')){
+    setTimeout(()=>alert('Payment was not completed. Please try again.'),500);
+    window.history.replaceState({},'','/');
+  }
+})();
+
+/* ════ AI CHAT ════ */
+let chatOpen=false;
+const chatEl=document.getElementById('chat-messages');
+const AI={
+  default:[
+    "That's a great question. AI implementation varies significantly by industry and business size. Could you tell me a bit more about your organisation?",
+    "Happy to help. Daniel specialises in exactly this area — would you like me to recommend the right service, or book a free discovery call to discuss in detail?",
+    "The short answer depends on your current tech stack and team capability. A 30-minute discovery call is the fastest way to get a tailored answer — and it's free.",
+  ],
+  book:"You can book directly on this page — scroll to 'Book a session', pick a date and time, and payment is handled instantly via GoCardless.",
+  price:"Pricing: £500 for a 60-minute strategy session, £1,500/day for AI implementation, £1,200/day for training workshops, and £5,000/month (12-month minimum, 25hrs/month) for the Fractional AI Officer retainer.",
+  cred:"Daniel holds certifications from Google, Oxford University, and MIT — a rare combination of academic rigour and hands-on delivery experience.",
+};
+function addMsg(text,role){
+  const m=document.createElement('div');m.className='msg '+role;
+  const b=document.createElement('div');b.className='msg-bubble';b.textContent=text;
+  const t=document.createElement('div');t.className='msg-time';t.textContent='Just now';
+  m.appendChild(b);m.appendChild(t);chatEl.appendChild(m);chatEl.scrollTop=chatEl.scrollHeight;
+}
+function addTyping(){
+  const t=document.createElement('div');t.className='msg ai';t.id='typing-ind';
+  t.innerHTML='<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  chatEl.appendChild(t);chatEl.scrollTop=chatEl.scrollHeight;
+}
+function rmTyping(){const t=document.getElementById('typing-ind');if(t)t.remove();}
+async function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';addMsg(text,'user');addTyping();
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+    const d=await r.json();rmTyping();addMsg(d.reply||localReply(text),'ai');
+  }catch(e){rmTyping();addMsg(localReply(text),'ai');}
+}
+function localReply(t){
+  t=t.toLowerCase();
+  if(t.includes('book')||t.includes('call')||t.includes('appointment'))return AI.book;
+  if(t.includes('price')||t.includes('cost')||t.includes('much')||t.includes('fee'))return AI.price;
+  if(t.includes('oxford')||t.includes('mit')||t.includes('google')||t.includes('certif'))return AI.cred;
+  return AI.default[Math.floor(Math.random()*AI.default.length)];
+}
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chat-panel').classList.toggle('open',chatOpen);
+  if(chatOpen&&chatEl.children.length===0){
+    setTimeout(()=>addMsg("Hi! I'm Daniel's AI assistant. Ask me anything about services, pricing, or how AI could help your business — or I can help you book right now.",'ai'),300);
+  }
+}
+
+/* ════ INIT ════ */
+renderCalendar();
+</script>
+</body>
+</html>

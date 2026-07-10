@@ -1239,6 +1239,63 @@ footer {
       ctx.beginPath();ctx.arc(q.x,q.y,2.4,0,Math.PI*2);
       ctx.fillStyle=AMBER((0.2+0.45*pulse).toFixed(3));ctx.fill();
     });
+
+    drawHUD(cx,cy,R,ry);
+  }
+
+  /* ── HUD reticle: concentric rings + ticks + micro-readouts (screen space) ── */
+  function drawHUD(cx,cy,R,ry){
+    const r1=R*1.12, r2=R*1.30, r3=R*0.92;
+
+    /* ring A — fine blue circle with 60 tick marks, rotates with scroll */
+    ctx.beginPath();ctx.arc(cx,cy,r1,0,Math.PI*2);
+    ctx.strokeStyle=BLUE(0.14);ctx.lineWidth=0.7;ctx.stroke();
+    for(let i=0;i<60;i++){
+      const a=ry+i*Math.PI/30;
+      const long=i%5===0, len=long?7:3.5;
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
+      ctx.lineTo(cx+Math.cos(a)*(r1+len),cy+Math.sin(a)*(r1+len));
+      ctx.strokeStyle=long?WHITE(0.20):BLUE(0.18);ctx.lineWidth=long?1:0.6;ctx.stroke();
+    }
+
+    /* ring B — three amber arc segments, counter-rotating */
+    for(let s=0;s<3;s++){
+      const a0=-ry*0.6+s*(Math.PI*2/3);
+      ctx.beginPath();ctx.arc(cx,cy,r2,a0,a0+Math.PI*0.38);
+      ctx.strokeStyle=AMBER(0.16);ctx.lineWidth=1.4;ctx.stroke();
+    }
+    /* ring B carets — small amber position markers */
+    for(let s=0;s<3;s++){
+      const a=-ry*0.6+s*(Math.PI*2/3);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2,2,0,Math.PI*2);
+      ctx.fillStyle=AMBER(0.4);ctx.fill();
+    }
+
+    /* ring C — inner dashed white circle, slow rotation */
+    ctx.save();
+    ctx.setLineDash([2,7]);ctx.lineDashOffset=-ry*40;
+    ctx.beginPath();ctx.arc(cx,cy,r3,0,Math.PI*2);
+    ctx.strokeStyle=WHITE(0.10);ctx.lineWidth=0.8;ctx.stroke();
+    ctx.restore();
+
+    /* cardinal crosshair ticks */
+    [[0,-1],[0,1],[-1,0],[1,0]].forEach(k=>{
+      ctx.beginPath();
+      ctx.moveTo(cx+k[0]*(r2+10),cy+k[1]*(r2+10));
+      ctx.lineTo(cx+k[0]*(r2+20),cy+k[1]*(r2+20));
+      ctx.strokeStyle=WHITE(0.22);ctx.lineWidth=1;ctx.stroke();
+    });
+
+    /* micro-readouts */
+    const deg=((ry*180/Math.PI)%360+360)%360;
+    ctx.font="10px 'Space Grotesk', sans-serif";ctx.textAlign='left';
+    ctx.fillStyle=BLUE(0.45);
+    ctx.fillText('ROT '+deg.toFixed(1).padStart(5,'0')+'°',cx+r2*0.72,cy-r2*0.74);
+    ctx.fillStyle=AMBER(0.4);
+    ctx.fillText('DW·CORE ONLINE',cx-r2*0.98,cy+r2*0.80);
+    ctx.fillStyle=WHITE(0.22);
+    ctx.fillText('AI·ACCEL v5',cx+r2*0.70,cy+r2*0.80);
   }
 
   function loop(){

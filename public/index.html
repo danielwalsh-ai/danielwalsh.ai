@@ -804,7 +804,10 @@ footer {
         </div>
       </div>
       <div class="process-visual" id="orbit-visual">
-        <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;position:absolute;inset:0;">
+        <!-- No viewBox: percentage coordinates anchor nodes to the panel's real
+             corners at any panel size, so the diagram always fills it. Radii are
+             fixed px so circles stay round. -->
+        <svg xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
           <defs>
             <radialGradient id="cGlow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#f0a030" stop-opacity="0.22"/>
@@ -817,41 +820,41 @@ footer {
           </defs>
 
           <!-- Connector lines from centre to each node -->
-          <line x1="250" y1="190" x2="82"  y2="72"  stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="250" y1="190" x2="418" y2="72"  stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="250" y1="190" x2="82"  y2="308" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="250" y1="190" x2="418" y2="308" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="50%" y1="50%" x2="17%" y2="20%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="50%" y1="50%" x2="83%" y2="20%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="50%" y1="50%" x2="17%" y2="80%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
+          <line x1="50%" y1="50%" x2="83%" y2="80%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
 
           <!-- NODE 1 — top left -->
-          <circle cx="82" cy="72" r="58" fill="url(#nGlow)"/>
-          <circle cx="82" cy="72" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="82" y="64" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">01</text>
-          <text x="82" y="81" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DISCOVERY</text>
+          <circle cx="17%" cy="20%" r="58" fill="url(#nGlow)"/>
+          <circle cx="17%" cy="20%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="17%" y="20%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">01</text>
+          <text x="17%" y="20%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DISCOVERY</text>
 
           <!-- NODE 2 — top right -->
-          <circle cx="418" cy="72" r="58" fill="url(#nGlow)"/>
-          <circle cx="418" cy="72" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="418" y="64" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">02</text>
-          <text x="418" y="81" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DIAGNOSIS</text>
+          <circle cx="83%" cy="20%" r="58" fill="url(#nGlow)"/>
+          <circle cx="83%" cy="20%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="83%" y="20%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">02</text>
+          <text x="83%" y="20%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DIAGNOSIS</text>
 
           <!-- NODE 3 — bottom left -->
-          <circle cx="82" cy="308" r="58" fill="url(#nGlow)"/>
-          <circle cx="82" cy="308" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="82" y="300" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">03</text>
-          <text x="82" y="317" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">PROPOSAL</text>
+          <circle cx="17%" cy="80%" r="58" fill="url(#nGlow)"/>
+          <circle cx="17%" cy="80%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="17%" y="80%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">03</text>
+          <text x="17%" y="80%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">PROPOSAL</text>
 
           <!-- NODE 4 — bottom right -->
-          <circle cx="418" cy="308" r="58" fill="url(#nGlow)"/>
-          <circle cx="418" cy="308" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="418" y="300" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">04</text>
-          <text x="418" y="317" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">EXECUTION</text>
+          <circle cx="83%" cy="80%" r="58" fill="url(#nGlow)"/>
+          <circle cx="83%" cy="80%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
+          <text x="83%" y="80%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">04</text>
+          <text x="83%" y="80%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">EXECUTION</text>
 
           <!-- CENTRAL NODE -->
-          <circle cx="250" cy="190" r="70" fill="url(#cGlow)"/>
-          <circle cx="250" cy="190" r="50" fill="rgba(13,15,28,0.97)" stroke="rgba(240,160,48,0.55)" stroke-width="1.5"/>
-          <circle cx="250" cy="190" r="34" fill="rgba(240,160,48,0.06)" stroke="rgba(240,160,48,0.25)" stroke-width="1"/>
-          <text x="250" y="184" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.5">DW</text>
-          <text x="250" y="200" text-anchor="middle" fill="rgba(240,160,48,0.45)" font-family="'Space Grotesk',sans-serif" font-size="10" letter-spacing="1">.ai</text>
+          <circle cx="50%" cy="50%" r="70" fill="url(#cGlow)"/>
+          <circle cx="50%" cy="50%" r="50" fill="rgba(13,15,28,0.97)" stroke="rgba(240,160,48,0.55)" stroke-width="1.5"/>
+          <circle cx="50%" cy="50%" r="34" fill="rgba(240,160,48,0.06)" stroke="rgba(240,160,48,0.25)" stroke-width="1"/>
+          <text x="50%" y="50%" dy="-6" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.5">DW</text>
+          <text x="50%" y="50%" dy="10" text-anchor="middle" fill="rgba(240,160,48,0.45)" font-family="'Space Grotesk',sans-serif" font-size="10" letter-spacing="1">.ai</text>
         </svg>
       </div>
     </div>

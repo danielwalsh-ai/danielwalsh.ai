@@ -40,7 +40,7 @@ Professional AI consultancy site for Daniel Walsh. Live production system — be
 
 ## Conventions
 
-- British spelling, £, DD/MM/YYYY, UK framing throughout.
+- British spelling, £, DD/MM/YYYY. Positioning is WORLDWIDE (decided 10 Jul 2026): no London/UK-only framing in copy, titles or structured data — "based in the UK, working worldwide" is the only permitted UK reference.
 - Keep the single-file structure for index.html unless explicitly told to split it.
 - CSS colours should use `:root` variables — if you find hardcoded hexes, migrate them to variables as you touch that code.
 - Mobile responsive across three breakpoints — test changes at all of them.

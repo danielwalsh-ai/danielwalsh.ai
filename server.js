@@ -18,10 +18,21 @@ const PORT = process.env.PORT || 3000;
 /* ════════════════════════════════════
    MIDDLEWARE
 ════════════════════════════════════ */
-app.use(helmet());
+// The site is a single HTML file with inline JS and onclick handlers, so the
+// CSP must permit inline scripts — helmet's default (script-src 'self',
+// script-src-attr 'none') silently disables the whole frontend.
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'script-src': ["'self'", "'unsafe-inline'"],
+      'script-src-attr': ["'unsafe-inline'"],
+    },
+  },
+}));
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN || 'https://danielwalsh.ai' }));
 app.use(express.json());
-app.use(express.static('public')); // serves danielwalsh.html + admin.html
+app.use(express.static('public', { extensions: ['html'] })); // clean URLs: /about → about.html
 
 // Rate limiting
 const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: { error: 'Too many requests' } });

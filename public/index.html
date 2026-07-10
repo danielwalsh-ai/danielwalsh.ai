@@ -4,7 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#07070f">
-<title>Daniel Walsh — AI Consultancy</title>
+<title>Daniel Walsh — AI Consultant, London | Strategy, Implementation &amp; Training</title>
+<meta name="description" content="Oxford, Google &amp; MIT-certified AI consultancy for UK businesses. Strategy sessions, hands-on AI implementation, team training and fractional AI leadership — fixed prices, booked online.">
+<link rel="canonical" href="https://danielwalsh.ai/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Daniel Walsh — AI Consultant, London">
+<meta property="og:description" content="Oxford, Google &amp; MIT-certified AI consultancy for UK businesses. Fixed prices, booked online.">
+<meta property="og:url" content="https://danielwalsh.ai/">
+<meta property="og:site_name" content="danielwalsh.ai">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Daniel Walsh — AI Consultant, London">
+<meta name="twitter:description" content="Oxford, Google &amp; MIT-certified AI consultancy for UK businesses. Fixed prices, booked online.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Daniel Walsh AI Consultancy",
+  "alternateName": "danielwalsh.ai",
+  "url": "https://danielwalsh.ai/",
+  "email": "hello@danielwalsh.ai",
+  "founder": { "@type": "Person", "name": "Daniel Walsh", "url": "https://danielwalsh.ai/about", "sameAs": ["https://www.linkedin.com/in/daniel-walsh-7885aa3a"] },
+  "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" },
+  "areaServed": "GB",
+  "priceRange": "££",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "AI consultancy services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Strategy & Advisory", "url": "https://danielwalsh.ai/services/strategy-advisory" }, "price": "500", "priceCurrency": "GBP" },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Implementation", "url": "https://danielwalsh.ai/services/ai-implementation" }, "price": "1500", "priceCurrency": "GBP" },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Training & Workshops", "url": "https://danielwalsh.ai/services/training-workshops" }, "price": "1200", "priceCurrency": "GBP" },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fractional AI Officer", "url": "https://danielwalsh.ai/services/fractional-ai-officer" }, "price": "5000", "priceCurrency": "GBP" }
+    ]
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -166,6 +200,7 @@ section { padding: 80px 40px; }
   cursor: pointer; transition: background .25s;
   position: relative; overflow: hidden;
   display: flex; flex-direction: column;
+  color: inherit; text-decoration: none;
 }
 .service-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -634,6 +669,8 @@ footer {
   <div class="nav-links">
     <a href="#services">Services</a>
     <a href="#process">Process</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
     <a href="#booking">Book</a>
   </div>
   <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="nav-linkedin" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
@@ -735,34 +772,34 @@ footer {
       <p class="section-sub">Each engagement is scoped precisely. No bloated retainers. No buzzword audits. Just outcomes.</p>
     </div>
     <div class="services-grid">
-      <div class="service-card" onclick="selectService('Strategy & Advisory', 1200)">
+      <a class="service-card" href="/services/strategy-advisory">
         <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
         <h3>Strategy &amp; Advisory</h3>
         <p>A clear, board-ready AI roadmap built around your actual business model — not a template. Where to start, what to avoid, how to measure.</p>
         <div class="service-price">£500 / 60-min session</div>
         <div class="service-arrow">↗</div>
-      </div>
-      <div class="service-card" onclick="selectService('AI Implementation', 3500)">
+      </a>
+      <a class="service-card" href="/services/ai-implementation">
         <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
         <h3>AI Implementation</h3>
         <p>Hands-on build and deployment of AI systems — from LLM integrations to custom pipelines. I design it, build it, and hand it over working.</p>
         <div class="service-price">£1,500 / day</div>
         <div class="service-arrow">↗</div>
-      </div>
-      <div class="service-card" onclick="selectService('Training & Workshops', 950)">
+      </a>
+      <a class="service-card" href="/services/training-workshops">
         <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <h3>Training & Workshops</h3>
         <p>Half-day or full-day sessions that turn your team from AI-curious to AI-capable. Tailored to your industry. Practical, not theoretical.</p>
         <div class="service-price">£1,200 / day</div>
         <div class="service-arrow">↗</div>
-      </div>
-      <div class="service-card" onclick="selectService('Fractional AI Officer', 4500)">
+      </a>
+      <a class="service-card" href="/services/fractional-ai-officer">
         <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
         <h3>Fractional AI Officer</h3>
         <p>Your embedded AI lead without the full-time cost. Attend your exec meetings, drive your AI agenda, and own delivery across the business.</p>
         <div class="service-price">£5,000 / month · 25 hrs · 12-month minimum</div>
         <div class="service-arrow">↗</div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1004,13 +1041,15 @@ footer {
     <div class="footer-cols">
       <div class="footer-col">
         <div class="footer-col-title">Services</div>
-        <a href="#services">Strategy &amp; Advisory</a>
-        <a href="#services">AI Implementation</a>
-        <a href="#services">Training &amp; Workshops</a>
-        <a href="#services">Fractional AI Officer</a>
+        <a href="/services/strategy-advisory">Strategy &amp; Advisory</a>
+        <a href="/services/ai-implementation">AI Implementation</a>
+        <a href="/services/training-workshops">Training &amp; Workshops</a>
+        <a href="/services/fractional-ai-officer">Fractional AI Officer</a>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Company</div>
+        <a href="/about">About</a>
+        <a href="/faq">FAQ</a>
         <a href="#process">How it works</a>
         <a href="#booking">Book a session</a>
         <a href="mailto:hello@danielwalsh.ai">Contact</a>
@@ -1067,61 +1106,192 @@ footer {
 </div>
 
 <script>
-/* ════ NEURAL MESH ════ */
+/* ════ 3D SCROLL GPU SCHEMATIC ════
+   Stylised AI-accelerator board (central die + HBM stacks + traces) as a 3D
+   wireframe, hand-rolled projection — no libraries, no trademarks.
+   Rotation is driven by scroll position — it spins at the pace you scroll —
+   plus a slow idle drift and slight mouse-tilt parallax. */
 (function(){
   const canvas=document.getElementById('mesh-canvas');
   const hero=document.getElementById('hero');
   const ctx=canvas.getContext('2d');
-  let W,H,nodes=[],mouse={x:-999,y:-999};
-  const N=60,CONN=145,MR=180;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,dpr=1;
+
+  /* Colours (brand: blue tertiary low-opacity, amber accents ≤10%) */
+  const BLUE=(a)=>`rgba(61,90,254,${a})`;
+  const WHITE=(a)=>`rgba(240,240,248,${a})`;
+  const AMBER=(a)=>`rgba(240,160,48,${a})`;
+
+  /* ── Geometry: y is UP; board lies in the x–z plane ── */
+  const lines=[];  /* {pts:[[x,y,z],…], c:'b'|'w'|'a', w:px, base:opacity} */
+  const dots=[];   /* {p:[x,y,z], c, r} */
+  const BW=1.75, BD=1.15, BT=0.06;      /* board half-width, half-depth, thickness */
+
+  function rect(y,hw,hd,c,w,base,cx0,cz0){
+    cx0=cx0||0;cz0=cz0||0;
+    lines.push({pts:[[cx0-hw,y,cz0-hd],[cx0+hw,y,cz0-hd],[cx0+hw,y,cz0+hd],[cx0-hw,y,cz0+hd],[cx0-hw,y,cz0-hd]],c,w,base});
+  }
+  function box(cx0,cz0,hw,hd,h,c,w,base){
+    rect(h,hw,hd,c,w,base,cx0,cz0);            /* top face */
+    rect(0.001,hw,hd,c,w*0.8,base*0.5,cx0,cz0); /* footprint */
+    [[-hw,-hd],[hw,-hd],[hw,hd],[-hw,hd]].forEach(k=>
+      lines.push({pts:[[cx0+k[0],0.001,cz0+k[1]],[cx0+k[0],h,cz0+k[1]]],c,w:w*0.8,base:base*0.8}));
+  }
+
+  /* Board outline (top + bottom + corner posts) */
+  rect(0,BW,BD,'b',1.1,0.30); rect(-BT,BW,BD,'b',0.8,0.16);
+  [[-BW,-BD],[BW,-BD],[BW,BD],[-BW,BD]].forEach(k=>
+    lines.push({pts:[[k[0],0,k[1]],[k[0],-BT,k[1]]],c:'b',w:0.8,base:0.2}));
+
+  /* Central die — amber-edged (the hero accent) with inner core */
+  box(0,0,0.42,0.42,0.14,'a',1.2,0.5);
+  rect(0.141,0.30,0.30,'a',0.8,0.35);
+  rect(0.142,0.16,0.16,'w',0.6,0.25);
+
+  /* HBM memory stacks — 3 each side of the die */
+  [-1,1].forEach(sx=>{ [-0.62,0,0.62].forEach(z=>{ box(sx*0.78,z,0.16,0.26,0.11,'b',0.9,0.34); }); });
+
+  /* Trace fan: die edges → board edge connectors, one 90° bend each */
+  for(let i=0;i<9;i++){
+    const z=-0.36+i*0.09;
+    [[-1],[1]].forEach(([sx])=>{
+      const x0=sx*0.44, x1=sx*(1.12+((i%3)*0.14)), xe=sx*BW*0.97;
+      lines.push({pts:[[x0,0.002,z],[x1,0.002,z],[x1,0.002,z*1.55],[xe,0.002,z*1.55]],c:'b',w:0.55,base:0.22});
+      dots.push({p:[x1,0.004,z],c:'w',r:1.1});
+    });
+  }
+  /* Front/back traces from die to board edge */
+  for(let i=0;i<7;i++){
+    const x=-0.27+i*0.09;
+    [[-1],[1]].forEach(([sz])=>{
+      lines.push({pts:[[x,0.002,sz*0.44],[x,0.002,sz*0.78],[x*1.9,0.002,sz*0.78],[x*1.9,0.002,sz*BD*0.96]],c:'b',w:0.55,base:0.20});
+    });
+  }
+
+  /* Capacitor banks — short paired ticks along front and back edges */
+  for(let i=0;i<12;i++){
+    const x=-1.35+i*0.245;
+    [[-1],[1]].forEach(([sz])=>{
+      lines.push({pts:[[x,0.05,sz*0.97],[x,0.05,sz*1.05]],c:'w',w:1.4,base:0.20});
+      lines.push({pts:[[x+0.05,0.05,sz*0.97],[x+0.05,0.05,sz*1.05]],c:'w',w:1.4,base:0.12});
+    });
+  }
+
+  /* Edge connector fingers (one long side) */
+  for(let i=0;i<22;i++){
+    const x=-1.45+i*0.135;
+    lines.push({pts:[[x,-BT,BD],[x,0,BD]],c:'a',w:1.6,base:0.16});
+  }
+
+  /* Amber pulse pads on the die top */
+  const pads=[[-0.2,-0.2],[0.2,-0.2],[-0.2,0.2],[0.2,0.2]].map(k=>({p:[k[0],0.145,k[1]]}));
+
+  let rotY=0,targetY=0,mx=0,my=0,tmx=0,tmy=0,idle=0;
+  const TILT=0.52,SCROLL_RATE=0.0032;
+
   function resize(){
     const r=hero.getBoundingClientRect();
-    W=canvas.width=r.width;
-    H=canvas.height=r.height;
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    W=r.width;H=r.height;
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   }
-  function init(){
-    nodes=[];
-    for(let i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5});
+
+  function project(p,ry,rx,R,cx,cy){
+    const cy1=Math.cos(ry),sy1=Math.sin(ry),cx1=Math.cos(rx),sx1=Math.sin(rx);
+    const x1=p[0]*cy1+p[2]*sy1, z1=-p[0]*sy1+p[2]*cy1;
+    const y2=p[1]*cx1-z1*sx1, z2=p[1]*sx1+z1*cx1;
+    const d=4.2,s=d/(d-z2);
+    return {x:cx+x1*R*s,y:cy-y2*R*s,z:z2};
   }
+
+  function col(c,a){return c==='a'?AMBER(a):c==='w'?WHITE(a):BLUE(a);}
+
   function draw(){
     ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      n.x+=n.vx;n.y+=n.vy;
-      if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
-      let dx=mouse.x-n.x,dy=mouse.y-n.y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<MR){let f=(1-d/MR)*.015;n.vx-=dx*f;n.vy-=dy*f;}
-      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(240,160,48,0.5)';ctx.fill();
+    const cx=W/2, cy=H/2+Math.min(W,H)*0.06-window.scrollY*0.15; /* slight parallax rise */
+    const R=Math.min(W,H)*0.42;
+    const rx=TILT+tmy*0.10, ry=rotY+idle+tmx*0.10;
+
+    lines.forEach(L=>{
+      const pts=L.pts.map(p=>project(p,ry,rx,R,cx,cy));
+      const zm=pts.reduce((s,q)=>s+q.z,0)/pts.length;
+      const depth=0.55+((zm+1.2)/2.4)*0.65;           /* depth fade */
+      ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+      for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+      ctx.strokeStyle=col(L.c,Math.min(0.55,L.base*depth).toFixed(3));
+      ctx.lineWidth=L.w*(0.7+depth*0.4);ctx.stroke();
     });
-    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
-      let dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<CONN){let a=(1-d/CONN)*0.18;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(240,160,48,${a})`;ctx.lineWidth=.6;ctx.stroke();}
-    }
-    requestAnimationFrame(draw);
+
+    dots.forEach(D=>{
+      const q=project(D.p,ry,rx,R,cx,cy);
+      const depth=0.55+((q.z+1.2)/2.4)*0.65;
+      ctx.beginPath();ctx.arc(q.x,q.y,D.r*depth,0,Math.PI*2);
+      ctx.fillStyle=col(D.c,(0.18*depth).toFixed(3));ctx.fill();
+    });
+
+    /* pulsing amber die pads */
+    pads.forEach((P,i)=>{
+      const q=project(P.p,ry,rx,R,cx,cy);
+      const pulse=reduced?0.5:0.5+0.5*Math.sin(idle*3+i*1.7);
+      ctx.beginPath();ctx.arc(q.x,q.y,2.4,0,Math.PI*2);
+      ctx.fillStyle=AMBER((0.2+0.45*pulse).toFixed(3));ctx.fill();
+    });
   }
-  window.addEventListener('resize',()=>{resize();init();});
-  hero.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
-  hero.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
-  window.addEventListener('load',()=>{resize();init();draw();});
+
+  function loop(){
+    idle+=reduced?0:0.0028;
+    targetY=window.scrollY*SCROLL_RATE;
+    rotY+=(targetY-rotY)*0.08;      /* smoothed — spins at the pace you scroll */
+    tmx+=(mx-tmx)*0.05; tmy+=(my-tmy)*0.05;
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize',resize);
+  hero.addEventListener('mousemove',e=>{
+    const r=hero.getBoundingClientRect();
+    mx=(e.clientX-r.left)/r.width*2-1; my=(e.clientY-r.top)/r.height*2-1;
+  });
+  hero.addEventListener('mouseleave',()=>{mx=0;my=0;});
+  resize();
+  if(reduced){draw();window.addEventListener('scroll',()=>{targetY=rotY=window.scrollY*SCROLL_RATE;draw();},{passive:true});}
+  else loop();
 })();
 
 /* ════ NAV ════ */
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60));
 
 /* ════ CALENDAR ════ */
-const today=new Date(2026,5,21);
+const today=new Date();
 let viewMonth=today.getMonth(),viewYear=today.getFullYear();
 let selectedDate=null,selectedSlot=null;
 let selectedServiceName='Discovery Call',selectedServicePrice=0;
 const UNAVAIL_DAYS=[0,6];
-const UNAVAIL_DATES=new Set(['2026-06-25','2026-06-26','2026-07-04','2026-07-10']);
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const ALL_SLOTS=['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
-const TAKEN={'2026-06-23':['09:00','10:00','14:00'],'2026-06-24':['09:30','11:00'],'2026-07-01':['09:00','09:30','10:00']};
+
+/* Live availability from the server: {'YYYY-MM-DD': ['09:00', …]} per month */
+const AVAIL_CACHE={};
+async function fetchUnavailable(y,m){
+  const key=`${y}-${String(m+1).padStart(2,'0')}`;
+  if(!AVAIL_CACHE[key]){
+    try{
+      const r=await fetch('/api/availability?month='+key);
+      const d=await r.json();
+      AVAIL_CACHE[key]=d.unavailable||{};
+    }catch(e){AVAIL_CACHE[key]={};}
+  }
+  return AVAIL_CACHE[key];
+}
 
 function dk(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
 
-function renderCalendar(){
+async function renderCalendar(){
   document.getElementById('cal-month-label').textContent=MONTHS[viewMonth]+' '+viewYear;
+  const unavail=await fetchUnavailable(viewYear,viewMonth);
   const grid=document.getElementById('cal-grid');
   grid.innerHTML='';
   const firstDow=new Date(viewYear,viewMonth,1).getDay();
@@ -1136,10 +1306,10 @@ function renderCalendar(){
     const date=new Date(viewYear,viewMonth,d);
     const isPast=date<new Date(today.getFullYear(),today.getMonth(),today.getDate());
     const isWeekend=UNAVAIL_DAYS.includes(date.getDay());
-    const isBlocked=UNAVAIL_DATES.has(key);
+    const isFull=(unavail[key]||[]).length>=ALL_SLOTS.length;
     const isToday=d===today.getDate()&&viewMonth===today.getMonth()&&viewYear===today.getFullYear();
     if(isToday)btn.classList.add('today');
-    if(!isPast&&!isWeekend&&!isBlocked){
+    if(!isPast&&!isWeekend&&!isFull){
       btn.classList.add('available');
       if(selectedDate===key)btn.classList.add('selected');
       btn.onclick=()=>pickDate(key,d);
@@ -1148,13 +1318,14 @@ function renderCalendar(){
   }
 }
 
-function pickDate(key,d){
+async function pickDate(key,d){
   selectedDate=key;selectedSlot=null;
   renderCalendar();
   const dateObj=new Date(key+'T12:00:00');
   document.getElementById('step-time-hint').textContent=dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
   showStep('step-time');
-  const taken=TAKEN[key]||[];
+  const unavail=await fetchUnavailable(viewYear,viewMonth);
+  const taken=unavail[key]||[];
   const grid=document.getElementById('slots-grid');
   grid.innerHTML='';
   ALL_SLOTS.forEach(s=>{

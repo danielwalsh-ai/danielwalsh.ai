@@ -1,0 +1,161 @@
+/* danielwalsh.ai — shared styles for content pages (index.html keeps its own inline CSS) */
+:root {
+  --bg: #07070f;
+  --bg2: #0d0f1c;
+  --bg3: #111326;
+  --amber: #f0a030;
+  --amber-dim: #a06c18;
+  --amber-glow: rgba(240,160,48,0.12);
+  --white: #f0f0f8;
+  --muted: rgba(240,240,248,0.45);
+  --body: #9aa0b5;
+  --border: rgba(240,240,248,0.08);
+  --border-amber: rgba(240,160,48,0.25);
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+a { color: var(--amber); }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 40px;
+  background: rgba(7,7,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--white); }
+.logo-mark {
+  width: 38px; height: 38px; border-radius: 10px; background: var(--amber);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #07070f;
+  letter-spacing: -0.5px;
+}
+.logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+.logo-text span { color: var(--amber); }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--white); }
+.nav-cta {
+  background: var(--amber); color: #07070f; border: none; padding: 10px 22px; border-radius: 8px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+}
+.nav-cta:hover { background: #ffb84d; transform: translateY(-1px); }
+.nav-linkedin { color: var(--muted); display: inline-flex; transition: color .2s; }
+.nav-linkedin:hover { color: var(--white); }
+
+/* ─── PAGE LAYOUT ─── */
+main { max-width: 880px; margin: 0 auto; padding: 150px 40px 80px; }
+.breadcrumbs { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.breadcrumbs a { color: var(--muted); text-decoration: none; }
+.breadcrumbs a:hover { color: var(--amber); }
+.page-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border-amber); background: var(--amber-glow);
+  padding: 6px 16px; border-radius: 100px;
+  font-size: 12px; font-weight: 500; color: var(--amber);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px;
+}
+h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 700; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 20px; }
+.page-lede { font-size: 19px; color: var(--body); max-width: 640px; margin-bottom: 8px; }
+
+.prose { margin-top: 48px; }
+.prose h2 { font-size: 26px; letter-spacing: -0.5px; margin: 44px 0 16px; }
+.prose h3 { font-size: 19px; margin: 32px 0 12px; }
+.prose p { color: var(--body); margin-bottom: 16px; max-width: 72ch; }
+.prose ul { color: var(--body); margin: 0 0 16px 22px; }
+.prose li { margin-bottom: 8px; }
+.prose strong { color: var(--white); }
+
+/* ─── PRICE PANEL ─── */
+.price-panel {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 28px 32px; margin: 40px 0;
+}
+.price-panel .amount { font-family: 'Space Grotesk', sans-serif; font-size: 34px; font-weight: 700; color: var(--amber); }
+.price-panel .unit { font-size: 14px; color: var(--muted); }
+.btn-primary {
+  background: var(--amber); color: #07070f; border: none; padding: 14px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: #ffb84d; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(240,160,48,0.35); }
+
+/* ─── FAQ ─── */
+details.faq { border-bottom: 1px solid var(--border); padding: 4px 0; }
+details.faq summary {
+  cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; padding: 18px 0; color: var(--white);
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: '+'; color: var(--amber); font-size: 22px; font-weight: 400; flex-shrink: 0; margin-left: 16px; }
+details.faq[open] summary::after { content: '−'; }
+details.faq p { color: var(--body); padding: 0 0 18px; max-width: 72ch; }
+
+/* ─── CTA BAND ─── */
+.cta-band {
+  background: #12163a; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 44px 40px; margin: 64px 0 0; text-align: center;
+}
+.cta-band h2 { font-size: 28px; letter-spacing: -0.5px; margin-bottom: 10px; }
+.cta-band p { color: var(--body); margin-bottom: 26px; }
+
+/* ─── RELATED LINKS ─── */
+.related { margin-top: 56px; }
+.related h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 16px; }
+.related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.related-grid a {
+  display: block; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; color: var(--white); text-decoration: none; font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 600; transition: border-color .2s, transform .2s;
+}
+.related-grid a:hover { border-color: var(--border-amber); transform: translateY(-2px); }
+.related-grid a span { display: block; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 4px; }
+
+/* ─── FOOTER ─── */
+footer { border-top: 1px solid var(--border); background: var(--bg2); margin-top: 90px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; padding: 56px 40px 40px; display: flex; justify-content: space-between; gap: 60px; flex-wrap: wrap; }
+.footer-brand { max-width: 280px; }
+.footer-logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; color: var(--white); }
+.footer-wordmark span { color: var(--amber); }
+.footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.footer-email { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; display: block; }
+.footer-email:hover { color: var(--amber); }
+.footer-linkedin { color: var(--muted); display: inline-flex; margin-top: 10px; transition: color .2s; }
+.footer-linkedin:hover { color: var(--amber); }
+.footer-cols { display: flex; gap: 60px; }
+.footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 140px; }
+.footer-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 4px; }
+.footer-col a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-col a:hover { color: var(--amber); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding: 18px 40px;
+  display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+  font-size: 12px; color: rgba(240,240,248,0.28); max-width: 1100px; margin: 0 auto;
+}
+.footer-bottom a { color: rgba(240,240,248,0.28); text-decoration: none; }
+.footer-bottom a:hover { color: var(--amber); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 14px 24px; }
+  .nav-links { display: none; }
+  main { padding: 130px 24px 60px; }
+  .related-grid { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; gap: 40px; padding: 48px 24px 32px; }
+}
+@media (max-width: 560px) {
+  main { padding: 120px 20px 48px; }
+  h1 { letter-spacing: -1px; }
+  .price-panel { padding: 22px 20px; }
+  .cta-band { padding: 32px 22px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}

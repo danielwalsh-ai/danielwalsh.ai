@@ -75,14 +75,26 @@ async function initDB() {
 /* ════════════════════════════════════
    SERVICES
 ════════════════════════════════════ */
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Service clients are only constructed when their key is present, so the server
+// boots (and the site/admin stay up) even if a credential is missing — each route
+// that needs a client returns a clear error instead of crashing on startup.
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
-const gocardless = GoCardless(
-  process.env.GOCARDLESS_ACCESS_TOKEN,
-  constants.Environments.Live
-);
+// Defaults to Sandbox; set GOCARDLESS_ENVIRONMENT=live in production to take real payments.
+const gocardless = process.env.GOCARDLESS_ACCESS_TOKEN
+  ? GoCardless(
+      process.env.GOCARDLESS_ACCESS_TOKEN,
+      process.env.GOCARDLESS_ENVIRONMENT === 'live'
+        ? constants.Environments.Live
+        : constants.Environments.Sandbox
+    )
+  : null;
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const anthropic = process.env.ANTHROPIC_API_KEY
+  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  : null;
 
 /* ════════════════════════════════════
    HELPERS
@@ -190,6 +202,10 @@ app.post('/api/bookings/initiate', bookingLimiter, async (req, res) => {
       return res.json({ success: true, bookingId, free: true });
     }
 
+    if (!gocardless) {
+      return res.status(503).json({ error: 'Payments are not configured yet. Please try a free discovery call.' });
+    }
+
     // Create GoCardless billing request for paid bookings
     const billingRequest = await gocardless.billingRequests.create({
       payment_request: {
@@ -287,10 +303,13 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
   if (!message || typeof message !== 'string' || message.length > 2000) {
     return res.status(400).json({ error: 'Invalid message' });
   }
+  if (!anthropic) {
+    return res.status(503).json({ error: 'Chat is not configured yet.' });
+  }
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       max_tokens: 400,
       system: `You are the AI assistant for Daniel Walsh's AI consultancy (danielwalsh.ai). 
 Daniel is a UK-based AI consultant certified by Google, Oxford University, and MIT.
@@ -396,6 +415,10 @@ app.put('/api/admin/availability', async (req, res) => {
    EMAIL — RESEND
 ════════════════════════════════════ */
 async function sendConfirmationEmail({ name, email, service, date, time_slot, price, bookingId }) {
+  if (!resend) {
+    console.warn('⚠ Resend not configured — skipping confirmation email for booking', bookingId);
+    return;
+  }
   const dateFormatted = formatDate(date);
   const priceFormatted = formatPrice(price);
 
@@ -473,9 +496,13 @@ app.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOSt
 /* ════════════════════════════════════
    START
 ════════════════════════════════════ */
-initDB().then(() => {
-  app.listen(PORT, () => console.log(`✓ danielwalsh.ai server running on port ${PORT}`));
-}).catch(err => {
-  console.error('Failed to start:', err);
-  process.exit(1);
-});
+initDB()
+  .catch(err => {
+    // Don't hard-crash if the DB is unreachable — the site, AI chat and admin login
+    // still work; only booking/availability need the database. Logs a clear warning.
+    console.warn('⚠ Database unavailable — bookings/availability disabled until it connects.');
+    console.warn('  Reason:', err.message);
+  })
+  .finally(() => {
+    app.listen(PORT, () => console.log(`✓ danielwalsh.ai server running on port ${PORT}`));
+  });

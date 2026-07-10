@@ -323,7 +323,7 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
       model: 'claude-sonnet-5',
       max_tokens: 400,
       system: `You are the AI assistant for Daniel Walsh's AI consultancy (danielwalsh.ai). 
-Daniel is a UK-based AI consultant certified by Google, Oxford University, and MIT.
+Daniel is an AI consultant based in the UK, working with clients worldwide, certified by Google, Oxford University, and MIT.
 Services: Strategy & Advisory £500/session (60 min), AI Implementation £1,500/day, Training & Workshops £1,200/day, Fractional AI Officer £5,000/month (25hrs, 12-month minimum).
 Be concise, confident, and professional. Max 2-3 sentences. Never fabricate case studies or client names.
 Always encourage booking a free discovery call for detailed questions.`,
@@ -462,7 +462,7 @@ async function sendConfirmationEmail({ name, email, service, date, time_slot, pr
         <p style="color:rgba(240,240,248,0.6);font-size:14px;margin-bottom:8px;">A video link will be sent 24 hours before your session.</p>
         <p style="color:rgba(240,240,248,0.6);font-size:14px;">To reschedule, reply to this email at least 24 hours before your session.</p>
         <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(240,240,248,0.06);font-size:12px;color:rgba(240,240,248,0.3);">
-          danielwalsh.ai · London, UK · hello@danielwalsh.ai
+          danielwalsh.ai · Worldwide · hello@danielwalsh.ai
         </div>
       </div>
     `,

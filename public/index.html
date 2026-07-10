@@ -107,19 +107,14 @@ nav.scrolled { padding: 14px 40px; }
 /* ─── HERO ─── */
 #hero {
   min-height: 100vh; position: relative;
-  display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
-  text-align: left; padding: 120px 40px 80px 7vw;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 40px 80px;
   overflow: hidden;
 }
-#mesh-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; }
-.hero-content { position: relative; z-index: 1; max-width: 620px; }
-/* Narrow screens: HUD sits faint behind centred text (JS dims + recentres it) */
-@media (max-width: 1000px) {
-  #hero { flex-direction: column; justify-content: center; text-align: center; padding: 120px 40px 80px; }
-  .hero-content { max-width: 800px; }
-  .hero-sub { margin: 0 auto 48px; }
-  .hero-actions { justify-content: center; }
-}
+/* Full-page parallax backdrop: fixed behind all content, ghosting through
+   translucent section backgrounds, spiraling with scroll. */
+#mesh-canvas { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; pointer-events: none; }
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   border: 1px solid var(--border-amber);
@@ -140,9 +135,9 @@ nav.scrolled { padding: 14px 40px; }
 .hero-title .dim { color: var(--muted); }
 .hero-sub {
   font-size: 18px; color: var(--muted); line-height: 1.7;
-  max-width: 520px; margin: 0 0 48px; font-weight: 400;
+  max-width: 560px; margin: 0 auto 48px; font-weight: 400;
 }
-.hero-actions { display: flex; align-items: center; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+.hero-actions { display: flex; align-items: center; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .btn-primary {
   background: var(--amber); color: #07070f;
   border: none; padding: 14px 32px; border-radius: 10px;
@@ -169,7 +164,7 @@ nav.scrolled { padding: 14px 40px; }
 
 /* ─── CREDENTIALS BAR ─── */
 #credentials {
-  background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: rgba(13,15,28,0.82); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   padding: 28px 40px;
   display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap;
 }
@@ -199,7 +194,7 @@ section { padding: 80px 40px; }
 .section-sub { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.7; }
 
 /* ─── SERVICES ─── */
-#services { background: var(--bg); }
+#services { background: rgba(7,7,15,0.72); }
 .services-intro { margin-bottom: 40px; }
 .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; }
 .service-card {
@@ -230,7 +225,7 @@ section { padding: 80px 40px; }
 .service-card:hover .service-arrow { color: var(--amber); transform: translate(3px,-3px); }
 
 /* ─── PROCESS ─── */
-#process { background: var(--bg2); }
+#process { background: rgba(13,15,28,0.78); }
 .process-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: stretch; margin-top: 48px; }
 .process-steps { display: flex; flex-direction: column; gap: 0; }
 .step {
@@ -262,7 +257,7 @@ section { padding: 80px 40px; }
 @keyframes pulseNode { 0%,100%{r:6} 50%{r:8} }
 
 /* ─── BOOKING ─── */
-#booking { background: var(--bg); }
+#booking { background: rgba(7,7,15,0.72); }
 .booking-layout { display: grid; grid-template-columns: 320px 1fr; gap: 48px; align-items: start; }
 
 /* Service selector panel */
@@ -1120,7 +1115,6 @@ footer {
    plus a slow idle drift and slight mouse-tilt parallax. */
 (function(){
   const canvas=document.getElementById('mesh-canvas');
-  const hero=document.getElementById('hero');
   const ctx=canvas.getContext('2d');
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W,H,dpr=1;
@@ -1194,13 +1188,16 @@ footer {
   /* Amber pulse pads on the die top */
   const pads=[[-0.2,-0.2],[0.2,-0.2],[-0.2,0.2],[0.2,0.2]].map(k=>({p:[k[0],0.145,k[1]]}));
 
+  /* Parallax starfield — deepest layer, drifts slower than the page */
+  const stars=[];
+  for(let i=0;i<80;i++)stars.push({x:Math.random(),y:Math.random(),depth:0.15+Math.random()*0.45,r:0.5+Math.random()*1.3});
+
   let rotY=0,targetY=0,mx=0,my=0,tmx=0,tmy=0,idle=0;
-  const TILT=0.52,SCROLL_RATE=0.0032;
+  const TILT=0.52,SCROLL_RATE=0.0040;
 
   function resize(){
-    const r=hero.getBoundingClientRect();
     dpr=Math.min(window.devicePixelRatio||1,2);
-    W=r.width;H=r.height;
+    W=window.innerWidth;H=window.innerHeight;
     canvas.width=W*dpr;canvas.height=H*dpr;
     canvas.style.width=W+'px';canvas.style.height=H+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -1218,13 +1215,26 @@ footer {
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    /* Desktop: HUD lives in the right half beside the copy. Narrow: faint, centred behind it. */
+    const sy=window.scrollY;
+    const docH=Math.max(1,document.documentElement.scrollHeight-H);
+    const p=Math.min(1,sy/docH);            /* 0 at top → 1 at page bottom */
     const narrow=W<1000;
-    const cx=narrow?W/2:W*0.72;
-    const cy=H*0.52-window.scrollY*0.15; /* slight parallax rise */
-    const R=narrow?Math.min(W,H)*0.34:Math.min(H*0.34,W*0.17);
-    const rx=TILT+tmy*0.10, ry=rotY+idle+tmx*0.10;
-    ctx.globalAlpha=narrow?0.4:1;
+
+    /* Layer 1 — starfield, scrolls at a fraction of page speed (parallax) */
+    stars.forEach(s=>{
+      const yy=((s.y*H - sy*s.depth*0.25)%H+H)%H;
+      const xx=s.x*W + Math.sin(idle*0.7+s.y*9)*6;
+      ctx.beginPath();ctx.arc(xx,yy,s.r,0,Math.PI*2);
+      ctx.fillStyle=WHITE((0.05+s.depth*0.16).toFixed(3));ctx.fill();
+    });
+
+    /* Layer 2 — the hologram, corkscrewing down the page as you scroll */
+    const cx=W*0.5 + (narrow?0:W*0.10*Math.sin(p*Math.PI*4));
+    const cy=H*0.5 + H*0.07*Math.cos(p*Math.PI*4);
+    const R=Math.min(W,H)*(0.40-0.05*Math.sin(p*Math.PI*2));
+    const rx=(TILT-0.10+p*0.85)+tmy*0.10;   /* board tips over as you descend */
+    const ry=rotY+idle+tmx*0.10;
+    ctx.globalAlpha=narrow?0.30:0.55;        /* burn-in level behind content */
 
     lines.forEach(L=>{
       const pts=L.pts.map(p=>project(p,ry,rx,R,cx,cy));
@@ -1254,12 +1264,12 @@ footer {
     });
     ctx.restore();
 
-    drawHUD(cx,cy,R,ry);
+    drawHUD(cx,cy,R,ry,p);
     ctx.globalAlpha=1;
   }
 
   /* ── HUD reticle: concentric rings + ticks + micro-readouts (screen space) ── */
-  function drawHUD(cx,cy,R,ry){
+  function drawHUD(cx,cy,R,ry,p){
     const r1=R*1.12, r2=R*1.30, r3=R*0.92;
 
     /* ring A — fine blue circle with 60 tick marks, rotates with scroll */
@@ -1313,7 +1323,7 @@ footer {
     ctx.fillStyle=AMBER(0.6);
     ctx.fillText('DW·CORE ONLINE',cx-r2*0.98,cy+r2*0.80);
     ctx.fillStyle=WHITE(0.38);
-    ctx.fillText('AI·ACCEL v5',cx+r2*0.70,cy+r2*0.80);
+    ctx.fillText('DESCENT '+String(Math.round((p||0)*100)).padStart(3,'0')+'%',cx+r2*0.70,cy+r2*0.80);
   }
 
   let frame=0;
@@ -1324,19 +1334,17 @@ footer {
     tmx+=(mx-tmx)*0.05; tmy+=(my-tmy)*0.05;
     /* self-heal if a resize event was missed (e.g. hidden tab, orientation change) */
     if(++frame%30===0){
-      const r=hero.getBoundingClientRect();
-      if(Math.abs(W-r.width)>1||Math.abs(H-r.height)>1)resize();
+      if(Math.abs(W-window.innerWidth)>1||Math.abs(H-window.innerHeight)>1)resize();
     }
     draw();
     requestAnimationFrame(loop);
   }
 
   window.addEventListener('resize',resize);
-  hero.addEventListener('mousemove',e=>{
-    const r=hero.getBoundingClientRect();
-    mx=(e.clientX-r.left)/r.width*2-1; my=(e.clientY-r.top)/r.height*2-1;
+  window.addEventListener('mousemove',e=>{
+    mx=e.clientX/W*2-1; my=e.clientY/H*2-1;
   });
-  hero.addEventListener('mouseleave',()=>{mx=0;my=0;});
+  document.addEventListener('mouseleave',()=>{mx=0;my=0;});
   resize();
   if(reduced){draw();window.addEventListener('scroll',()=>{targetY=rotY=window.scrollY*SCROLL_RATE;draw();},{passive:true});}
   else loop();

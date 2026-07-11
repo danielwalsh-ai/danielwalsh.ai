@@ -770,8 +770,11 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
 /* ─── AI CORE — central spiral vortex ─── */
 #core-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; transition: opacity 1.2s; }
 .core-vid {
-  position: absolute; left: 50%; top: 52%; transform: translate(-50%,-50%);
-  width: min(120vh, 100%); z-index: 1; pointer-events: none;
+  /* the clip's ring spans ~99% of frame width with its centre 55% down the
+     frame — size it beyond the headline width and pin the ring centre to the
+     hero text centre so the copy always sits inside the circle */
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-55%);
+  width: max(min(118vh, 1150px), 95vw); z-index: 1; pointer-events: none;
   mix-blend-mode: screen;            /* black backing disappears over the page */
   opacity: 0; transition: opacity 0.55s linear;
 }

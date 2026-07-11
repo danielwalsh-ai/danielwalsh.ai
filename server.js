@@ -31,7 +31,11 @@ app.use(helmet({
   },
 }));
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN || 'https://danielwalsh.ai' }));
-app.use(express.json());
+// The GoCardless webhook must receive the RAW body for signature verification —
+// global express.json() would consume it first, so skip that path here.
+app.use((req, res, next) =>
+  req.originalUrl === '/api/webhooks/gocardless' ? next() : express.json()(req, res, next)
+);
 app.use(express.static('public', { extensions: ['html'] })); // clean URLs: /about → about.html
 
 // Rate limiting
@@ -287,14 +291,19 @@ app.post('/api/webhooks/gocardless', express.raw({ type: 'application/json' }), 
   const sig = req.headers['webhook-signature'];
   const secret = process.env.GOCARDLESS_WEBHOOK_SECRET;
 
-  // Verify signature
+  // Verify signature (timing-safe compare on the raw body)
   const expected = crypto.createHmac('sha256', secret).update(req.body).digest('hex');
-  if (sig !== expected) return res.status(401).send('Invalid signature');
+  const sigBuf = Buffer.from(sig || '', 'utf8');
+  const expBuf = Buffer.from(expected, 'utf8');
+  if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+    return res.status(401).send('Invalid signature');
+  }
 
   const events = JSON.parse(req.body).events;
   for (const event of events) {
     if (event.resource_type === 'payments') {
-      const { id: paymentId, status } = event.links || {};
+      const paymentId = (event.links || {}).payment;
+      if (!paymentId) continue;
       if (event.action === 'paid_out') {
         await db.query(`UPDATE bookings SET status='paid' WHERE gc_payment_id=$1`, [paymentId]);
       }

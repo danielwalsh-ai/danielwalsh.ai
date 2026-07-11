@@ -51,11 +51,13 @@ async function fetchFeedItems() {
 async function writeIssue(feedItems) {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const month = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
-  const prompt = `You write the monthly AI newsletter for Daniel Walsh (danielwalsh.ai), an AI consultant certified by Google, Oxford and MIT who helps businesses worldwide put AI to work. Audience: business owners and directors — smart, busy, allergic to hype.
+  const prompt = `You write the monthly AI newsletter for Daniel Walsh (danielwalsh.ai), an AI consultant certified by Google, Oxford and MIT who helps businesses worldwide put AI to work. The audience is business owners and directors: smart, busy, and allergic to hype.
 
-Write the ${month} issue. British spelling. Plain, confident, practical. Never fabricate statistics, tools, or links.
+Write the ${month} issue. British spelling. Plain, confident and practical. Never fabricate statistics, tools, or links.
 
-You are given recent articles below. Pick the 3 most genuinely useful for business readers as "resources" — you MUST use their exact URLs and may only pick from this list.
+Write the way a person actually speaks. Use natural contractions (you'll, it's, don't, you're) and vary your sentence length. Do NOT use em dashes or en dashes (— or –) anywhere in your writing. Use full stops, commas, colons or brackets instead. Avoid stiff, robotic phrasing and corporate filler.
+
+You are given recent articles below. Pick the 3 most genuinely useful for business readers as "resources". You must use their exact URLs and may only pick from this list.
 
 ARTICLES:
 ${feedItems.map((it, i) => `${i + 1}. [${it.source}] ${it.title} — ${it.link}\n   ${it.desc}`).join('\n')}
@@ -142,7 +144,7 @@ function renderEmail(issue, email) {
 function welcomeHtml(issue, email) {
   const heading = `
       <h1 style="font-size:23px;color:#ffffff;margin:0 0 12px;">Welcome aboard.</h1>
-      <p style="font-size:14px;line-height:1.7;color:#aab2c0;margin-bottom:24px;">Thanks for pinning yourself on the globe — you're now on <b style="color:#f0a030;">The AI Briefing</b>. Once a month I send three practical AI tips and three resources worth your time — no hype, unsubscribe anytime. To get you started, here's this month's issue in full:</p>
+      <p style="font-size:14px;line-height:1.7;color:#aab2c0;margin-bottom:24px;">Thanks for pinning yourself on the globe. You're now on <b style="color:#f0a030;">The AI Briefing</b>. Once a month I send three practical AI tips and three resources worth your time. No hype, and you can unsubscribe anytime. To get you started, here's this month's issue in full:</p>
       <div style="border-top:1px solid rgba(0,229,255,0.2);margin:0 0 24px;"></div>`;
   return shell('[ WELCOME ]', heading, issueInner(issue), email);
 }

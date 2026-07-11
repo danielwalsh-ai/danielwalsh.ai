@@ -264,7 +264,7 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
       to: 'hello@danielwalsh.ai',
       subject: `New globe lead: ${email}`,
       html: `<p><strong>${email}</strong> pinned themselves on the globe at ${lat.toFixed(1)}, ${lng.toFixed(1)}.</p>
-             <p>Worth a hello — they took the time to engage.</p>`,
+             <p>Worth a hello, they took the time to engage.</p>`,
     }).catch(err => console.error('Pin alert email failed:', err.message));
 
     // Welcome the new subscriber with this month's issue — background, never blocks the pin
@@ -276,7 +276,7 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
           await resend.emails.send({
             from: 'Daniel Walsh <hello@danielwalsh.ai>',
             to: email,
-            subject: 'Welcome to The AI Briefing — this month’s issue inside',
+            subject: 'Welcome to The AI Briefing: this month’s issue inside',
             html: newsletter.welcomeHtml(issue, email),
           });
         } catch (err) { console.error('Welcome email failed:', err.message); }
@@ -373,7 +373,7 @@ app.post('/api/bookings/initiate', bookingLimiter, async (req, res) => {
     // Create GoCardless billing request for paid bookings
     const billingRequest = await gocardless.billingRequests.create({
       payment_request: {
-        description: `${service} — ${formatDate(date)} at ${time_slot}`,
+        description: `${service}, ${formatDate(date)} at ${time_slot}`,
         amount: priceInt * 100, // GoCardless uses pence
         currency: 'GBP',
         app_fee: 0,
@@ -595,7 +595,7 @@ async function sendConfirmationEmail({ name, email, service, date, time_slot, pr
   await resend.emails.send({
     from: 'Daniel Walsh AI <hello@danielwalsh.ai>',
     to: email,
-    subject: `Booking confirmed — ${service}`,
+    subject: `Booking confirmed: ${service}`,
     html: `
       <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;background:#07070f;color:#f0f0f8;padding:40px;border-radius:16px;">
         <div style="margin-bottom:32px;">
@@ -630,7 +630,7 @@ async function sendConfirmationEmail({ name, email, service, date, time_slot, pr
   await resend.emails.send({
     from: 'danielwalsh.ai <hello@danielwalsh.ai>',
     to: 'hello@danielwalsh.ai',
-    subject: `New booking: ${name} — ${service}`,
+    subject: `New booking: ${name}, ${service}`,
     html: `
       <p><strong>New booking #${bookingId}</strong></p>
       <p><strong>Client:</strong> ${name} (${email})</p>

@@ -105,9 +105,9 @@
       myPin=pending;pending=null;
       pins.push({lat:myPin.lat,lng:myPin.lng});
       try{localStorage.setItem('dw_globe_pin',JSON.stringify(myPin));}catch(e){}
-      pinNote.textContent='You’re on the map — welcome aboard. ✓';
+      pinNote.textContent='You’re on the map. Welcome aboard. ✓';
       setTimeout(()=>{pinForm.style.display='none';},1600);
-    }catch(err){pinNote.textContent=err.message||'Something went wrong — try again.';}
+    }catch(err){pinNote.textContent=err.message||'Something went wrong. Give it another go.';}
   }
 
   /* tap position → lat/lng on the front of the sphere (inverse of the render) */
@@ -295,7 +295,7 @@
         pending={lat:autoGeo.lat, lng:autoGeo.lng};
         const country=countryAt(autoGeo.lat,autoGeo.lng)||autoGeo.country;
         pinHead.textContent=country
-          ? 'Looks like you’re in '+country+' — drop your email to join the AI newsletter.'
+          ? 'Looks like you’re in '+country+'. Drop your email to join the AI newsletter.'
           : 'Drop your email to join the AI newsletter.';
         pinForm.style.display='block';
         pinNote.textContent='Practical AI tips, occasionally. Unsubscribe anytime.';
@@ -332,7 +332,7 @@
         pending=hit;
         const country=countryAt(hit.lat,hit.lng);
         pinHead.textContent=country
-          ? 'Nice spot — '+country+'. Leave your email to join the AI newsletter.'
+          ? 'Nice spot, '+country+'. Leave your email to join the AI newsletter.'
           : 'Mid-ocean? Bold choice. Leave your email to join the AI newsletter.';
         pinForm.style.display='block';
         pinNote.textContent='Practical AI tips, occasionally. Unsubscribe anytime.';
@@ -580,13 +580,13 @@ let chatOpen=false;
 const chatEl=document.getElementById('chat-messages');
 const AI={
   default:[
-    "That's a great question. AI implementation varies significantly by industry and business size. Could you tell me a bit more about your organisation?",
-    "Happy to help. Daniel specialises in exactly this area — would you like me to recommend the right service, or book a free discovery call to discuss in detail?",
-    "The short answer depends on your current tech stack and team capability. A 30-minute discovery call is the fastest way to get a tailored answer — and it's free.",
+    "Good question. How AI fits really depends on your industry and the size of your business, so tell me a bit more about your organisation and I'll point you the right way.",
+    "Happy to help. This is exactly Daniel's area. Would you like me to recommend the right service, or shall I help you book a free discovery call to talk it through?",
+    "The honest answer depends on your current tools and your team. A 30-minute discovery call is the quickest way to get an answer tailored to you, and it's free.",
   ],
-  book:"You can book directly on this page — scroll to 'Book a session', pick a date and time, and payment is handled instantly via GoCardless.",
-  price:"Pricing: £500 for a 60-minute strategy session, £1,500/day for AI implementation, £1,200/day for training workshops, and £5,000/month (12-month minimum, 25hrs/month) for the Fractional AI Officer retainer.",
-  cred:"Daniel holds certifications from Google, Oxford University, and MIT — a rare combination of academic rigour and hands-on delivery experience.",
+  book:"You can book right here on the page. Scroll to 'Book a session', pick a date and time, and payment is handled instantly through GoCardless.",
+  price:"Here's the pricing: £500 for a 60-minute strategy session, £1,500/day for AI implementation, £1,200/day for training workshops, and £5,000/month (25 hours a month, 12-month minimum) for the Fractional AI Officer retainer.",
+  cred:"Daniel is certified by Google, Oxford University and MIT. It's a rare mix of academic rigour and hands-on delivery experience.",
 };
 function addMsg(text,role){
   const m=document.createElement('div');m.className='msg '+role;
@@ -620,7 +620,7 @@ function toggleChat(){
   chatOpen=!chatOpen;
   document.getElementById('chat-panel').classList.toggle('open',chatOpen);
   if(chatOpen&&chatEl.children.length===0){
-    setTimeout(()=>addMsg("Hi! I'm Daniel's AI assistant. Ask me anything about services, pricing, or how AI could help your business — or I can help you book right now.",'ai'),300);
+    setTimeout(()=>addMsg("Hi, I'm Daniel's AI assistant. Ask me anything about the services, pricing, or how AI could help your business. Or if you're ready, I can help you book right now.",'ai'),300);
   }
 }
 

@@ -9,7 +9,7 @@
   --amber-dim: #a06c18;
   --amber-glow: rgba(240,160,48,0.12);
   --white: #f0f0f8;
-  --muted: rgba(240,240,248,0.45);
+  --muted: rgba(240,240,248,0.62);
   --body: #9aa0b5;
   --border: rgba(0,229,255,0.16);
   --border-amber: rgba(240,160,48,0.3);
@@ -173,4 +173,4 @@ body::before {
 .price-panel, .related-grid a, details.faq, .cta-band { box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06); }
 .related-grid a:hover { border-color: rgba(0,229,255,0.4); box-shadow: 0 0 22px rgba(0,229,255,0.14); }
 nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05); }
-.footer-col-title { color: var(--cyan-dim); }
+.footer-col-title { color: rgba(0,229,255,0.75); }

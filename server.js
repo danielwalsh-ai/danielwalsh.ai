@@ -18,17 +18,18 @@ const PORT = process.env.PORT || 3000;
 /* ════════════════════════════════════
    MIDDLEWARE
 ════════════════════════════════════ */
-// The site is a single HTML file with inline JS and onclick handlers, so the
-// CSP must permit inline scripts — helmet's default (script-src 'self',
-// script-src-attr 'none') silently disables the whole frontend.
+// Page scripts live in external files (/js/*.js) so script-src stays a strict
+// 'self' — no 'unsafe-inline', effective against XSS. Legacy onclick=
+// attributes in the markup still need script-src-attr 'unsafe-inline'.
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      'script-src': ["'self'", "'unsafe-inline'"],
+      'script-src': ["'self'"],
       'script-src-attr': ["'unsafe-inline'"],
     },
   },
+  strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true, preload: true },
 }));
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN || 'https://danielwalsh.ai' }));
 // The GoCardless webhook must receive the RAW body for signature verification —

@@ -700,6 +700,71 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
     linear-gradient(var(--cyan-dim),var(--cyan-dim)) right 0 bottom 0/1px 14px;
   background-repeat: no-repeat;
 }
+
+/* ─── JARVIS DASHBOARD (hero) ─── */
+.hud-panel {
+  position: absolute; z-index: 2;
+  background: rgba(2,10,14,0.42);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0,229,255,0.22); border-radius: 8px;
+  animation: hudPulse 3.2s ease-in-out infinite;
+  transform: perspective(700px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));
+}
+@keyframes hudPulse {
+  0%,100% { border-color: rgba(0,229,255,0.16); box-shadow: 0 0 14px rgba(0,229,255,0.05); }
+  50%     { border-color: rgba(0,229,255,0.40); box-shadow: 0 0 26px rgba(0,229,255,0.14); }
+}
+.hud-status {
+  top: 96px; left: 50%; margin-left: -280px; width: 560px;
+  display: flex; justify-content: center; gap: 26px; padding: 10px 20px;
+}
+.hud-stat { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; color: rgba(240,240,248,.5); text-transform: uppercase; white-space: nowrap; }
+.hud-stat b { color: var(--cyan); font-weight: 600; }
+.ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #2aff9e; box-shadow: 0 0 9px #2aff9e; display: inline-block; margin-right: 6px; animation: blinkDot 1.4s infinite; }
+.hud-status .hud-stat:first-child b { color: #2aff9e; }
+@keyframes blinkDot { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+.tl-head { font-family: 'Space Grotesk', sans-serif; font-size: 9.5px; letter-spacing: .14em; color: var(--cyan-dim); margin-bottom: 8px; }
+.hud-terminal {
+  left: 22px; top: 50%; margin-top: -170px; width: 285px; height: 340px;
+  padding: 12px 14px; overflow: hidden;
+}
+#hud-log { font-family: Consolas, 'Courier New', monospace; font-size: 10.5px; line-height: 1.6; color: rgba(0,229,255,0.72); white-space: pre-wrap; word-break: break-all; }
+#hud-log .warn { color: var(--amber); }
+.hud-right { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); width: 268px; display: flex; flex-direction: column; gap: 12px; z-index: 2; }
+.hud-side { position: relative; padding: 12px 14px; }
+#hud-diag { font-family: Consolas, monospace; font-size: 10px; line-height: 1.7; color: rgba(240,240,248,.55); height: 88px; overflow: hidden; }
+#hud-diag b { color: #2aff9e; font-weight: 400; }
+#hud-diag .warn b { color: var(--amber); }
+.hud-command {
+  bottom: 74px; left: 50%; margin-left: -230px; width: 460px;
+  display: flex; gap: 8px; padding: 10px 12px; align-items: center;
+}
+#hud-input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,229,255,0.18); border-radius: 6px; padding: 9px 12px; color: var(--white); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+#hud-input:focus { border-color: rgba(0,229,255,0.5); box-shadow: 0 0 12px rgba(0,229,255,0.15); }
+#hud-mic { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(0,229,255,0.4); background: rgba(0,229,255,0.08); color: var(--cyan); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; animation: micGlow 2.4s ease-in-out infinite; }
+#hud-mic.listening { border-color: var(--amber); color: var(--amber); animation: none; box-shadow: 0 0 18px rgba(240,160,48,0.5); }
+@keyframes micGlow { 0%,100% { box-shadow: 0 0 8px rgba(0,229,255,0.2); } 50% { box-shadow: 0 0 20px rgba(0,229,255,0.45); } }
+@media (max-width: 1400px) { .hud-terminal, .hud-right { display: none; } }
+@media (max-width: 760px) { .hud-status, .hud-command { display: none; } }
+
+/* card tilt (service cards join the HUD panels) */
+.service-card { transform: perspective(700px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)); }
+
+/* ripple + glitch on interactive elements */
+.btn-primary, .nav-cta, .chat-send, .modal-pay-btn { position: relative; overflow: hidden; }
+.ripple { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.55); transform: translate(-50%,-50%); animation: rippleAnim .6s ease-out forwards; pointer-events: none; }
+@keyframes rippleAnim { to { width: 240px; height: 240px; opacity: 0; } }
+.btn-primary:hover, .nav-cta:hover { animation: btnGlitch .28s steps(2) 1; }
+@keyframes btnGlitch {
+  20% { transform: translate(1px,-1px) skewX(1.5deg); }
+  40% { transform: translate(-1px,1px); }
+  60% { transform: translate(1px,0) skewX(-1deg); }
+  80% { transform: translate(0,-1px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-panel, .ai-dot, #hud-mic { animation: none; }
+  .btn-primary:hover, .nav-cta:hover { animation: none; }
+}
 </style>
 </head>
 <body>
@@ -739,6 +804,41 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       <a href="#services" class="btn-ghost">View services</a>
     </div>
   </div>
+
+  <!-- JARVIS DASHBOARD -->
+  <div class="hud-panel hud-status tilt">
+    <span class="hud-stat"><span class="ai-dot"></span><b>AI ONLINE</b></span>
+    <span class="hud-stat">SYS <b id="hud-time">--:--:--</b></span>
+    <span class="hud-stat">CPU <b id="hud-cpu">--%</b></span>
+    <span class="hud-stat">MEM <b id="hud-mem">--%</b></span>
+    <span class="hud-stat">LINK <b>SECURE</b></span>
+  </div>
+
+  <div class="hud-panel hud-terminal tilt">
+    <div class="tl-head">// EXECUTION LOG</div>
+    <div id="hud-log"></div>
+  </div>
+
+  <div class="hud-right">
+    <div class="hud-panel hud-side tilt">
+      <div class="tl-head">// TELEMETRY</div>
+      <canvas id="hud-chart" width="240" height="58"></canvas>
+    </div>
+    <div class="hud-panel hud-side tilt">
+      <div class="tl-head">// AUDIO</div>
+      <canvas id="hud-wave" width="240" height="40"></canvas>
+    </div>
+    <div class="hud-panel hud-side tilt">
+      <div class="tl-head">// DIAGNOSTICS</div>
+      <div id="hud-diag"></div>
+    </div>
+  </div>
+
+  <div class="hud-panel hud-command tilt">
+    <input id="hud-input" type="text" placeholder="Ask the system anything&#8230;" autocomplete="off">
+    <button id="hud-mic" aria-label="Voice command"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button>
+  </div>
+
   <div class="scroll-hint">
     <div class="scroll-line"></div>
     <span>Scroll</span>
@@ -1583,6 +1683,164 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   resize();
   if(reduced){draw();}
   else loop();
+})();
+
+/* ════ JARVIS DASHBOARD ════ */
+(function(){
+  const $=id=>document.getElementById(id);
+  if(!$('hud-time'))return;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* status bar: clock + fake load metrics (random walk) */
+  let cpu=34,mem=52;
+  setInterval(()=>{ $('hud-time').textContent=new Date().toLocaleTimeString('en-GB'); },1000);
+  setInterval(()=>{
+    cpu=Math.max(12,Math.min(88,cpu+(Math.random()-0.5)*9));
+    mem=Math.max(30,Math.min(80,mem+(Math.random()-0.5)*4));
+    $('hud-cpu').textContent=cpu.toFixed(0)+'%';
+    $('hud-mem').textContent=mem.toFixed(0)+'%';
+  },850);
+
+  /* streaming terminal */
+  const LOGS=[
+    'spawn agent.discovery --session={S}',
+    'claude.messages.create tokens={T} ok',
+    'vector.index query k=12 ... {M}ms',
+    'pipeline.report render p95=1.2s',
+    'db.pool acquire conn=4/20',
+    'webhook.gocardless sig=verified',
+    'guardrail.scan pii=none risk=low',
+    'embed.batch 128/128 complete',
+    'cache.layer hit_ratio=94.{D}%',
+    'router.model select=sonnet ctx=64k',
+    'cron.daily_report armed 18:00Z',
+    'tls.cert valid 89d remaining',
+    'geo.pin lookup country=OK {M}ms',
+    'audio.stream buffer=stable',
+  ];
+  const log=$('hud-log');
+  function addLog(){
+    const t=new Date().toLocaleTimeString('en-GB',{hour12:false});
+    let line=LOGS[Math.floor(Math.random()*LOGS.length)]
+      .replace('{S}',Math.random().toString(36).slice(2,8))
+      .replace('{T}',200+Math.floor(Math.random()*900))
+      .replace('{M}',3+Math.floor(Math.random()*40))
+      .replace('{D}',Math.floor(Math.random()*9));
+    const div=document.createElement('div');
+    if(Math.random()<0.07){div.className='warn';line+='  [retry ok]';}
+    div.textContent='['+t+'] '+line;
+    log.appendChild(div);
+    while(log.children.length>16)log.removeChild(log.firstChild);
+  }
+  for(let i=0;i<10;i++)addLog();
+  setInterval(addLog,1400);
+
+  /* telemetry chart - rolling line */
+  const ch=$('hud-chart'),chx=ch.getContext('2d');
+  const series=Array(60).fill(40);
+  setInterval(()=>{ series.push(cpu+Math.random()*6-3); series.shift(); },400);
+  function drawChart(){
+    chx.clearRect(0,0,240,58);
+    chx.beginPath();
+    series.forEach((v,i)=>{ const x=i*4, y=54-(v/100)*48; i?chx.lineTo(x,y):chx.moveTo(x,y); });
+    chx.strokeStyle='rgba(0,229,255,0.8)'; chx.lineWidth=1.2; chx.stroke();
+    chx.lineTo(236,58); chx.lineTo(0,58); chx.closePath();
+    chx.fillStyle='rgba(0,229,255,0.07)'; chx.fill();
+  }
+
+  /* audio waveform */
+  const wv=$('hud-wave'),wvx=wv.getContext('2d');
+  let wt=0;
+  window.__hudAmp=1;
+  function drawWave(){
+    wt+=0.09; wvx.clearRect(0,0,240,40);
+    const amp=window.__hudAmp;
+    for(let i=0;i<48;i++){
+      const h=(3+Math.abs(Math.sin(wt+i*0.42))*14*amp+Math.random()*2)*Math.min(1,amp);
+      wvx.fillStyle=i%8===0?'rgba(240,160,48,0.75)':'rgba(0,229,255,0.55)';
+      wvx.fillRect(i*5,20-h/2,3,h);
+    }
+  }
+
+  /* diagnostics */
+  const DIAG=['NET LINK','TLS CERT','DB POOL','API GATEWAY','MODEL ROUTER','RATE LIMITER','WEBHOOKS','EMAIL RELAY','VECTOR STORE','SCHEDULER'];
+  const dg=$('hud-diag'); let di=0;
+  function addDiag(){
+    const name=DIAG[di++%DIAG.length];
+    const warn=Math.random()<0.08;
+    const div=document.createElement('div');
+    if(warn)div.className='warn';
+    div.innerHTML=name.padEnd(14,'\u00a0')+' <b>'+(warn?'RECHECK':'OK')+'</b>';
+    dg.appendChild(div);
+    while(dg.children.length>5)dg.removeChild(dg.firstChild);
+  }
+  for(let i=0;i<5;i++)addDiag();
+  setInterval(addDiag,2100);
+
+  function hudLoop(){ drawChart(); drawWave(); requestAnimationFrame(hudLoop); }
+  if(!reduced)hudLoop(); else {drawChart();drawWave();}
+
+  /* mouse-tilt parallax on panels + service cards */
+  if(!reduced){
+    let pend=null;
+    document.addEventListener('mousemove',e=>{ pend={x:e.clientX,y:e.clientY}; },{passive:true});
+    (function tiltLoop(){
+      if(pend){
+        document.querySelectorAll('.tilt,.service-card').forEach(el=>{
+          const r=el.getBoundingClientRect();
+          if(r.width===0)return;
+          const dx=(pend.x-(r.left+r.width/2))/r.width, dy=(pend.y-(r.top+r.height/2))/r.height;
+          if(Math.abs(dx)<2.5&&Math.abs(dy)<2.5){
+            el.style.setProperty('--ty',(dx*2.2)+'deg');
+            el.style.setProperty('--tx',(-dy*2.2)+'deg');
+          } else { el.style.setProperty('--ty','0deg'); el.style.setProperty('--tx','0deg'); }
+        });
+        pend=null;
+      }
+      requestAnimationFrame(tiltLoop);
+    })();
+  }
+
+  /* ripple on buttons */
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('.btn-primary,.nav-cta,.chat-send,.modal-pay-btn,#hud-mic,#pin-submit');
+    if(!b)return;
+    const rect=b.getBoundingClientRect();
+    const r=document.createElement('span');
+    r.className='ripple';
+    r.style.left=(e.clientX-rect.left)+'px';
+    r.style.top=(e.clientY-rect.top)+'px';
+    b.appendChild(r);
+    setTimeout(()=>r.remove(),650);
+  });
+
+  /* command bar routes into the AI chat */
+  function sendCommand(text){
+    if(!text)return;
+    if(!chatOpen)toggleChat();
+    const inp=document.getElementById('chat-input');
+    inp.value=text;
+    sendChat();
+    $('hud-input').value='';
+  }
+  $('hud-input').addEventListener('keydown',e=>{ if(e.key==='Enter')sendCommand(e.target.value.trim()); });
+
+  /* mic: real voice commands where the browser supports it */
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const mic=$('hud-mic');
+  if(SR){
+    const rec=new SR(); rec.lang='en-GB'; rec.interimResults=false;
+    let listening=false;
+    mic.addEventListener('click',()=>{
+      if(listening){rec.stop();return;}
+      try{ rec.start(); listening=true; mic.classList.add('listening'); window.__hudAmp=2.2; }catch(e){}
+    });
+    rec.onresult=ev=>{ const said=ev.results[0][0].transcript; $('hud-input').value=said; sendCommand(said); };
+    rec.onend=()=>{ listening=false; mic.classList.remove('listening'); window.__hudAmp=1; };
+    rec.onerror=()=>{ listening=false; mic.classList.remove('listening'); window.__hudAmp=1; };
+  } else {
+    mic.addEventListener('click',()=>{ $('hud-input').focus(); });
+  }
 })();
 
 /* ════ NAV ════ */

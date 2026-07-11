@@ -1,18 +1,20 @@
 /* danielwalsh.ai — shared styles for content pages (index.html keeps its own inline CSS) */
 :root {
-  --bg: #07070f;
-  --bg2: #0d0f1c;
-  --bg3: #111326;
+  --bg: #000000;
+  --bg2: #020608;
+  --bg3: #040c12;
+  --cyan: #00e5ff;
+  --cyan-dim: rgba(0,229,255,0.5);
   --amber: #f0a030;
   --amber-dim: #a06c18;
   --amber-glow: rgba(240,160,48,0.12);
   --white: #f0f0f8;
   --muted: rgba(240,240,248,0.45);
   --body: #9aa0b5;
-  --border: rgba(240,240,248,0.08);
-  --border-amber: rgba(240,160,48,0.25);
-  --radius: 12px;
-  --radius-lg: 20px;
+  --border: rgba(0,229,255,0.16);
+  --border-amber: rgba(240,160,48,0.3);
+  --radius: 6px;
+  --radius-lg: 10px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
@@ -25,7 +27,7 @@ nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 40px;
-  background: rgba(7,7,15,0.85);
+  background: rgba(0,0,0,0.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
@@ -101,7 +103,7 @@ details.faq p { color: var(--body); padding: 0 0 18px; max-width: 72ch; }
 
 /* ─── CTA BAND ─── */
 .cta-band {
-  background: #12163a; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: #030a12; border: 1px solid var(--border); border-radius: var(--radius-lg);
   padding: 44px 40px; margin: 64px 0 0; text-align: center;
 }
 .cta-band h2 { font-size: 28px; letter-spacing: -0.5px; margin-bottom: 10px; }
@@ -159,3 +161,16 @@ footer { border-top: 1px solid var(--border); background: var(--bg2); margin-top
   .cta-band { padding: 32px 22px; }
   .footer-bottom { flex-direction: column; text-align: center; }
 }
+
+/* ─── JARVIS HUD LAYER (rebrand 11 Jul 2026) ─── */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,229,255,0.030) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(90deg, rgba(0,229,255,0.030) 0 1px, transparent 1px 72px);
+}
+.page-eyebrow { border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.05); color: var(--cyan); }
+.price-panel, .related-grid a, details.faq, .cta-band { box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06); }
+.related-grid a:hover { border-color: rgba(0,229,255,0.4); box-shadow: 0 0 22px rgba(0,229,255,0.14); }
+nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05); }
+.footer-col-title { color: var(--cyan-dim); }

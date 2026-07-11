@@ -43,25 +43,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #07070f;
-  --bg2: #0d0f1c;
-  --bg3: #111326;
+  /* JARVIS HUD palette (rebrand 11 Jul 2026): pitch black, neon cyan
+     structure, electric blue depth, glowing orange for CTAs/highlights */
+  --bg: #000000;
+  --bg2: #020608;
+  --bg3: #040c12;
+  --cyan: #00e5ff;
+  --cyan-dim: rgba(0,229,255,0.5);
+  --blue: #3d5afe;
   --amber: #f0a030;
   --amber-dim: #a06c18;
   --amber-glow: rgba(240,160,48,0.12);
   --white: #f0f0f8;
   --muted: rgba(240,240,248,0.45);
-  --border: rgba(240,240,248,0.08);
-  --border-amber: rgba(240,160,48,0.25);
-  --navy: #0a1628;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --border: rgba(0,229,255,0.16);
+  --border-amber: rgba(240,160,48,0.3);
+  --navy: #021018;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --hud-glow: 0 0 14px rgba(0,229,255,0.07), inset 0 0 0 1px rgba(0,229,255,0.06);
+  --hud-glow-hot: 0 0 22px rgba(0,229,255,0.16), inset 0 0 0 1px rgba(0,229,255,0.25);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 html { -webkit-text-size-adjust: 100%; }
 html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+/* HUD grid plane — faint cyan graph paper behind everything */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,229,255,0.030) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(90deg, rgba(0,229,255,0.030) 0 1px, transparent 1px 72px);
+}
 
 /* ─── TYPOGRAPHY ─── */
 .display { font-family: 'Space Grotesk', sans-serif; }
@@ -72,7 +86,7 @@ nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 20px 40px;
-  background: rgba(7,7,15,0.75);
+  background: rgba(0,0,0,0.82);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   transition: padding .3s;
@@ -164,7 +178,7 @@ nav.scrolled { padding: 14px 40px; }
 
 /* ─── CREDENTIALS BAR ─── */
 #credentials {
-  background: rgba(13,15,28,0.82); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: rgba(0,6,10,0.82); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   padding: 28px 40px;
   display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap;
 }
@@ -194,7 +208,7 @@ section { padding: 80px 40px; }
 .section-sub { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.7; }
 
 /* ─── SERVICES ─── */
-#services { background: rgba(7,7,15,0.72); }
+#services { background: rgba(0,3,7,0.72); }
 .services-intro { margin-bottom: 40px; }
 .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; }
 .service-card {
@@ -225,7 +239,7 @@ section { padding: 80px 40px; }
 .service-card:hover .service-arrow { color: var(--amber); transform: translate(3px,-3px); }
 
 /* ─── PROCESS ─── */
-#process { background: rgba(13,15,28,0.78); }
+#process { background: rgba(0,6,10,0.78); }
 .process-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: stretch; margin-top: 48px; }
 .process-steps { display: flex; flex-direction: column; gap: 0; }
 .step {
@@ -257,7 +271,7 @@ section { padding: 80px 40px; }
 @keyframes pulseNode { 0%,100%{r:6} 50%{r:8} }
 
 /* ─── BOOKING ─── */
-#booking { background: rgba(7,7,15,0.72); }
+#booking { background: rgba(0,3,7,0.72); }
 .booking-layout { display: grid; grid-template-columns: 320px 1fr; gap: 48px; align-items: start; }
 
 /* Service selector panel */
@@ -658,6 +672,34 @@ footer {
   transition: color .2s; margin-top: 8px;
 }
 .footer-linkedin:hover { color: var(--amber); }
+
+/* ─── JARVIS HUD LAYER (rebrand 11 Jul 2026) ───
+   Neon-cyan structure over pitch black; orange stays on CTAs/highlights. */
+section { border-top: 1px solid rgba(0,229,255,0.10); }
+.section-label { color: var(--cyan); }
+.section-label::before { content: '[ '; color: var(--cyan-dim); }
+.section-label::after { content: ' ]'; color: var(--cyan-dim); }
+.service-card, .booking-step, .cal-card, .bip-service, .process-visual, .modal, .chat-panel { box-shadow: var(--hud-glow); }
+.service-card:hover, .bip-service:hover, .bip-service.active { box-shadow: var(--hud-glow-hot); }
+.btn-ghost { border-color: rgba(0,229,255,0.35); color: var(--cyan); }
+.btn-ghost:hover { border-color: var(--cyan); background: rgba(0,229,255,0.06); box-shadow: 0 0 18px rgba(0,229,255,0.15); }
+nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05); }
+.footer-col-title, .scroll-hint span { color: var(--cyan-dim); }
+/* corner brackets on major HUD panels */
+.booking-step { position: relative; }
+.process-visual::after, .booking-step::after {
+  content: ''; position: absolute; inset: 6px; pointer-events: none; opacity: .55;
+  background:
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) left 0 top 0/14px 1px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) left 0 top 0/1px 14px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) right 0 top 0/14px 1px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) right 0 top 0/1px 14px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) left 0 bottom 0/14px 1px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) left 0 bottom 0/1px 14px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) right 0 bottom 0/14px 1px,
+    linear-gradient(var(--cyan-dim),var(--cyan-dim)) right 0 bottom 0/1px 14px;
+  background-repeat: no-repeat;
+}
 </style>
 </head>
 <body>
@@ -1070,6 +1112,7 @@ footer {
 
   const WHITE=(a)=>`rgba(240,240,248,${a})`;
   const BLUE=(a)=>`rgba(61,90,254,${a})`;
+  const CYAN=(a)=>`rgba(0,229,255,${a})`;
 
   /* ── Faceted torus: NU panels around the ring × NV around the tube ── */
   const NU=14, NV=6, RMAJ=1.0, RTUBE=0.44, GAP=0.10;
@@ -1154,7 +1197,7 @@ footer {
 
     /* soft electric-blue core glow behind the ring */
     const glow=ctx.createRadialGradient(cx,cy,R*0.1,cx,cy,R*1.6);
-    glow.addColorStop(0,BLUE(0.07));glow.addColorStop(1,BLUE(0));
+    glow.addColorStop(0,CYAN(0.06));glow.addColorStop(1,CYAN(0));
     ctx.fillStyle=glow;ctx.fillRect(cx-R*1.6,cy-R*1.6,R*3.2,R*3.2);
 
     drawList.forEach(({P,z})=>{
@@ -1169,16 +1212,16 @@ footer {
       for(let k=1;k<=E;k++){const q=project(torusPoint(P.u0,P.v1-(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
       ctx.closePath();
       /* darken panel interior so nearer panels occlude farther ones */
-      ctx.fillStyle=`rgba(7,7,15,${(0.55+depth*0.35).toFixed(3)})`;ctx.fill();
+      ctx.fillStyle=`rgba(0,2,4,${(0.55+depth*0.35).toFixed(3)})`;ctx.fill();
       /* every fifth panel carries an electric-blue edge; the rest stay silver */
-      ctx.strokeStyle=P.blueEdge?BLUE((la*1.1).toFixed(3)):WHITE(la.toFixed(3));
+      ctx.strokeStyle=P.blueEdge?CYAN((la*1.1).toFixed(3)):WHITE(la.toFixed(3));
       ctx.lineWidth=0.7+depth*0.9;ctx.stroke();
 
       /* inner detail: mid-lines across the panel, faint blue circuitry feel */
       const um=(P.u0+P.u1)/2, vm=(P.v0+P.v1)/2;
       ctx.beginPath();
       for(let k=0;k<=E;k++){const q=project(torusPoint(P.u0+(P.u1-P.u0)*k/E,vm,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
-      ctx.strokeStyle=BLUE((la*0.35).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
+      ctx.strokeStyle=CYAN((la*0.35).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
       ctx.beginPath();
       for(let k=0;k<=E;k++){const q=project(torusPoint(um,P.v0+(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
       ctx.strokeStyle=WHITE((la*0.22).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
@@ -1229,7 +1272,7 @@ footer {
   let W,H,dpr=1;
 
   const WHITE=(a)=>`rgba(240,240,248,${a})`;
-  const BLUE=(a)=>`rgba(61,90,254,${a})`;
+  const BLUE=(a)=>`rgba(0,229,255,${a})`;   /* HUD rebrand: graticule + pins neon cyan */
   const AMBER=(a)=>`rgba(240,160,48,${a})`;
 
   /* ── Earth landmass: 2° dot grid (180×90 bitset, baked at build time from
@@ -1285,7 +1328,7 @@ footer {
 
   /* email form shown after placing a pin */
   const pinForm=document.createElement('div');
-  pinForm.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:none;background:rgba(13,15,28,0.95);border:1px solid rgba(240,160,48,0.3);border-radius:12px;padding:12px 14px;z-index:5;max-width:92%;';
+  pinForm.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:none;background:rgba(0,6,10,0.96);border:1px solid rgba(0,229,255,0.3);box-shadow:0 0 18px rgba(0,229,255,0.12);border-radius:12px;padding:12px 14px;z-index:5;max-width:92%;';
   pinForm.innerHTML='<div id="pin-head" style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#f0a030;margin-bottom:8px;">Nice spot. Leave your email and Daniel will wave back.</div>'
     +'<div style="display:flex;gap:6px;"><input id="pin-email" type="email" placeholder="you@company.com" style="background:#07070f;border:1px solid rgba(240,240,248,0.15);border-radius:8px;padding:8px 10px;color:#f0f0f8;font-size:13px;width:180px;outline:none;">'
     +'<button id="pin-submit" style="background:#f0a030;color:#07070f;border:none;border-radius:8px;padding:8px 14px;font-family:\'Space Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Pin me</button></div>'

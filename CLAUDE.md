@@ -10,28 +10,30 @@ Professional AI consultancy site for Daniel Walsh. Live production system — be
 - **Hosting:** Coolify at 178.104.154.216. Deploys automatically on push to GitHub main.
 - **Database:** PostgreSQL on Coolify (internal hostname `dm8hs0r3fezjck2f411rixp3`).
 - **Secrets:** all env vars live in Coolify — never hardcode keys, never commit them.
-- **DNS:** pending — GoDaddy A records (@ and www → 178.104.154.216) plus Resend TXT records not yet added.
+- **DNS:** LIVE since 10 Jul 2026 — A records @ and www → 178.104.154.216, SSL via Let's Encrypt; Resend DNS verified (hello@danielwalsh.ai sends).
 
-## Brand (LOCKED — do not deviate)
+## Brand — JARVIS HUD (owner rebrand, 11 Jul 2026)
+
+Daniel explicitly overrode the previous amber-on-navy brand: the site is now styled as an Iron-Man/Jarvis heads-up display.
 
 | Token | Value | Usage |
 |---|---|---|
-| Canvas | `#07070F` | Main page background |
-| Section | `#12163A` | Section backgrounds / panels |
-| Accent | `#F0A030` | Electric amber — CTAs, highlights, links ONLY |
+| Canvas | `#000000` | Pitch-black page background + faint cyan graph-paper grid overlay |
+| Panels | `#020608` / `#040C12` | Near-black panels |
+| Structure | `#00E5FF` (neon cyan) | Hairline borders, glows, graticules, section labels `[ like this ]`, corner brackets |
+| Depth | `#3D5AFE` (electric blue) | Particle/dust accents in canvas visuals |
+| Hot accent | `#F0A030` (glowing orange/amber) | CTAs, prices, pins, key highlights — kept for conversion |
 | Heading text | `#FFFFFF` | |
 | Body text | `#9AA0B5` | |
-| Muted text | `#5B6078` | Captions, footers, metadata |
 
 - **Fonts:** Space Grotesk (display/headings), Inter (body).
-- **Logo:** DW monogram, amber on dark.
-- Amber is the only loud element — ~10% max coverage. One primary CTA per view.
-- Electric blue is tertiary ONLY (low-opacity mesh lines/charts, e.g. #3D5AFE @ 15–25%). Never on CTAs or headings.
-- No pure `#000000`.
+- **Logo:** DW monogram, amber on dark (unchanged).
+- Feel: hyper-functional, technical HUD — thin glowing borders, angular (6/10px radii), grid systems, corner brackets on major panels.
+- CTAs stay orange and prominent — do not let cyan swallow the conversion path.
 
 ### Decision log — do not relitigate
-- **Electric blue as primary accent was tested live and reverted.** Amber on dark navy converts better for B2B professional services. Do not suggest switching back.
-- Deep navy section background is `#12163A` — chosen deliberately (enough lift from #07070F, dark enough that amber stays loudest).
+- **HUD rebrand (11 Jul 2026) supersedes the old "amber-only, no blue, no pure black" rules** — Daniel requested it explicitly, twice, with reference imagery. The old note that blue converted worse predates this; if conversion drops, revisit with data, not opinions.
+- Site visuals are hand-rolled canvas (no three.js): full-page 4D stardust torus parallax backdrop + interactive Earth globe (drag/pin/lead-capture) in Process.
 - LinkedIn: icon only, in nav and footer. No text label.
 - Booking language: "reschedule" only — never "cancel".
 - Pricing (correct, do not change without instruction): Strategy & Advisory £500/60-min session · AI Implementation £1,500/day · Training & Workshops £1,200/day · Fractional AI Officer £5,000/month (25 hrs, 12-month minimum).

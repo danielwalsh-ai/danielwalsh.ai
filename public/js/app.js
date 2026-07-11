@@ -494,11 +494,9 @@
   /* status bar: clock + fake load metrics (random walk) */
   let cpu=34,mem=52;
   setInterval(()=>{ $('hud-time').textContent=new Date().toLocaleTimeString('en-GB'); },1000);
+  /* cpu random walk still drives the telemetry chart */
   setInterval(()=>{
     cpu=Math.max(12,Math.min(88,cpu+(Math.random()-0.5)*9));
-    mem=Math.max(30,Math.min(80,mem+(Math.random()-0.5)*4));
-    $('hud-cpu').textContent=cpu.toFixed(0)+'%';
-    $('hud-mem').textContent=mem.toFixed(0)+'%';
   },850);
 
   /* streaming terminal */

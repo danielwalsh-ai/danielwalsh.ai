@@ -10,6 +10,7 @@ const GoCardless = require('gocardless-nodejs');
 const constants = require('gocardless-nodejs/constants');
 const Anthropic = require('@anthropic-ai/sdk');
 const crypto = require('crypto');
+const newsletter = require('./newsletter');
 require('dotenv').config();
 
 const app = express();
@@ -98,6 +99,13 @@ async function initDB() {
       subject    VARCHAR(255),
       recipients INTEGER,
       sent_at    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS newsletter_cache (
+      id         INTEGER PRIMARY KEY,
+      content    JSONB,
+      month      VARCHAR(7),
+      created_at TIMESTAMPTZ DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS globe_pins (
@@ -258,6 +266,23 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
       html: `<p><strong>${email}</strong> pinned themselves on the globe at ${lat.toFixed(1)}, ${lng.toFixed(1)}.</p>
              <p>Worth a hello — they took the time to engage.</p>`,
     }).catch(err => console.error('Pin alert email failed:', err.message));
+
+    // Welcome the new subscriber with this month's issue — background, never blocks the pin
+    if (resend) {
+      (async () => {
+        try {
+          const issue = await newsletter.getCurrentIssue(db);
+          if (!issue) return;
+          await resend.emails.send({
+            from: 'Daniel Walsh <hello@danielwalsh.ai>',
+            to: email,
+            subject: 'Welcome to The AI Briefing — this month’s issue inside',
+            html: newsletter.welcomeHtml(issue, email),
+          });
+        } catch (err) { console.error('Welcome email failed:', err.message); }
+      })();
+    }
+
     res.json({ success: true });
   } catch (err) {
     console.error('Globe pin error:', err);
@@ -268,7 +293,6 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
 /* ════════════════════════════════════
    API — NEWSLETTER
 ════════════════════════════════════ */
-const newsletter = require('./newsletter');
 
 // One-click unsubscribe (link in every issue; HMAC token so only the owner can)
 app.get('/api/newsletter/unsubscribe', async (req, res) => {

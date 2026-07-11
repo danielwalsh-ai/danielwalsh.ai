@@ -485,6 +485,39 @@
   else loop();
 })();
 
+/* ════ CINEMATIC CORE VIDEO ════
+   Daniel's generated hologram clip plays as the hero core. It loops fluidly
+   when idle and accelerates with scroll speed (playbackRate, not seeking, so
+   it never stutters). The particle vortex covers loading + reduced-motion. */
+(function(){
+  const vid=document.getElementById('core-video');
+  const cvs=document.getElementById('core-canvas');
+  if(!vid)return;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){ vid.remove(); return; }        /* vortex stays, static */
+
+  vid.addEventListener('canplaythrough',()=>{
+    vid.classList.add('ready');
+    if(cvs)cvs.classList.add('retired');
+    vid.play().catch(()=>{});
+  },{once:true});
+
+  /* scroll velocity → playback speed (1x idle, up to 4x while scrolling) */
+  let lastY=window.scrollY, boost=0;
+  window.addEventListener('scroll',()=>{
+    boost=Math.min(3,boost+Math.abs(window.scrollY-lastY)*0.01);
+    lastY=window.scrollY;
+  },{passive:true});
+  setInterval(()=>{
+    boost*=0.9;
+    const rate=1+boost;
+    if(Math.abs(vid.playbackRate-rate)>0.05)vid.playbackRate=Math.min(4,rate);
+    /* pause offscreen to save battery */
+    if(window.scrollY>innerHeight*1.3){ if(!vid.paused)vid.pause(); }
+    else if(vid.paused&&vid.classList.contains('ready'))vid.play().catch(()=>{});
+  },120);
+})();
+
 /* ════ JARVIS DASHBOARD ════ */
 (function(){
   const $=id=>document.getElementById(id);

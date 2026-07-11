@@ -768,7 +768,15 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
 }
 
 /* ─── AI CORE — central spiral vortex ─── */
-#core-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
+#core-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; transition: opacity 1.2s; }
+#core-video {
+  position: absolute; left: 50%; top: 52%; transform: translate(-50%,-50%);
+  width: min(120vh, 100%); z-index: 1; pointer-events: none;
+  mix-blend-mode: screen;            /* black backing disappears over the page */
+  opacity: 0; transition: opacity 1.2s;
+}
+#core-video.ready { opacity: 1; }
+#core-canvas.retired { opacity: 0; }
 .hero-content { z-index: 2; }
 .hero-title { text-shadow: 0 2px 28px rgba(0,0,0,0.85), 0 0 60px rgba(0,0,0,0.6); }
 .hero-sub { text-shadow: 0 1px 14px rgba(0,0,0,0.9); }
@@ -797,6 +805,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
 <section id="hero">
   <canvas id="mesh-canvas"></canvas>
   <canvas id="core-canvas"></canvas>
+  <video id="core-video" src="/media/hero-core.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
   <div class="hero-content">
     <div class="hero-eyebrow">AI Consultancy · Worldwide</div>
     <h1 class="hero-title display">

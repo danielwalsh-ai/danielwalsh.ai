@@ -266,6 +266,14 @@ section { padding: 80px 40px; }
 }
 .step-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
 .step-content p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.globe-note {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 3; white-space: nowrap;
+  font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--cyan);
+  background: rgba(0,6,10,0.7); border: 1px solid rgba(0,229,255,0.25);
+  border-radius: 100px; padding: 6px 16px;
+}
 .process-visual {
   background: var(--bg3); border-radius: var(--radius-lg); border: 1px solid var(--border);
   height: 100%; min-height: 380px; display: flex; align-items: center; justify-content: center;
@@ -922,6 +930,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
         </div>
       </div>
       <div class="process-visual" id="orbit-visual">
+        <div class="globe-note">Click the globe to drop a pin &amp; join the AI newsletter</div>
         <canvas id="process-globe" style="width:100%;height:100%;position:absolute;inset:0;cursor:grab;"></canvas>
       </div>
     </div>

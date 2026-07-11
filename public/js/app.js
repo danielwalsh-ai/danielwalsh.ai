@@ -69,10 +69,10 @@
   /* email form shown after placing a pin */
   const pinForm=document.createElement('div');
   pinForm.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:none;background:rgba(0,6,10,0.96);border:1px solid rgba(0,229,255,0.3);box-shadow:0 0 18px rgba(0,229,255,0.12);border-radius:12px;padding:12px 14px;z-index:5;max-width:92%;';
-  pinForm.innerHTML='<div id="pin-head" style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#f0a030;margin-bottom:8px;">Nice spot. Leave your email and Daniel will wave back.</div>'
+  pinForm.innerHTML='<div id="pin-head" style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#f0a030;margin-bottom:8px;">Nice spot. Leave your email to join the AI newsletter.</div>'
     +'<div style="display:flex;gap:6px;"><input id="pin-email" type="email" placeholder="you@company.com" style="background:#07070f;border:1px solid rgba(240,240,248,0.15);border-radius:8px;padding:8px 10px;color:#f0f0f8;font-size:13px;width:180px;outline:none;">'
     +'<button id="pin-submit" style="background:#f0a030;color:#07070f;border:none;border-radius:8px;padding:8px 14px;font-family:\'Space Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Pin me</button></div>'
-    +'<div id="pin-note" style="font-size:10px;color:rgba(240,240,248,0.35);margin-top:7px;">Just a hello — no spam, ever.</div>';
+    +'<div id="pin-note" style="font-size:10px;color:rgba(240,240,248,0.35);margin-top:7px;">Practical AI tips, occasionally. Unsubscribe anytime.</div>';
   panel.appendChild(pinForm);
   const pinEmail=pinForm.querySelector('#pin-email'), pinNote=pinForm.querySelector('#pin-note'), pinHead=pinForm.querySelector('#pin-head');
   pinForm.querySelector('#pin-submit').addEventListener('click',submitPin);
@@ -89,7 +89,7 @@
       myPin=pending;pending=null;
       pins.push({lat:myPin.lat,lng:myPin.lng});
       try{localStorage.setItem('dw_globe_pin',JSON.stringify(myPin));}catch(e){}
-      pinNote.textContent='You’re on the map. ✓';
+      pinNote.textContent='You’re on the map — welcome aboard. ✓';
       setTimeout(()=>{pinForm.style.display='none';},1600);
     }catch(err){pinNote.textContent=err.message||'Something went wrong — try again.';}
   }
@@ -301,10 +301,10 @@
         pending=hit;
         const country=countryAt(hit.lat,hit.lng);
         pinHead.textContent=country
-          ? 'Nice spot — '+country+'. Leave your email and Daniel will wave back.'
-          : 'Mid-ocean? Bold choice. Leave your email and Daniel will wave back.';
+          ? 'Nice spot — '+country+'. Leave your email to join the AI newsletter.'
+          : 'Mid-ocean? Bold choice. Leave your email to join the AI newsletter.';
         pinForm.style.display='block';
-        pinNote.textContent='Just a hello — no spam, ever.';
+        pinNote.textContent='Practical AI tips, occasionally. Unsubscribe anytime.';
         setTimeout(()=>pinEmail.focus(),50);
       } else { pending=null; pinForm.style.display='none'; }
     }

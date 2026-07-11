@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#07070f">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Daniel Walsh — AI Consultant | Strategy, Implementation &amp; Training</title>
 <meta name="description" content="Oxford, Google &amp; MIT-certified AI consultancy for businesses worldwide. Strategy sessions, hands-on AI implementation, team training and fractional AI leadership — fixed prices, booked online.">
 <link rel="canonical" href="https://danielwalsh.ai/">
@@ -645,9 +646,9 @@ footer {
   padding: 20px 40px;
   border-top: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; color: rgba(240,240,248,0.28);
+  font-size: 12px; color: rgba(240,240,248,0.55);
 }
-.footer-bottom a { color: rgba(240,240,248,0.28); text-decoration: none; transition: color .2s; }
+.footer-bottom a { color: rgba(240,240,248,0.55); text-decoration: none; transition: color .2s; }
 .footer-bottom a:hover { color: var(--amber); }
 
 /* ─── BOOKING DETAIL CHECKS ─── */
@@ -718,7 +719,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   top: 96px; left: 50%; margin-left: -280px; width: 560px;
   display: flex; justify-content: center; gap: 26px; padding: 10px 20px;
 }
-.hud-stat { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; color: rgba(240,240,248,.5); text-transform: uppercase; white-space: nowrap; }
+.hud-stat { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; color: rgba(240,240,248,.78); text-transform: uppercase; white-space: nowrap; }
 .hud-stat b { color: var(--cyan); font-weight: 600; }
 .ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #2aff9e; box-shadow: 0 0 9px #2aff9e; display: inline-block; margin-right: 6px; animation: blinkDot 1.4s infinite; }
 .hud-status .hud-stat:first-child b { color: #2aff9e; }
@@ -842,7 +843,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   </div>
 
   <div class="hud-panel hud-command tilt">
-    <input id="hud-input" type="text" placeholder="Ask the system anything&#8230;" autocomplete="off">
+    <input id="hud-input" type="text" aria-label="Ask the AI assistant" placeholder="Ask the system anything&#8230;" autocomplete="off">
     <button id="hud-mic" aria-label="Voice command"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button>
   </div>
 
@@ -1057,9 +1058,9 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
           </div>
           <div class="cal-card">
             <div class="cal-topbar">
-              <button class="cal-arrow" onclick="changeMonth(-1)">&#8249;</button>
+              <button class="cal-arrow" aria-label="Previous month" onclick="changeMonth(-1)">&#8249;</button>
               <span class="cal-month-title" id="cal-month-label">June 2026</span>
-              <button class="cal-arrow" onclick="changeMonth(1)">&#8250;</button>
+              <button class="cal-arrow" aria-label="Next month" onclick="changeMonth(1)">&#8250;</button>
             </div>
             <div class="cal-weekdays">
               <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
@@ -1136,7 +1137,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       </div>
       <p class="footer-tagline">Oxford · Google · MIT certified<br>AI consultancy · Worldwide</p>
       <a href="mailto:hello@danielwalsh.ai" class="footer-email">hello@danielwalsh.ai</a>
-      <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="footer-linkedin"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="footer-linkedin" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
@@ -1173,15 +1174,15 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
           <span>● Online now</span>
         </div>
       </div>
-      <button class="chat-close" onclick="toggleChat()">×</button>
+      <button class="chat-close" aria-label="Close chat" onclick="toggleChat()">×</button>
     </div>
     <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-input-area">
       <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ask anything about AI for your business…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
-      <button class="chat-send" onclick="sendChat()">↑</button>
+      <button class="chat-send" aria-label="Send message" onclick="sendChat()">↑</button>
     </div>
   </div>
-  <button class="chat-btn" onclick="toggleChat()">
+  <button class="chat-btn" aria-label="Open AI chat" onclick="toggleChat()">
     💬
     <div class="chat-badge"></div>
   </button>

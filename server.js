@@ -85,6 +85,18 @@ async function initDB() {
       UNIQUE(date, time_slot)
     );
 
+    CREATE TABLE IF NOT EXISTS newsletter_unsubs (
+      email      VARCHAR(255) PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS newsletter_issues (
+      id         SERIAL PRIMARY KEY,
+      subject    VARCHAR(255),
+      recipients INTEGER,
+      sent_at    TIMESTAMPTZ DEFAULT NOW()
+    );
+
     CREATE TABLE IF NOT EXISTS globe_pins (
       id         SERIAL PRIMARY KEY,
       lat        REAL NOT NULL,
@@ -222,6 +234,38 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
   } catch (err) {
     console.error('Globe pin error:', err);
     res.status(500).json({ error: 'Failed to save pin' });
+  }
+});
+
+/* ════════════════════════════════════
+   API — NEWSLETTER
+════════════════════════════════════ */
+const newsletter = require('./newsletter');
+
+// One-click unsubscribe (link in every issue; HMAC token so only the owner can)
+app.get('/api/newsletter/unsubscribe', async (req, res) => {
+  try {
+    const email = Buffer.from(String(req.query.e || ''), 'base64').toString('utf8').toLowerCase();
+    if (!email || newsletter.unsubToken(email) !== req.query.t) {
+      return res.status(400).send('Invalid unsubscribe link.');
+    }
+    await db.query(
+      `INSERT INTO newsletter_unsubs (email) VALUES ($1) ON CONFLICT (email) DO NOTHING`, [email]);
+    res.send(`<div style="font-family:sans-serif;background:#000;color:#f0f0f8;min-height:100vh;display:flex;align-items:center;justify-content:center;"><div style="text-align:center;"><h2>You&#39;re unsubscribed.</h2><p style="color:#9aa0b5;">No more newsletters. Your globe pin stays on the map.</p></div></div>`);
+  } catch (err) {
+    res.status(500).send('Something went wrong.');
+  }
+});
+
+// Manual trigger (admin only) — same engine the monthly cron runs
+app.post('/api/admin/newsletter-send', async (req, res) => {
+  if (!verifyAdminToken(req)) return res.status(401).json({ error: 'Unauthorised' });
+  try {
+    const result = await newsletter.run({ force: true });
+    res.json(result);
+  } catch (err) {
+    console.error('Newsletter trigger error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 

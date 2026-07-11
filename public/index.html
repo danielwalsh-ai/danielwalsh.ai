@@ -126,9 +126,6 @@ nav.scrolled { padding: 14px 40px; }
   text-align: center; padding: 120px 40px 80px;
   overflow: hidden;
 }
-/* Full-page parallax backdrop: fixed behind all content, ghosting through
-   translucent section backgrounds, spiraling with scroll. */
-#mesh-canvas { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; pointer-events: none; }
 .hero-content { position: relative; z-index: 1; max-width: 800px; }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
@@ -702,52 +699,6 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   background-repeat: no-repeat;
 }
 
-/* ─── JARVIS DASHBOARD (hero) ─── */
-.hud-panel {
-  position: absolute; z-index: 2;
-  background: rgba(2,10,14,0.42);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(0,229,255,0.22); border-radius: 8px;
-  animation: hudPulse 3.2s ease-in-out infinite;
-  transform: perspective(700px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));
-}
-@keyframes hudPulse {
-  0%,100% { border-color: rgba(0,229,255,0.16); box-shadow: 0 0 14px rgba(0,229,255,0.05); }
-  50%     { border-color: rgba(0,229,255,0.40); box-shadow: 0 0 26px rgba(0,229,255,0.14); }
-}
-.hud-status {
-  top: 96px; left: 50%; margin-left: -280px; width: 560px;
-  display: flex; justify-content: center; gap: 26px; padding: 10px 20px;
-}
-.hud-stat { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; color: rgba(240,240,248,.78); text-transform: uppercase; white-space: nowrap; }
-.hud-stat b { color: var(--cyan); font-weight: 600; }
-.ai-dot { width: 7px; height: 7px; border-radius: 50%; background: #2aff9e; box-shadow: 0 0 9px #2aff9e; display: inline-block; margin-right: 6px; animation: blinkDot 1.4s infinite; }
-.hud-status .hud-stat:first-child b { color: #2aff9e; }
-@keyframes blinkDot { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
-.tl-head { font-family: 'Space Grotesk', sans-serif; font-size: 9.5px; letter-spacing: .14em; color: var(--cyan-dim); margin-bottom: 8px; }
-.hud-terminal {
-  left: 22px; top: 50%; margin-top: -170px; width: 285px; height: 340px;
-  padding: 12px 14px; overflow: hidden;
-}
-#hud-log { font-family: Consolas, 'Courier New', monospace; font-size: 10.5px; line-height: 1.6; color: rgba(0,229,255,0.72); white-space: pre-wrap; word-break: break-all; }
-#hud-log .warn { color: var(--amber); }
-.hud-right { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); width: 268px; display: flex; flex-direction: column; gap: 12px; z-index: 2; }
-.hud-side { position: relative; padding: 12px 14px; }
-#hud-diag { font-family: Consolas, monospace; font-size: 10px; line-height: 1.7; color: rgba(240,240,248,.55); height: 88px; overflow: hidden; }
-#hud-diag b { color: #2aff9e; font-weight: 400; }
-#hud-diag .warn b { color: var(--amber); }
-.hud-command {
-  bottom: 74px; left: 50%; margin-left: -230px; width: 460px;
-  display: flex; gap: 8px; padding: 10px 12px; align-items: center;
-}
-#hud-input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,229,255,0.18); border-radius: 6px; padding: 9px 12px; color: var(--white); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
-#hud-input:focus { border-color: rgba(0,229,255,0.5); box-shadow: 0 0 12px rgba(0,229,255,0.15); }
-#hud-mic { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(0,229,255,0.4); background: rgba(0,229,255,0.08); color: var(--cyan); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; animation: micGlow 2.4s ease-in-out infinite; }
-#hud-mic.listening { border-color: var(--amber); color: var(--amber); animation: none; box-shadow: 0 0 18px rgba(240,160,48,0.5); }
-@keyframes micGlow { 0%,100% { box-shadow: 0 0 8px rgba(0,229,255,0.2); } 50% { box-shadow: 0 0 20px rgba(0,229,255,0.45); } }
-@media (max-width: 1400px) { .hud-terminal, .hud-right { display: none; } }
-@media (max-width: 760px) { .hud-status, .hud-command { display: none; } }
-
 /* card tilt (service cards join the HUD panels) */
 .service-card { transform: perspective(700px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)); }
 
@@ -763,7 +714,6 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   80% { transform: translate(0,-1px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hud-panel, .ai-dot, #hud-mic { animation: none; }
   .btn-primary:hover, .nav-cta:hover { animation: none; }
 }
 
@@ -794,7 +744,6 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
 
 <!-- HERO -->
 <section id="hero">
-  <canvas id="mesh-canvas"></canvas>
   <div class="hero-content">
     <div class="hero-eyebrow">AI Consultancy · Worldwide</div>
     <h1 class="hero-title display">
@@ -809,34 +758,6 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       <a href="#booking" class="btn-primary">Book a discovery call →</a>
       <a href="#services" class="btn-ghost">View services</a>
     </div>
-  </div>
-
-  <!-- JARVIS DASHBOARD -->
-  <div class="hud-panel hud-status tilt">
-    <span class="hud-stat"><span class="ai-dot"></span><b>AI ONLINE</b></span>
-    <span class="hud-stat">SYS <b id="hud-time">--:--:--</b></span>
-    <span class="hud-stat">LINK <b>SECURE</b></span>
-  </div>
-
-  <div class="hud-panel hud-terminal tilt">
-    <div class="tl-head">// EXECUTION LOG</div>
-    <div id="hud-log"></div>
-  </div>
-
-  <div class="hud-right">
-    <div class="hud-panel hud-side tilt">
-      <div class="tl-head">// AUDIO</div>
-      <canvas id="hud-wave" width="240" height="40"></canvas>
-    </div>
-    <div class="hud-panel hud-side tilt">
-      <div class="tl-head">// DIAGNOSTICS</div>
-      <div id="hud-diag"></div>
-    </div>
-  </div>
-
-  <div class="hud-panel hud-command tilt">
-    <input id="hud-input" type="text" aria-label="Ask the AI assistant" placeholder="Ask the system anything&#8230;" autocomplete="off">
-    <button id="hud-mic" aria-label="Voice command"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button>
   </div>
 
   <div class="scroll-hint">

@@ -1,164 +1,4 @@
 
-/* ════ 4D TORUS PARALLAX ════
-   Segmented stardust torus (faceted ring of panels) that tumbles through its
-   own centre — the classic "4th dimension" illusion. Hand-rolled 3D on canvas,
-   no libraries. Idle: continuous tumble in place. On scroll: the whole object
-   travels DOWN the page with your scroll position (parallax backdrop). */
-(function(){
-  const canvas=document.getElementById('mesh-canvas');
-  const ctx=canvas.getContext('2d');
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let W,H,dpr=1;
-
-  const WHITE=(a)=>`rgba(240,240,248,${a})`;
-  const BLUE=(a)=>`rgba(61,90,254,${a})`;
-  const CYAN=(a)=>`rgba(0,229,255,${a})`;
-
-  /* ── Faceted torus: NU panels around the ring × NV around the tube ── */
-  const NU=14, NV=6, RMAJ=1.0, RTUBE=0.44, GAP=0.10;
-  const panels=[];
-  for(let i=0;i<NU;i++){
-    for(let j=0;j<NV;j++){
-      const u0=(i+GAP/2)/NU*Math.PI*2, u1=(i+1-GAP/2)/NU*Math.PI*2;
-      const v0=(j+GAP/2)/NV*Math.PI*2, v1=(j+1-GAP/2)/NV*Math.PI*2;
-      /* stardust: [u, v, size, isBlue] — a share of the dust glows electric blue */
-      const dust=[];
-      const n=12+Math.floor(((i*7+j*13)%12));    /* deterministic count */
-      let seed=i*131+j*17+1;
-      const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
-      for(let k=0;k<n;k++)dust.push([u0+(u1-u0)*rnd(), v0+(v1-v0)*rnd(), 0.4+rnd()*0.9, rnd()<0.28?1:0]);
-      panels.push({u0,u1,v0,v1,dust,blueEdge:(i*NV+j)%5===0});
-    }
-  }
-
-  /* Sparse background starfield (slow parallax layer) */
-  const stars=[];
-  for(let i=0;i<60;i++)stars.push({x:Math.random(),y:Math.random(),depth:0.15+Math.random()*0.45,r:0.4+Math.random()*1.1});
-
-  let mx=0,my=0,tmx=0,tmy=0,t=0,scrollRot=0;
-
-  function resize(){
-    dpr=Math.min(window.devicePixelRatio||1,2);
-    W=window.innerWidth;H=window.innerHeight;
-    canvas.width=W*dpr;canvas.height=H*dpr;
-    canvas.style.width=W+'px';canvas.style.height=H+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-
-  /* torus surface point → rotated 3D. vFlow makes panels stream through the
-     hole (the "4D" inside-out motion); rx/ry are rigid tumble angles. */
-  function torusPoint(u,v,vFlow,rx,ry){
-    const vv=v+vFlow;
-    const x=(RMAJ+RTUBE*Math.cos(vv))*Math.cos(u);
-    const y=RTUBE*Math.sin(vv);
-    const z=(RMAJ+RTUBE*Math.cos(vv))*Math.sin(u);
-    /* rotate Y then X */
-    const cy1=Math.cos(ry),sy1=Math.sin(ry),cx1=Math.cos(rx),sx1=Math.sin(rx);
-    const x1=x*cy1+z*sy1, z1=-x*sy1+z*cy1;
-    const y2=y*cx1-z1*sx1, z2=y*sx1+z1*cx1;
-    return [x1,y2,z2];
-  }
-
-  function project(p,R,cx,cy){
-    const d=3.6,s=d/(d-p[2]);
-    return {x:cx+p[0]*R*s, y:cy-p[1]*R*s, z:p[2]};
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    const sy=window.scrollY;
-    const docH=Math.max(1,document.documentElement.scrollHeight-H);
-    const p=Math.min(1,sy/docH);            /* 0 top → 1 bottom of page */
-
-    /* Layer 1 — starfield, drifts slower than the page */
-    stars.forEach(s=>{
-      const yy=((s.y*H - sy*s.depth*0.25)%H+H)%H;
-      ctx.beginPath();ctx.arc(s.x*W,yy,s.r,0,Math.PI*2);
-      ctx.fillStyle=WHITE((0.04+s.depth*0.14).toFixed(3));ctx.fill();
-    });
-
-    /* Layer 2 — the torus: tumbles in place; scroll carries it down the page */
-    const cx=W*0.5 + Math.sin(t*0.25)*W*0.015 + tmx*W*0.01;
-    const cy=H*(0.44+0.38*p) + Math.sin(t*0.4)*H*0.008;
-    const R=Math.min(W,H)*0.30;
-    const vFlow=t*0.5 + scrollRot;           /* panels stream through the hole */
-    const rx=0.95+Math.sin(t*0.11)*0.18+tmy*0.06;
-    const ry=t*0.07+tmx*0.06;
-
-    /* depth-sort panels so nearer ones draw over farther ones */
-    const drawList=panels.map(P=>{
-      const um=(P.u0+P.u1)/2, vm=(P.v0+P.v1)/2;
-      const m=torusPoint(um,vm,vFlow,rx,ry);
-      return {P,z:m[2]};
-    }).sort((a,b)=>a.z-b.z);
-
-    const narrow=W<1000;
-    ctx.globalAlpha=narrow?0.45:0.8;
-
-    /* soft electric-blue core glow behind the ring */
-    const glow=ctx.createRadialGradient(cx,cy,R*0.1,cx,cy,R*1.6);
-    glow.addColorStop(0,CYAN(0.06));glow.addColorStop(1,CYAN(0));
-    ctx.fillStyle=glow;ctx.fillRect(cx-R*1.6,cy-R*1.6,R*3.2,R*3.2);
-
-    drawList.forEach(({P,z})=>{
-      const depth=(z+1.5)/3;                 /* 0 far → 1 near */
-      const la=0.10+depth*0.55;
-      /* panel outline: 4 edges, sampled so they curve with the surface */
-      ctx.beginPath();
-      const E=4;
-      for(let k=0;k<=E;k++){const q=project(torusPoint(P.u0+(P.u1-P.u0)*k/E,P.v0,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
-      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u1,P.v0+(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
-      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u1-(P.u1-P.u0)*k/E,P.v1,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
-      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u0,P.v1-(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
-      ctx.closePath();
-      /* darken panel interior so nearer panels occlude farther ones */
-      ctx.fillStyle=`rgba(0,2,4,${(0.55+depth*0.35).toFixed(3)})`;ctx.fill();
-      /* every fifth panel carries an electric-blue edge; the rest stay silver */
-      ctx.strokeStyle=P.blueEdge?CYAN((la*1.1).toFixed(3)):WHITE(la.toFixed(3));
-      ctx.lineWidth=0.7+depth*0.9;ctx.stroke();
-
-      /* inner detail: mid-lines across the panel, faint blue circuitry feel */
-      const um=(P.u0+P.u1)/2, vm=(P.v0+P.v1)/2;
-      ctx.beginPath();
-      for(let k=0;k<=E;k++){const q=project(torusPoint(P.u0+(P.u1-P.u0)*k/E,vm,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
-      ctx.strokeStyle=CYAN((la*0.35).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
-      ctx.beginPath();
-      for(let k=0;k<=E;k++){const q=project(torusPoint(um,P.v0+(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
-      ctx.strokeStyle=WHITE((la*0.22).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
-
-      /* stardust inside the panel — white sparkle with electric-blue motes */
-      P.dust.forEach(d=>{
-        const q=project(torusPoint(d[0],d[1],vFlow,rx,ry),R,cx,cy);
-        const tw=reduced?0.7:0.55+0.45*Math.sin(t*2.2+d[0]*9+d[1]*7); /* twinkle */
-        ctx.beginPath();ctx.arc(q.x,q.y,d[2]*(0.5+depth*0.9)*(d[3]?1.3:1),0,Math.PI*2);
-        ctx.fillStyle=d[3]?BLUE((la*1.1*tw).toFixed(3)):WHITE((la*0.9*tw).toFixed(3));ctx.fill();
-      });
-    });
-    ctx.globalAlpha=1;
-  }
-
-  let frame=0;
-  function loop(){
-    t+=reduced?0:0.016;
-    const target=window.scrollY*0.0018;
-    scrollRot+=(target-scrollRot)*0.06;      /* scroll adds extra spin, smoothed */
-    tmx+=(mx-tmx)*0.05; tmy+=(my-tmy)*0.05;
-    if(++frame%30===0){
-      if(Math.abs(W-window.innerWidth)>1||Math.abs(H-window.innerHeight)>1)resize();
-    }
-    draw();
-    requestAnimationFrame(loop);
-  }
-
-  window.addEventListener('resize',resize);
-  window.addEventListener('mousemove',e=>{mx=e.clientX/W*2-1;my=e.clientY/H*2-1;});
-  document.addEventListener('mouseleave',()=>{mx=0;my=0;});
-  resize();
-  if(reduced){draw();window.addEventListener('scroll',()=>{scrollRot=window.scrollY*0.0018;draw();},{passive:true});}
-  else loop();
-})();
-
-
 /* ════ PROCESS GLOBE ════
    "Predictable outcomes" visual: a wireframe globe with the four process
    outcomes pinned to its surface. Auto-rotates; grab it with the mouse (or
@@ -485,88 +325,17 @@
   else loop();
 })();
 
-/* ════ JARVIS DASHBOARD ════ */
+/* ════ MICRO-INTERACTIONS ════ */
 (function(){
-  const $=id=>document.getElementById(id);
-  if(!$('hud-time'))return;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* status bar clock */
-  setInterval(()=>{ $('hud-time').textContent=new Date().toLocaleTimeString('en-GB'); },1000);
-
-  /* streaming terminal */
-  const LOGS=[
-    'spawn agent.discovery --session={S}',
-    'claude.messages.create tokens={T} ok',
-    'vector.index query k=12 ... {M}ms',
-    'pipeline.report render p95=1.2s',
-    'db.pool acquire conn=4/20',
-    'webhook.gocardless sig=verified',
-    'guardrail.scan pii=none risk=low',
-    'embed.batch 128/128 complete',
-    'cache.layer hit_ratio=94.{D}%',
-    'router.model select=sonnet ctx=64k',
-    'cron.daily_report armed 18:00Z',
-    'tls.cert valid 89d remaining',
-    'geo.pin lookup country=OK {M}ms',
-    'audio.stream buffer=stable',
-  ];
-  const log=$('hud-log');
-  function addLog(){
-    const t=new Date().toLocaleTimeString('en-GB',{hour12:false});
-    let line=LOGS[Math.floor(Math.random()*LOGS.length)]
-      .replace('{S}',Math.random().toString(36).slice(2,8))
-      .replace('{T}',200+Math.floor(Math.random()*900))
-      .replace('{M}',3+Math.floor(Math.random()*40))
-      .replace('{D}',Math.floor(Math.random()*9));
-    const div=document.createElement('div');
-    if(Math.random()<0.07){div.className='warn';line+='  [retry ok]';}
-    div.textContent='['+t+'] '+line;
-    log.appendChild(div);
-    while(log.children.length>16)log.removeChild(log.firstChild);
-  }
-  for(let i=0;i<10;i++)addLog();
-  setInterval(addLog,1400);
-
-  /* audio waveform */
-  const wv=$('hud-wave'),wvx=wv.getContext('2d');
-  let wt=0;
-  window.__hudAmp=1;
-  function drawWave(){
-    wt+=0.09; wvx.clearRect(0,0,240,40);
-    const amp=window.__hudAmp;
-    for(let i=0;i<48;i++){
-      const h=(3+Math.abs(Math.sin(wt+i*0.42))*14*amp+Math.random()*2)*Math.min(1,amp);
-      wvx.fillStyle=i%8===0?'rgba(240,160,48,0.75)':'rgba(0,229,255,0.55)';
-      wvx.fillRect(i*5,20-h/2,3,h);
-    }
-  }
-
-  /* diagnostics */
-  const DIAG=['NET LINK','TLS CERT','DB POOL','API GATEWAY','MODEL ROUTER','RATE LIMITER','WEBHOOKS','EMAIL RELAY','VECTOR STORE','SCHEDULER'];
-  const dg=$('hud-diag'); let di=0;
-  function addDiag(){
-    const name=DIAG[di++%DIAG.length];
-    const warn=Math.random()<0.08;
-    const div=document.createElement('div');
-    if(warn)div.className='warn';
-    div.innerHTML=name.padEnd(14,'\u00a0')+' <b>'+(warn?'RECHECK':'OK')+'</b>';
-    dg.appendChild(div);
-    while(dg.children.length>5)dg.removeChild(dg.firstChild);
-  }
-  for(let i=0;i<5;i++)addDiag();
-  setInterval(addDiag,2100);
-
-  function hudLoop(){ drawWave(); requestAnimationFrame(hudLoop); }
-  if(!reduced)hudLoop(); else drawWave();
-
-  /* mouse-tilt parallax on panels + service cards */
+  /* mouse-tilt parallax on service cards */
   if(!reduced){
     let pend=null;
     document.addEventListener('mousemove',e=>{ pend={x:e.clientX,y:e.clientY}; },{passive:true});
     (function tiltLoop(){
       if(pend){
-        document.querySelectorAll('.tilt,.service-card').forEach(el=>{
+        document.querySelectorAll('.service-card').forEach(el=>{
           const r=el.getBoundingClientRect();
           if(r.width===0)return;
           const dx=(pend.x-(r.left+r.width/2))/r.width, dy=(pend.y-(r.top+r.height/2))/r.height;
@@ -583,7 +352,7 @@
 
   /* ripple on buttons */
   document.addEventListener('click',e=>{
-    const b=e.target.closest('.btn-primary,.nav-cta,.chat-send,.modal-pay-btn,#hud-mic,#pin-submit');
+    const b=e.target.closest('.btn-primary,.nav-cta,.chat-send,.modal-pay-btn,#pin-submit');
     if(!b)return;
     const rect=b.getBoundingClientRect();
     const r=document.createElement('span');
@@ -593,34 +362,6 @@
     b.appendChild(r);
     setTimeout(()=>r.remove(),650);
   });
-
-  /* command bar routes into the AI chat */
-  function sendCommand(text){
-    if(!text)return;
-    if(!chatOpen)toggleChat();
-    const inp=document.getElementById('chat-input');
-    inp.value=text;
-    sendChat();
-    $('hud-input').value='';
-  }
-  $('hud-input').addEventListener('keydown',e=>{ if(e.key==='Enter')sendCommand(e.target.value.trim()); });
-
-  /* mic: real voice commands where the browser supports it */
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const mic=$('hud-mic');
-  if(SR){
-    const rec=new SR(); rec.lang='en-GB'; rec.interimResults=false;
-    let listening=false;
-    mic.addEventListener('click',()=>{
-      if(listening){rec.stop();return;}
-      try{ rec.start(); listening=true; mic.classList.add('listening'); window.__hudAmp=2.2; }catch(e){}
-    });
-    rec.onresult=ev=>{ const said=ev.results[0][0].transcript; $('hud-input').value=said; sendCommand(said); };
-    rec.onend=()=>{ listening=false; mic.classList.remove('listening'); window.__hudAmp=1; };
-    rec.onerror=()=>{ listening=false; mic.classList.remove('listening'); window.__hudAmp=1; };
-  } else {
-    mic.addEventListener('click',()=>{ $('hud-input').focus(); });
-  }
 })();
 
 /* ════ NAV ════ */

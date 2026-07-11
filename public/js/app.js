@@ -486,36 +486,60 @@
 })();
 
 /* ════ CINEMATIC CORE VIDEO ════
-   Daniel's generated hologram clip plays as the hero core. It loops fluidly
-   when idle and accelerates with scroll speed (playbackRate, not seeking, so
-   it never stutters). The particle vortex covers loading + reduced-motion. */
+   Daniel's hologram clip as the hero core — slowed right down, looping
+   seamlessly forever via two stacked copies that crossfade at the join
+   (screen-blended glows merge invisibly). Scroll speed still boosts playback.
+   The particle vortex covers loading + reduced-motion. */
 (function(){
-  const vid=document.getElementById('core-video');
+  const a=document.getElementById('core-video');
   const cvs=document.getElementById('core-canvas');
-  if(!vid)return;
+  if(!a)return;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced){ vid.remove(); return; }        /* vortex stays, static */
+  if(reduced){ a.remove(); return; }
 
-  vid.addEventListener('canplaythrough',()=>{
-    vid.classList.add('ready');
+  const BASE=0.45;                 /* slowed: ~half speed */
+  const FADE=0.55;                 /* crossfade window, real seconds */
+  const b=a.cloneNode();           /* second layer for the seamless join */
+  b.id='core-video-b';
+  a.parentElement.insertBefore(b,a.nextSibling);
+  let active=a, standby=b, started=false, boost=0;
+
+  a.addEventListener('canplaythrough',()=>{
+    if(started)return; started=true;
+    a.playbackRate=BASE; b.playbackRate=BASE;
+    a.classList.add('on');
     if(cvs)cvs.classList.add('retired');
-    vid.play().catch(()=>{});
+    a.play().catch(()=>{});
   },{once:true});
 
-  /* scroll velocity → playback speed (1x idle, up to 4x while scrolling) */
-  let lastY=window.scrollY, boost=0;
+  let lastY=window.scrollY;
   window.addEventListener('scroll',()=>{
-    boost=Math.min(3,boost+Math.abs(window.scrollY-lastY)*0.01);
+    boost=Math.min(2.5,boost+Math.abs(window.scrollY-lastY)*0.008);
     lastY=window.scrollY;
   },{passive:true});
+
   setInterval(()=>{
+    if(!started)return;
     boost*=0.9;
-    const rate=1+boost;
-    if(Math.abs(vid.playbackRate-rate)>0.05)vid.playbackRate=Math.min(4,rate);
-    /* pause offscreen to save battery */
-    if(window.scrollY>innerHeight*1.3){ if(!vid.paused)vid.pause(); }
-    else if(vid.paused&&vid.classList.contains('ready'))vid.play().catch(()=>{});
-  },120);
+    const rate=Math.min(3,BASE*(1+boost));
+    [a,b].forEach(v=>{ if(Math.abs(v.playbackRate-rate)>0.03)v.playbackRate=rate; });
+
+    /* battery: pause everything once well past the hero */
+    if(window.scrollY>innerHeight*1.3){ [a,b].forEach(v=>{if(!v.paused)v.pause();}); return; }
+    if(active.paused)active.play().catch(()=>{});
+
+    /* seamless join: as the active layer nears its end, start + fade in the
+       standby, fade out the active, then swap roles */
+    const remain=(active.duration-active.currentTime)/rate;
+    if(active.duration&&remain<=FADE&&standby.paused){
+      standby.currentTime=0;
+      standby.play().catch(()=>{});
+      standby.classList.add('on');
+      active.classList.remove('on');
+      const old=active; active=standby; standby=old;
+      setTimeout(()=>{ standby.pause(); },FADE*1000+150);
+    }
+  },100);
 })();
 
 /* ════ JARVIS DASHBOARD ════ */

@@ -843,58 +843,7 @@ footer {
         </div>
       </div>
       <div class="process-visual" id="orbit-visual">
-        <!-- No viewBox: percentage coordinates anchor nodes to the panel's real
-             corners at any panel size, so the diagram always fills it. Radii are
-             fixed px so circles stay round. -->
-        <svg xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
-          <defs>
-            <radialGradient id="cGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#f0a030" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#f0a030" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="nGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#f0a030" stop-opacity="0.10"/>
-              <stop offset="100%" stop-color="#f0a030" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-
-          <!-- Connector lines from centre to each node -->
-          <line x1="50%" y1="50%" x2="17%" y2="20%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="50%" y1="50%" x2="83%" y2="20%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="50%" y1="50%" x2="17%" y2="80%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-          <line x1="50%" y1="50%" x2="83%" y2="80%" stroke="rgba(240,160,48,0.2)" stroke-width="1" stroke-dasharray="5 5"/>
-
-          <!-- NODE 1 — top left -->
-          <circle cx="17%" cy="20%" r="58" fill="url(#nGlow)"/>
-          <circle cx="17%" cy="20%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="17%" y="20%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">01</text>
-          <text x="17%" y="20%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DISCOVERY</text>
-
-          <!-- NODE 2 — top right -->
-          <circle cx="83%" cy="20%" r="58" fill="url(#nGlow)"/>
-          <circle cx="83%" cy="20%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="83%" y="20%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">02</text>
-          <text x="83%" y="20%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">DIAGNOSIS</text>
-
-          <!-- NODE 3 — bottom left -->
-          <circle cx="17%" cy="80%" r="58" fill="url(#nGlow)"/>
-          <circle cx="17%" cy="80%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="17%" y="80%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">03</text>
-          <text x="17%" y="80%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">PROPOSAL</text>
-
-          <!-- NODE 4 — bottom right -->
-          <circle cx="83%" cy="80%" r="58" fill="url(#nGlow)"/>
-          <circle cx="83%" cy="80%" r="44" fill="rgba(13,15,28,0.95)" stroke="rgba(240,160,48,0.4)" stroke-width="1.5"/>
-          <text x="83%" y="80%" dy="-8" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="700">04</text>
-          <text x="83%" y="80%" dy="9" text-anchor="middle" fill="rgba(240,240,248,0.5)" font-family="'Space Grotesk',sans-serif" font-size="9" letter-spacing="1">EXECUTION</text>
-
-          <!-- CENTRAL NODE -->
-          <circle cx="50%" cy="50%" r="70" fill="url(#cGlow)"/>
-          <circle cx="50%" cy="50%" r="50" fill="rgba(13,15,28,0.97)" stroke="rgba(240,160,48,0.55)" stroke-width="1.5"/>
-          <circle cx="50%" cy="50%" r="34" fill="rgba(240,160,48,0.06)" stroke="rgba(240,160,48,0.25)" stroke-width="1"/>
-          <text x="50%" y="50%" dy="-6" text-anchor="middle" fill="#f0a030" font-family="'Space Grotesk',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.5">DW</text>
-          <text x="50%" y="50%" dy="10" text-anchor="middle" fill="rgba(240,160,48,0.45)" font-family="'Space Grotesk',sans-serif" font-size="10" letter-spacing="1">.ai</text>
-        </svg>
+        <canvas id="process-globe" style="width:100%;height:100%;position:absolute;inset:0;cursor:grab;"></canvas>
       </div>
     </div>
   </div>
@@ -1120,6 +1069,7 @@ footer {
   let W,H,dpr=1;
 
   const WHITE=(a)=>`rgba(240,240,248,${a})`;
+  const BLUE=(a)=>`rgba(61,90,254,${a})`;
 
   /* ── Faceted torus: NU panels around the ring × NV around the tube ── */
   const NU=14, NV=6, RMAJ=1.0, RTUBE=0.44, GAP=0.10;
@@ -1128,13 +1078,13 @@ footer {
     for(let j=0;j<NV;j++){
       const u0=(i+GAP/2)/NU*Math.PI*2, u1=(i+1-GAP/2)/NU*Math.PI*2;
       const v0=(j+GAP/2)/NV*Math.PI*2, v1=(j+1-GAP/2)/NV*Math.PI*2;
-      /* stardust: random points inside the panel, in torus (u,v) space */
+      /* stardust: [u, v, size, isBlue] — a share of the dust glows electric blue */
       const dust=[];
-      const n=6+Math.floor(((i*7+j*13)%9));      /* deterministic count */
+      const n=12+Math.floor(((i*7+j*13)%12));    /* deterministic count */
       let seed=i*131+j*17+1;
       const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
-      for(let k=0;k<n;k++)dust.push([u0+(u1-u0)*rnd(), v0+(v1-v0)*rnd(), 0.4+rnd()*0.9]);
-      panels.push({u0,u1,v0,v1,dust});
+      for(let k=0;k<n;k++)dust.push([u0+(u1-u0)*rnd(), v0+(v1-v0)*rnd(), 0.4+rnd()*0.9, rnd()<0.28?1:0]);
+      panels.push({u0,u1,v0,v1,dust,blueEdge:(i*NV+j)%5===0});
     }
   }
 
@@ -1202,6 +1152,11 @@ footer {
     const narrow=W<1000;
     ctx.globalAlpha=narrow?0.45:0.8;
 
+    /* soft electric-blue core glow behind the ring */
+    const glow=ctx.createRadialGradient(cx,cy,R*0.1,cx,cy,R*1.6);
+    glow.addColorStop(0,BLUE(0.07));glow.addColorStop(1,BLUE(0));
+    ctx.fillStyle=glow;ctx.fillRect(cx-R*1.6,cy-R*1.6,R*3.2,R*3.2);
+
     drawList.forEach(({P,z})=>{
       const depth=(z+1.5)/3;                 /* 0 far → 1 near */
       const la=0.10+depth*0.55;
@@ -1215,14 +1170,25 @@ footer {
       ctx.closePath();
       /* darken panel interior so nearer panels occlude farther ones */
       ctx.fillStyle=`rgba(7,7,15,${(0.55+depth*0.35).toFixed(3)})`;ctx.fill();
-      ctx.strokeStyle=WHITE(la.toFixed(3));ctx.lineWidth=0.7+depth*0.9;ctx.stroke();
+      /* every fifth panel carries an electric-blue edge; the rest stay silver */
+      ctx.strokeStyle=P.blueEdge?BLUE((la*1.1).toFixed(3)):WHITE(la.toFixed(3));
+      ctx.lineWidth=0.7+depth*0.9;ctx.stroke();
 
-      /* stardust inside the panel */
+      /* inner detail: mid-lines across the panel, faint blue circuitry feel */
+      const um=(P.u0+P.u1)/2, vm=(P.v0+P.v1)/2;
+      ctx.beginPath();
+      for(let k=0;k<=E;k++){const q=project(torusPoint(P.u0+(P.u1-P.u0)*k/E,vm,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
+      ctx.strokeStyle=BLUE((la*0.35).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
+      ctx.beginPath();
+      for(let k=0;k<=E;k++){const q=project(torusPoint(um,P.v0+(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
+      ctx.strokeStyle=WHITE((la*0.22).toFixed(3));ctx.lineWidth=0.5;ctx.stroke();
+
+      /* stardust inside the panel — white sparkle with electric-blue motes */
       P.dust.forEach(d=>{
         const q=project(torusPoint(d[0],d[1],vFlow,rx,ry),R,cx,cy);
         const tw=reduced?0.7:0.55+0.45*Math.sin(t*2.2+d[0]*9+d[1]*7); /* twinkle */
-        ctx.beginPath();ctx.arc(q.x,q.y,d[2]*(0.5+depth*0.9),0,Math.PI*2);
-        ctx.fillStyle=WHITE((la*0.9*tw).toFixed(3));ctx.fill();
+        ctx.beginPath();ctx.arc(q.x,q.y,d[2]*(0.5+depth*0.9)*(d[3]?1.3:1),0,Math.PI*2);
+        ctx.fillStyle=d[3]?BLUE((la*1.1*tw).toFixed(3)):WHITE((la*0.9*tw).toFixed(3));ctx.fill();
       });
     });
     ctx.globalAlpha=1;
@@ -1249,6 +1215,187 @@ footer {
   else loop();
 })();
 
+
+/* ════ PROCESS GLOBE ════
+   "Predictable outcomes" visual: a wireframe globe with the four process
+   outcomes pinned to its surface. Auto-rotates; grab it with the mouse (or
+   finger) to spin it yourself — momentum carries on when you let go. */
+(function(){
+  const canvas=document.getElementById('process-globe');
+  if(!canvas)return;
+  const panel=canvas.parentElement;
+  const ctx=canvas.getContext('2d');
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,dpr=1;
+
+  const WHITE=(a)=>`rgba(240,240,248,${a})`;
+  const BLUE=(a)=>`rgba(61,90,254,${a})`;
+  const AMBER=(a)=>`rgba(240,160,48,${a})`;
+
+  /* the four outcomes, pinned around the globe (lat/lng in degrees) */
+  const NODES=[
+    {lat:18,lng:0,num:'01',label:'DISCOVERY'},
+    {lat:-8,lng:90,num:'02',label:'DIAGNOSIS'},
+    {lat:14,lng:180,num:'03',label:'PROPOSAL'},
+    {lat:-14,lng:270,num:'04',label:'EXECUTION'},
+  ];
+
+  let rotY=0.6, rotX=0.30, spin=0.0045, vel=0, dragging=false, lastX=0, lastY=0, t=0;
+
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    const r=panel.getBoundingClientRect();
+    W=r.width;H=r.height;
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function spherePoint(latDeg,lngDeg){
+    const la=latDeg*Math.PI/180, ln=lngDeg*Math.PI/180+rotY;
+    const x=Math.cos(la)*Math.sin(ln), y=Math.sin(la), z=Math.cos(la)*Math.cos(ln);
+    /* tilt about X */
+    const c=Math.cos(rotX),s=Math.sin(rotX);
+    return [x, y*c-z*s, y*s+z*c];
+  }
+
+  function project(p,R,cx,cy){
+    const d=3.4,sc=d/(d-p[2]);
+    return {x:cx+p[0]*R*sc, y:cy-p[1]*R*sc, z:p[2]};
+  }
+
+  function drawCircle(pts,style,width){
+    ctx.beginPath();
+    pts.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));
+    ctx.strokeStyle=style;ctx.lineWidth=width;ctx.stroke();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx=W/2, cy=H/2, R=Math.min(W,H)*0.34;
+
+    /* soft amber core glow */
+    const glow=ctx.createRadialGradient(cx,cy,R*0.2,cx,cy,R*1.5);
+    glow.addColorStop(0,AMBER(0.05));glow.addColorStop(1,AMBER(0));
+    ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+
+    /* latitude rings (blue mesh, brand-tertiary) */
+    for(let lat=-60;lat<=60;lat+=30){
+      const front=[],back=[];
+      for(let k=0;k<=72;k++){
+        const q=project(spherePoint(lat,k*5),R,cx,cy);
+        (q.z>0?front:back).push({k,q});
+      }
+      /* draw back half fainter, front brighter, split into runs */
+      [[back,0.10],[front,0.26]].forEach(([half,al])=>{
+        let run=[];
+        for(let i=0;i<half.length;i++){
+          if(i>0&&half[i].k!==half[i-1].k+1){ if(run.length>1)drawCircle(run,BLUE(al),lat===0?1.1:0.7); run=[]; }
+          run.push(half[i].q);
+        }
+        if(run.length>1)drawCircle(run,BLUE(lat===0?al*1.5:al),lat===0?1.1:0.7);
+      });
+    }
+    /* meridians */
+    for(let lng=0;lng<360;lng+=30){
+      const front=[],back=[];
+      for(let k=0;k<=60;k++){
+        const q=project(spherePoint(-90+k*3,lng),R,cx,cy);
+        (q.z>0?front:back).push({k,q});
+      }
+      [[back,0.08],[front,0.20]].forEach(([half,al])=>{
+        let run=[];
+        for(let i=0;i<half.length;i++){
+          if(i>0&&half[i].k!==half[i-1].k+1){ if(run.length>1)drawCircle(run,BLUE(al),0.6); run=[]; }
+          run.push(half[i].q);
+        }
+        if(run.length>1)drawCircle(run,BLUE(al),0.6);
+      });
+    }
+
+    /* limb (outline circle) */
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);
+    ctx.strokeStyle=WHITE(0.22);ctx.lineWidth=1;ctx.stroke();
+
+    /* outcome nodes */
+    NODES.forEach((N,i)=>{
+      const q=project(spherePoint(N.lat,N.lng),R,cx,cy);
+      const front=q.z>0;
+      const pulse=reduced?0.6:0.6+0.4*Math.sin(t*2+i*1.6);
+      if(front){
+        /* connector tick + glowing node + label */
+        ctx.save();
+        ctx.shadowColor='rgba(240,160,48,0.6)';ctx.shadowBlur=10;
+        ctx.beginPath();ctx.arc(q.x,q.y,4.2,0,Math.PI*2);
+        ctx.fillStyle=AMBER((0.55+0.35*pulse).toFixed(3));ctx.fill();
+        ctx.restore();
+        ctx.beginPath();ctx.arc(q.x,q.y,7.5,0,Math.PI*2);
+        ctx.strokeStyle=AMBER(0.30);ctx.lineWidth=1;ctx.stroke();
+        const side=q.x>cx?1:-1;
+        ctx.beginPath();ctx.moveTo(q.x+side*10,q.y);ctx.lineTo(q.x+side*22,q.y);
+        ctx.strokeStyle=WHITE(0.30);ctx.lineWidth=1;ctx.stroke();
+        ctx.font="700 13px 'Space Grotesk', sans-serif";
+        ctx.textAlign=side>0?'left':'right';ctx.textBaseline='middle';
+        ctx.fillStyle=AMBER(0.9);
+        ctx.fillText(N.num, q.x+side*27, q.y-8);
+        ctx.font="9px 'Space Grotesk', sans-serif";
+        ctx.fillStyle=WHITE(0.55);
+        ctx.fillText(N.label, q.x+side*27, q.y+7);
+      } else {
+        /* seen through the globe, faint */
+        ctx.beginPath();ctx.arc(q.x,q.y,2.5,0,Math.PI*2);
+        ctx.fillStyle=AMBER(0.14);ctx.fill();
+      }
+    });
+
+    /* hint, fades once touched */
+    if(!draw.touched){
+      ctx.font="10px 'Space Grotesk', sans-serif";ctx.textAlign='center';
+      ctx.fillStyle=WHITE(0.30);
+      ctx.fillText('DRAG TO ROTATE', cx, cy+R+26);
+    }
+  }
+
+  let gframe=0;
+  function loop(){
+    t+=0.016;
+    if(!dragging){
+      rotY+=spin+vel;
+      vel*=0.95;                              /* momentum decay after release */
+    }
+    rotX+= (Math.max(-0.9,Math.min(0.9,rotX))-rotX);
+    /* self-heal: panel may have been hidden (display:none) when first sized */
+    if(++gframe%30===0){
+      const r=panel.getBoundingClientRect();
+      if(Math.abs(W-r.width)>1||Math.abs(H-r.height)>1)resize();
+    }
+    if(W>0)draw();
+    requestAnimationFrame(loop);
+  }
+
+  function startDrag(x,y){dragging=true;lastX=x;lastY=y;vel=0;draw.touched=true;canvas.style.cursor='grabbing';}
+  function moveDrag(x,y){
+    if(!dragging)return;
+    rotY+=(x-lastX)*0.006;
+    rotX=Math.max(-0.9,Math.min(0.9,rotX+(y-lastY)*0.004));
+    vel=(x-lastX)*0.0012;
+    lastX=x;lastY=y;
+    if(reduced)draw();
+  }
+  function endDrag(){dragging=false;canvas.style.cursor='grab';}
+
+  canvas.addEventListener('mousedown',e=>startDrag(e.clientX,e.clientY));
+  window.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+  window.addEventListener('mouseup',endDrag);
+  canvas.addEventListener('touchstart',e=>{startDrag(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  canvas.addEventListener('touchmove',e=>{moveDrag(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  canvas.addEventListener('touchend',endDrag);
+  window.addEventListener('resize',resize);
+
+  resize();
+  if(reduced){draw();}
+  else loop();
+})();
 
 /* ════ NAV ════ */
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60));

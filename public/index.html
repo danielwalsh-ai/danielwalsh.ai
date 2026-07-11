@@ -1232,6 +1232,22 @@ footer {
   const BLUE=(a)=>`rgba(61,90,254,${a})`;
   const AMBER=(a)=>`rgba(240,160,48,${a})`;
 
+  /* ── Earth landmass: 2° dot grid (180×90 bitset, baked at build time from
+     Natural-Earth-derived country polygons) — land renders as dots, sea empty ── */
+  const LAND_B64='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAfAP8DAAAAAAAAAAAAAAAAAAAAAADo//z//wcAAAAAAAACAAAAAAAAAAAAhvvw//8PAPABAAAAwAMAAAAAAAAAwADkw////wEABAAAAABgAAAAAAAAAADAUT8A/v8PAAAAAAwA/j8AuAEAAAAAcBHtDcD/fwAAAAAwAPz/fwMAABCAAQD5w/wD8P8FAAAMAIL7//9//xOAAP/ff0668QD/HwAA+A8At///////v3/w/////x8++B8AAOD/1//7////////jP////+/+AE/gAcAn9f//////////w/w/////wEs4AEAAHz+////////////gL////8HeAAcAADg5///////////9ADgAf7/f4AnAAAAAH78////////H0QAAAiA//8f8AcAAIBB4////////38ADwAQAOD//5//AQAAHAT/////////A3AAAAAA/v//+T8AAGDz//////////8DAQAAAMD/////AwAAsP//////////LwAAAAAA6P///2IAAAD+//////////8CAAAAAAD///8/CAAA4P//////////JwAAAAAA8P///wYAAAD+/unz/////z8AAAAAAAD///8HAAAA/pgPPP//////MQAAAAAA8P//PwAAAMBD9v7n/////wcBAAAAAAD///8AAAAAPkD7f/7///8hEAAAAAAA4P//DwAAAIDhAv/n////f8YAAAAAAAD8//8AAAAA+AdE//////8jDwAAAAAAgP//AwAAAMD/APD/////PxgAAAAAAADw/x8AAAAA/n/v//////8HAAAAAAAAAPwDAgAAAOD////7////fwAAAAAAAACgHyAAAACA//9/f/7///8DAAAAAAAAAPQBAAAAAPj//+cv+P//PwAAAAAAAAAAHjAAAADA/////g/+//8EAAAAAAAAAOBhCAAAAP7//99/4D//AAAAAAAAAAAAPAMEAADA////+Qf84BcAAAAAAAAAAAA/AAAAAPz//58fgAf+QAAAAAAAAAAAAA8AAADg////ewA4gA8EAAAAAAAAAADAAAAAAPz//38BgAP4QQAAAAAAAAAAAAgPAADA////zwAwgAwQAAAAAAAAAAAA9Q8AAPj///8HAAVIAAAAAAAAAAAAAID/AQAA////fwBAAAAQAAAAAAAAAAAA+P8AAGDh//8DAAA0GAAAAAAAAAAAAID/HwAAAPj/HwAAgMIBAAAAAAAAAAAA/P8BAACA//8AAAAYXgAAAAAAAAAAAMD/fwAAAPz/BwAAAOOBAQAAAAAAAAAA/P8/AACA/z8AAABgbtQBAAAAAAAAAOD//w8AAPD/AwAAAAQIeAAAAAAAAAAA/P//AQAA/z8AAACAA4APAQAAAAAAAID//w8AAPD/AwAAAAARsEAAAAAAAAAA+P9/AAAA/j8AAAAAAAAAAAAAAAAAAAD//wcAAPD/QwAAAACAIwAAAAAAAAAA8P9/AAAA/z8EAAAAAD8GIAAAAAAAAAD8/wMAAPD/cQAAAAD4ZwAAAAAAAAAAgP8/AAAA/w8HAAAAgP8HAAAAAAAAAAD4/wMAAOD/MAAAAAD//wEBAAAAAAAAgP8PAAAA/g8DAAAA+P8fAAAAAAAAAAD4PwAAAOB/EAAAAID//wMAAAAAAAAAgP8DAAAA/AMAAAAA+P9/AAAAAAAAAAD8HwAAAMA/AAAAAID//wcAAAAAAAAAwP8BAAAA+AEAAAAA8P9/AAAAAAAAAAD8DwAAAIAPAAAAAAAP/gMAAAAAAAAAwB8AAAAAAAAAAAAAEIAfAAEAAAAAAAD+AwAAAAAAAAAAAAAA8AEgAAAAAAAA4AcAAAAAAAAAAAAAAAAAAAYAAAAAAABeAAAAAAAAAAAAAAAAwAAwAAAAAAAAwAMAAAAAAAAAAAAAAAAIgAEAAAAAAAAeAAAAAAAAAAAAAAAAAAAMAAAAAAAA4AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAABAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAB4AEDwn/8HAAAAAAAAAAAwAAAAAACA/P/h/////w8AAAAAAAAAwAcAAAD4////z///////PwAAAAAAHALwAACA//////////////8HAADw/y///wMAAP7/////////////HwAA+P///38AAID///////////////8AAPL/////BwAO////////////////DwAA8P////8HEPD//////////////z8AAOD/////////////////////////HwDgPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+  const landDots=(()=>{
+    const bin=atob(LAND_B64);
+    const dots=[];
+    for(let r=0;r<90;r++)for(let c=0;c<180;c++){
+      const idx=r*180+c;
+      if(bin.charCodeAt(idx>>3)&(1<<(idx&7))){
+        const lat=(90-(r+0.5)*2)*Math.PI/180, lng=(-180+(c+0.5)*2)*Math.PI/180;
+        dots.push([Math.cos(lat)*Math.sin(lng), Math.sin(lat), Math.cos(lat)*Math.cos(lng)]);
+      }
+    }
+    return dots;
+  })();
+
   /* the four outcomes, pinned around the globe (lat/lng in degrees) */
   const NODES=[
     {lat:18,lng:0,num:'01',label:'DISCOVERY'},
@@ -1329,31 +1345,14 @@ footer {
     glow.addColorStop(0,AMBER(0.05));glow.addColorStop(1,AMBER(0));
     ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
 
-    /* latitude rings (blue mesh, brand-tertiary) */
+    /* faint graticule — subtle now the landmass carries the shape */
     for(let lat=-60;lat<=60;lat+=30){
       const front=[],back=[];
       for(let k=0;k<=72;k++){
         const q=project(spherePoint(lat,k*5),R,cx,cy);
         (q.z>0?front:back).push({k,q});
       }
-      /* draw back half fainter, front brighter, split into runs */
-      [[back,0.10],[front,0.26]].forEach(([half,al])=>{
-        let run=[];
-        for(let i=0;i<half.length;i++){
-          if(i>0&&half[i].k!==half[i-1].k+1){ if(run.length>1)drawCircle(run,BLUE(al),lat===0?1.1:0.7); run=[]; }
-          run.push(half[i].q);
-        }
-        if(run.length>1)drawCircle(run,BLUE(lat===0?al*1.5:al),lat===0?1.1:0.7);
-      });
-    }
-    /* meridians */
-    for(let lng=0;lng<360;lng+=30){
-      const front=[],back=[];
-      for(let k=0;k<=60;k++){
-        const q=project(spherePoint(-90+k*3,lng),R,cx,cy);
-        (q.z>0?front:back).push({k,q});
-      }
-      [[back,0.08],[front,0.20]].forEach(([half,al])=>{
+      [[back,0.04],[front,0.10]].forEach(([half,al])=>{
         let run=[];
         for(let i=0;i<half.length;i++){
           if(i>0&&half[i].k!==half[i-1].k+1){ if(run.length>1)drawCircle(run,BLUE(al),0.6); run=[]; }
@@ -1362,6 +1361,36 @@ footer {
         if(run.length>1)drawCircle(run,BLUE(al),0.6);
       });
     }
+    for(let lng=0;lng<360;lng+=45){
+      const front=[],back=[];
+      for(let k=0;k<=60;k++){
+        const q=project(spherePoint(-90+k*3,lng),R,cx,cy);
+        (q.z>0?front:back).push({k,q});
+      }
+      [[back,0.03],[front,0.08]].forEach(([half,al])=>{
+        let run=[];
+        for(let i=0;i<half.length;i++){
+          if(i>0&&half[i].k!==half[i-1].k+1){ if(run.length>1)drawCircle(run,BLUE(al),0.6); run=[]; }
+          run.push(half[i].q);
+        }
+        if(run.length>1)drawCircle(run,BLUE(al),0.6);
+      });
+    }
+
+    /* ── continents: rotate the precomputed land dots with the globe ── */
+    const cly=Math.cos(rotY),sly=Math.sin(rotY),clx=Math.cos(rotX),slx=Math.sin(rotX);
+    const d=3.4;
+    landDots.forEach(v=>{
+      const x1=v[0]*cly+v[2]*sly, z1=-v[0]*sly+v[2]*cly;
+      const y2=v[1]*clx-z1*slx, z2=v[1]*slx+z1*clx;
+      if(z2<=0.02)return;                       /* front hemisphere only */
+      const sc=d/(d-z2);
+      const px=cx+x1*R*sc, py=cy-y2*R*sc;
+      const al=0.14+z2*0.50;
+      const sz=1.1+z2*1.2;
+      ctx.fillStyle=WHITE(al.toFixed(3));
+      ctx.fillRect(px-sz/2,py-sz/2,sz,sz);
+    });
 
     /* limb (outline circle) */
     ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);

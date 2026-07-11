@@ -1241,6 +1241,56 @@ footer {
   ];
 
   let rotY=0.6, rotX=0.30, spin=0.0045, vel=0, dragging=false, lastX=0, lastY=0, t=0;
+  let moved=0, pending=null, myPin=null, pins=[];
+
+  /* other visitors' pins (locations only — the API never exposes emails) */
+  fetch('/api/globe/pins').then(r=>r.json()).then(d=>{pins=d.pins||[];}).catch(()=>{});
+  try{ myPin=JSON.parse(localStorage.getItem('dw_globe_pin')||'null'); }catch(e){}
+
+  /* email form shown after placing a pin */
+  const pinForm=document.createElement('div');
+  pinForm.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:none;background:rgba(13,15,28,0.95);border:1px solid rgba(240,160,48,0.3);border-radius:12px;padding:12px 14px;z-index:5;max-width:92%;';
+  pinForm.innerHTML='<div style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#f0a030;margin-bottom:8px;">Nice spot. Leave your email and Daniel will wave back.</div>'
+    +'<div style="display:flex;gap:6px;"><input id="pin-email" type="email" placeholder="you@company.com" style="background:#07070f;border:1px solid rgba(240,240,248,0.15);border-radius:8px;padding:8px 10px;color:#f0f0f8;font-size:13px;width:180px;outline:none;">'
+    +'<button id="pin-submit" style="background:#f0a030;color:#07070f;border:none;border-radius:8px;padding:8px 14px;font-family:\'Space Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Pin me</button></div>'
+    +'<div id="pin-note" style="font-size:10px;color:rgba(240,240,248,0.35);margin-top:7px;">Just a hello — no spam, ever.</div>';
+  panel.appendChild(pinForm);
+  const pinEmail=pinForm.querySelector('#pin-email'), pinNote=pinForm.querySelector('#pin-note');
+  pinForm.querySelector('#pin-submit').addEventListener('click',submitPin);
+  pinEmail.addEventListener('keydown',e=>{if(e.key==='Enter')submitPin();});
+
+  async function submitPin(){
+    const email=pinEmail.value.trim();
+    if(!/^\S+@\S+\.\S+$/.test(email)){pinEmail.focus();pinNote.textContent='That email doesn’t look right.';return;}
+    pinNote.textContent='Pinning…';
+    try{
+      const r=await fetch('/api/globe/pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:pending.lat,lng:pending.lng,email})});
+      const d=await r.json();
+      if(!r.ok)throw new Error(d.error||'Failed');
+      myPin=pending;pending=null;
+      pins.push({lat:myPin.lat,lng:myPin.lng});
+      try{localStorage.setItem('dw_globe_pin',JSON.stringify(myPin));}catch(e){}
+      pinNote.textContent='You’re on the map. ✓';
+      setTimeout(()=>{pinForm.style.display='none';},1600);
+    }catch(err){pinNote.textContent=err.message||'Something went wrong — try again.';}
+  }
+
+  /* tap position → lat/lng on the front of the sphere (inverse of the render) */
+  function tapToLatLng(clientX,clientY){
+    const r=canvas.getBoundingClientRect();
+    const cx=r.width/2, cy=r.height/2, R=Math.min(r.width,r.height)*0.34;
+    const nx=(clientX-r.left-cx)/R, ny=-(clientY-r.top-cy)/R;
+    const rr=nx*nx+ny*ny;
+    if(rr>1)return null;
+    const nz=Math.sqrt(1-rr);
+    /* undo tilt (rotX), then unwind rotY */
+    const c=Math.cos(rotX), s=Math.sin(rotX);
+    const y0=ny*c+nz*s, z0=-ny*s+nz*c;
+    const lat=Math.asin(Math.max(-1,Math.min(1,y0)))*180/Math.PI;
+    let lng=(Math.atan2(nx,z0)-rotY)*180/Math.PI;
+    lng=((lng+180)%360+360)%360-180;
+    return {lat,lng};
+  }
 
   function resize(){
     dpr=Math.min(window.devicePixelRatio||1,2);
@@ -1348,11 +1398,39 @@ footer {
       }
     });
 
+    /* visitor pins — locations of people who marked themselves */
+    pins.forEach(pn=>{
+      const q=project(spherePoint(pn.lat,pn.lng),R,cx,cy);
+      if(q.z>0){
+        ctx.beginPath();ctx.arc(q.x,q.y,1.8,0,Math.PI*2);
+        ctx.fillStyle=BLUE(0.65);ctx.fill();
+      }
+    });
+
+    /* my pin — amber ring */
+    if(myPin){
+      const q=project(spherePoint(myPin.lat,myPin.lng),R,cx,cy);
+      if(q.z>0){
+        ctx.beginPath();ctx.arc(q.x,q.y,3,0,Math.PI*2);ctx.fillStyle=AMBER(0.9);ctx.fill();
+        ctx.beginPath();ctx.arc(q.x,q.y,6.5,0,Math.PI*2);ctx.strokeStyle=AMBER(0.4);ctx.lineWidth=1;ctx.stroke();
+      }
+    }
+
+    /* pending pin — pulsing crosshair awaiting the email */
+    if(pending){
+      const q=project(spherePoint(pending.lat,pending.lng),R,cx,cy);
+      if(q.z>0){
+        const pr=5+2.5*Math.sin(t*5);
+        ctx.beginPath();ctx.arc(q.x,q.y,3,0,Math.PI*2);ctx.fillStyle=AMBER(0.95);ctx.fill();
+        ctx.beginPath();ctx.arc(q.x,q.y,pr+4,0,Math.PI*2);ctx.strokeStyle=AMBER(0.5);ctx.lineWidth=1.2;ctx.stroke();
+      }
+    }
+
     /* hint, fades once touched */
     if(!draw.touched){
       ctx.font="10px 'Space Grotesk', sans-serif";ctx.textAlign='center';
       ctx.fillStyle=WHITE(0.30);
-      ctx.fillText('DRAG TO ROTATE', cx, cy+R+26);
+      ctx.fillText('DRAG TO ROTATE · CLICK TO PIN YOURSELF', cx, cy+R+26);
     }
   }
 
@@ -1373,23 +1451,37 @@ footer {
     requestAnimationFrame(loop);
   }
 
-  function startDrag(x,y){dragging=true;lastX=x;lastY=y;vel=0;draw.touched=true;canvas.style.cursor='grabbing';}
+  function startDrag(x,y){dragging=true;lastX=x;lastY=y;vel=0;moved=0;draw.touched=true;canvas.style.cursor='grabbing';}
   function moveDrag(x,y){
     if(!dragging)return;
+    moved+=Math.abs(x-lastX)+Math.abs(y-lastY);
     rotY+=(x-lastX)*0.006;
     rotX=Math.max(-0.9,Math.min(0.9,rotX+(y-lastY)*0.004));
     vel=(x-lastX)*0.0012;
     lastX=x;lastY=y;
     if(reduced)draw();
   }
-  function endDrag(){dragging=false;canvas.style.cursor='grab';}
+  function endDrag(x,y){
+    if(dragging&&moved<6&&typeof x==='number'){
+      /* a tap, not a drag → place a pin where they clicked */
+      const hit=tapToLatLng(x,y);
+      if(hit){
+        pending=hit;
+        pinForm.style.display='block';
+        pinNote.textContent='Just a hello — no spam, ever.';
+        setTimeout(()=>pinEmail.focus(),50);
+      } else { pending=null; pinForm.style.display='none'; }
+    }
+    dragging=false;canvas.style.cursor='grab';
+    if(reduced)draw();
+  }
 
   canvas.addEventListener('mousedown',e=>startDrag(e.clientX,e.clientY));
   window.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
-  window.addEventListener('mouseup',endDrag);
+  window.addEventListener('mouseup',e=>endDrag(e.clientX,e.clientY));
   canvas.addEventListener('touchstart',e=>{startDrag(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
   canvas.addEventListener('touchmove',e=>{moveDrag(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
-  canvas.addEventListener('touchend',endDrag);
+  canvas.addEventListener('touchend',e=>{const c=e.changedTouches[0];endDrag(c?c.clientX:undefined,c?c.clientY:undefined);});
   window.addEventListener('resize',resize);
 
   resize();

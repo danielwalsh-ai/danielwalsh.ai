@@ -83,6 +83,14 @@ async function initDB() {
       available BOOLEAN DEFAULT TRUE,
       UNIQUE(date, time_slot)
     );
+
+    CREATE TABLE IF NOT EXISTS globe_pins (
+      id         SERIAL PRIMARY KEY,
+      lat        REAL NOT NULL,
+      lng        REAL NOT NULL,
+      email      VARCHAR(255) NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
   `);
   console.log('✓ Database ready');
 }
@@ -169,6 +177,50 @@ app.get('/api/availability', async (req, res) => {
   } catch (err) {
     console.error('Availability error:', err);
     res.status(500).json({ error: 'Failed to fetch availability' });
+  }
+});
+
+/* ════════════════════════════════════
+   API — GLOBE PINS (visitor map / lead capture)
+════════════════════════════════════ */
+
+// GET /api/globe/pins — locations only, never emails (public endpoint)
+app.get('/api/globe/pins', async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT ROUND(lat::numeric,1)::float AS lat, ROUND(lng::numeric,1)::float AS lng
+       FROM globe_pins ORDER BY created_at DESC LIMIT 200`
+    );
+    res.json({ pins: result.rows });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch pins' });
+  }
+});
+
+// POST /api/globe/pin — visitor marks their location + leaves an email
+const pinLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { error: 'Too many pins' } });
+app.post('/api/globe/pin', pinLimiter, async (req, res) => {
+  const { lat, lng, email } = req.body || {};
+  if (typeof lat !== 'number' || typeof lng !== 'number' || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    return res.status(400).json({ error: 'Invalid location' });
+  }
+  if (!email || typeof email !== 'string' || email.length > 255 || !/^\S+@\S+\.\S+$/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  try {
+    await db.query(`INSERT INTO globe_pins (lat, lng, email) VALUES ($1, $2, $3)`, [lat, lng, email]);
+    // Lead alert to Daniel — non-blocking, a failed email must not fail the pin
+    resend.emails.send({
+      from: 'danielwalsh.ai <hello@danielwalsh.ai>',
+      to: 'hello@danielwalsh.ai',
+      subject: `New globe lead: ${email}`,
+      html: `<p><strong>${email}</strong> pinned themselves on the globe at ${lat.toFixed(1)}, ${lng.toFixed(1)}.</p>
+             <p>Worth a hello — they took the time to engage.</p>`,
+    }).catch(err => console.error('Pin alert email failed:', err.message));
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Globe pin error:', err);
+    res.status(500).json({ error: 'Failed to save pin' });
   }
 });
 

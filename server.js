@@ -14,6 +14,9 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+// Behind Traefik (one reverse proxy) — lets req.ip resolve the real client IP
+// for geolocation + rate limiting without trusting arbitrary forwarded headers.
+app.set('trust proxy', 1);
 
 /* ════════════════════════════════════
    MIDDLEWARE
@@ -196,6 +199,31 @@ app.get('/api/availability', async (req, res) => {
 /* ════════════════════════════════════
    API — GLOBE PINS (visitor map / lead capture)
 ════════════════════════════════════ */
+
+// GET /api/geo — approximate visitor location from their IP (server-side lookup,
+// so the strict browser CSP is untouched and no permission prompt is shown).
+const geoCache = new Map(); // ip → { data, exp }
+app.get('/api/geo', async (req, res) => {
+  try {
+    const ip = (req.ip || '').replace(/^::ffff:/, '');
+    // private / loopback ranges never geolocate — return gracefully
+    if (!ip || /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|::1|fc|fd)/i.test(ip)) {
+      return res.json({ located: false });
+    }
+    const cached = geoCache.get(ip);
+    if (cached && cached.exp > Date.now()) return res.json(cached.data);
+
+    const r = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, { signal: AbortSignal.timeout(4000) });
+    const j = await r.json();
+    const data = (j && j.success && typeof j.latitude === 'number')
+      ? { located: true, lat: j.latitude, lng: j.longitude, country: j.country || null }
+      : { located: false };
+    geoCache.set(ip, { data, exp: Date.now() + 3600 * 1000 });
+    res.json(data);
+  } catch (err) {
+    res.json({ located: false });
+  }
+});
 
 // GET /api/globe/pins — locations only, never emails (public endpoint)
 app.get('/api/globe/pins', async (req, res) => {

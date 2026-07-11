@@ -66,6 +66,22 @@
   fetch('/api/globe/pins').then(r=>r.json()).then(d=>{pins=d.pins||[];}).catch(()=>{});
   try{ myPin=JSON.parse(localStorage.getItem('dw_globe_pin')||'null'); }catch(e){}
 
+  /* auto-locate: spin the globe to the visitor's region and pre-drop a pin there
+     (server reads approx location from IP — no permission prompt). Skipped if
+     they've already joined or as soon as they touch the globe. */
+  let autoRX=null, autoRY=null, autoDone=false, autoGeo=null;
+  if(!myPin){
+    fetch('/api/geo').then(r=>r.json()).then(g=>{
+      if(g && g.located && !draw.touched && !myPin){
+        spin=0;                                   /* hold on their location */
+        autoRX=Math.max(-0.9,Math.min(0.9, g.lat*Math.PI/180));
+        autoRY=-g.lng*Math.PI/180;
+        autoGeo={lat:g.lat, lng:g.lng, country:g.country};
+        draw.touched=true;                        /* hide the drag hint */
+      }
+    }).catch(()=>{});
+  }
+
   /* email form shown after placing a pin */
   const pinForm=document.createElement('div');
   pinForm.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:none;background:rgba(0,6,10,0.96);border:1px solid rgba(0,229,255,0.3);box-shadow:0 0 18px rgba(0,229,255,0.12);border-radius:12px;padding:12px 14px;z-index:5;max-width:92%;';
@@ -269,7 +285,22 @@
   let gframe=0;
   function loop(){
     t+=0.016;
-    if(!dragging){
+    if(autoRY!==null && !dragging){
+      /* ease shortest way to the visitor's location, then drop a pending pin */
+      const d=((autoRY-rotY+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
+      rotY+=d*0.06;
+      rotX+=(autoRX-rotX)*0.06;
+      if(Math.abs(d)<0.02 && Math.abs(autoRX-rotX)<0.02 && !autoDone){
+        autoDone=true; autoRY=null;
+        pending={lat:autoGeo.lat, lng:autoGeo.lng};
+        const country=countryAt(autoGeo.lat,autoGeo.lng)||autoGeo.country;
+        pinHead.textContent=country
+          ? 'Looks like you’re in '+country+' — drop your email to join the AI newsletter.'
+          : 'Drop your email to join the AI newsletter.';
+        pinForm.style.display='block';
+        pinNote.textContent='Practical AI tips, occasionally. Unsubscribe anytime.';
+      }
+    } else if(!dragging){
       rotY+=spin+vel;
       vel*=0.95;                              /* momentum decay after release */
     }
@@ -283,7 +314,7 @@
     requestAnimationFrame(loop);
   }
 
-  function startDrag(x,y){dragging=true;lastX=x;lastY=y;vel=0;moved=0;draw.touched=true;canvas.style.cursor='grabbing';}
+  function startDrag(x,y){dragging=true;lastX=x;lastY=y;vel=0;moved=0;draw.touched=true;autoRY=null;autoDone=true;canvas.style.cursor='grabbing';}
   function moveDrag(x,y){
     if(!dragging)return;
     moved+=Math.abs(x-lastX)+Math.abs(y-lastY);

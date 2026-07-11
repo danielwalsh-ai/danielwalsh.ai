@@ -1108,92 +1108,41 @@ footer {
 </div>
 
 <script>
-/* ════ 3D SCROLL GPU SCHEMATIC ════
-   Stylised AI-accelerator board (central die + HBM stacks + traces) as a 3D
-   wireframe, hand-rolled projection — no libraries, no trademarks.
-   Rotation is driven by scroll position — it spins at the pace you scroll —
-   plus a slow idle drift and slight mouse-tilt parallax. */
+/* ════ 4D TORUS PARALLAX ════
+   Segmented stardust torus (faceted ring of panels) that tumbles through its
+   own centre — the classic "4th dimension" illusion. Hand-rolled 3D on canvas,
+   no libraries. Idle: continuous tumble in place. On scroll: the whole object
+   travels DOWN the page with your scroll position (parallax backdrop). */
 (function(){
   const canvas=document.getElementById('mesh-canvas');
   const ctx=canvas.getContext('2d');
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W,H,dpr=1;
 
-  /* Colours (brand: blue tertiary low-opacity, amber accents ≤10%) */
-  const BLUE=(a)=>`rgba(61,90,254,${a})`;
   const WHITE=(a)=>`rgba(240,240,248,${a})`;
-  const AMBER=(a)=>`rgba(240,160,48,${a})`;
 
-  /* ── Geometry: y is UP; board lies in the x–z plane ── */
-  const lines=[];  /* {pts:[[x,y,z],…], c:'b'|'w'|'a', w:px, base:opacity} */
-  const dots=[];   /* {p:[x,y,z], c, r} */
-  const BW=1.75, BD=1.15, BT=0.06;      /* board half-width, half-depth, thickness */
-
-  function rect(y,hw,hd,c,w,base,cx0,cz0){
-    cx0=cx0||0;cz0=cz0||0;
-    lines.push({pts:[[cx0-hw,y,cz0-hd],[cx0+hw,y,cz0-hd],[cx0+hw,y,cz0+hd],[cx0-hw,y,cz0+hd],[cx0-hw,y,cz0-hd]],c,w,base});
-  }
-  function box(cx0,cz0,hw,hd,h,c,w,base){
-    rect(h,hw,hd,c,w,base,cx0,cz0);            /* top face */
-    rect(0.001,hw,hd,c,w*0.8,base*0.5,cx0,cz0); /* footprint */
-    [[-hw,-hd],[hw,-hd],[hw,hd],[-hw,hd]].forEach(k=>
-      lines.push({pts:[[cx0+k[0],0.001,cz0+k[1]],[cx0+k[0],h,cz0+k[1]]],c,w:w*0.8,base:base*0.8}));
-  }
-
-  /* Board outline (top + bottom + corner posts) */
-  rect(0,BW,BD,'b',1.1,0.30); rect(-BT,BW,BD,'b',0.8,0.16);
-  [[-BW,-BD],[BW,-BD],[BW,BD],[-BW,BD]].forEach(k=>
-    lines.push({pts:[[k[0],0,k[1]],[k[0],-BT,k[1]]],c:'b',w:0.8,base:0.2}));
-
-  /* Central die — amber-edged (the hero accent) with inner core */
-  box(0,0,0.42,0.42,0.14,'a',1.2,0.5);
-  rect(0.141,0.30,0.30,'a',0.8,0.35);
-  rect(0.142,0.16,0.16,'w',0.6,0.25);
-
-  /* HBM memory stacks — 3 each side of the die */
-  [-1,1].forEach(sx=>{ [-0.62,0,0.62].forEach(z=>{ box(sx*0.78,z,0.16,0.26,0.11,'b',0.9,0.34); }); });
-
-  /* Trace fan: die edges → board edge connectors, one 90° bend each */
-  for(let i=0;i<9;i++){
-    const z=-0.36+i*0.09;
-    [[-1],[1]].forEach(([sx])=>{
-      const x0=sx*0.44, x1=sx*(1.12+((i%3)*0.14)), xe=sx*BW*0.97;
-      lines.push({pts:[[x0,0.002,z],[x1,0.002,z],[x1,0.002,z*1.55],[xe,0.002,z*1.55]],c:'b',w:0.55,base:0.22});
-      dots.push({p:[x1,0.004,z],c:'w',r:1.1});
-    });
-  }
-  /* Front/back traces from die to board edge */
-  for(let i=0;i<7;i++){
-    const x=-0.27+i*0.09;
-    [[-1],[1]].forEach(([sz])=>{
-      lines.push({pts:[[x,0.002,sz*0.44],[x,0.002,sz*0.78],[x*1.9,0.002,sz*0.78],[x*1.9,0.002,sz*BD*0.96]],c:'b',w:0.55,base:0.20});
-    });
+  /* ── Faceted torus: NU panels around the ring × NV around the tube ── */
+  const NU=14, NV=6, RMAJ=1.0, RTUBE=0.44, GAP=0.10;
+  const panels=[];
+  for(let i=0;i<NU;i++){
+    for(let j=0;j<NV;j++){
+      const u0=(i+GAP/2)/NU*Math.PI*2, u1=(i+1-GAP/2)/NU*Math.PI*2;
+      const v0=(j+GAP/2)/NV*Math.PI*2, v1=(j+1-GAP/2)/NV*Math.PI*2;
+      /* stardust: random points inside the panel, in torus (u,v) space */
+      const dust=[];
+      const n=6+Math.floor(((i*7+j*13)%9));      /* deterministic count */
+      let seed=i*131+j*17+1;
+      const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+      for(let k=0;k<n;k++)dust.push([u0+(u1-u0)*rnd(), v0+(v1-v0)*rnd(), 0.4+rnd()*0.9]);
+      panels.push({u0,u1,v0,v1,dust});
+    }
   }
 
-  /* Capacitor banks — short paired ticks along front and back edges */
-  for(let i=0;i<12;i++){
-    const x=-1.35+i*0.245;
-    [[-1],[1]].forEach(([sz])=>{
-      lines.push({pts:[[x,0.05,sz*0.97],[x,0.05,sz*1.05]],c:'w',w:1.4,base:0.20});
-      lines.push({pts:[[x+0.05,0.05,sz*0.97],[x+0.05,0.05,sz*1.05]],c:'w',w:1.4,base:0.12});
-    });
-  }
-
-  /* Edge connector fingers (one long side) */
-  for(let i=0;i<22;i++){
-    const x=-1.45+i*0.135;
-    lines.push({pts:[[x,-BT,BD],[x,0,BD]],c:'a',w:1.6,base:0.16});
-  }
-
-  /* Amber pulse pads on the die top */
-  const pads=[[-0.2,-0.2],[0.2,-0.2],[-0.2,0.2],[0.2,0.2]].map(k=>({p:[k[0],0.145,k[1]]}));
-
-  /* Parallax starfield — deepest layer, drifts slower than the page */
+  /* Sparse background starfield (slow parallax layer) */
   const stars=[];
-  for(let i=0;i<80;i++)stars.push({x:Math.random(),y:Math.random(),depth:0.15+Math.random()*0.45,r:0.5+Math.random()*1.3});
+  for(let i=0;i<60;i++)stars.push({x:Math.random(),y:Math.random(),depth:0.15+Math.random()*0.45,r:0.4+Math.random()*1.1});
 
-  let rotY=0,targetY=0,mx=0,my=0,tmx=0,tmy=0,idle=0;
-  const TILT=0.52,SCROLL_RATE=0.0040;
+  let mx=0,my=0,tmx=0,tmy=0,t=0,scrollRot=0;
 
   function resize(){
     dpr=Math.min(window.devicePixelRatio||1,2);
@@ -1203,136 +1152,88 @@ footer {
     ctx.setTransform(dpr,0,0,dpr,0,0);
   }
 
-  function project(p,ry,rx,R,cx,cy){
+  /* torus surface point → rotated 3D. vFlow makes panels stream through the
+     hole (the "4D" inside-out motion); rx/ry are rigid tumble angles. */
+  function torusPoint(u,v,vFlow,rx,ry){
+    const vv=v+vFlow;
+    const x=(RMAJ+RTUBE*Math.cos(vv))*Math.cos(u);
+    const y=RTUBE*Math.sin(vv);
+    const z=(RMAJ+RTUBE*Math.cos(vv))*Math.sin(u);
+    /* rotate Y then X */
     const cy1=Math.cos(ry),sy1=Math.sin(ry),cx1=Math.cos(rx),sx1=Math.sin(rx);
-    const x1=p[0]*cy1+p[2]*sy1, z1=-p[0]*sy1+p[2]*cy1;
-    const y2=p[1]*cx1-z1*sx1, z2=p[1]*sx1+z1*cx1;
-    const d=4.2,s=d/(d-z2);
-    return {x:cx+x1*R*s,y:cy-y2*R*s,z:z2};
+    const x1=x*cy1+z*sy1, z1=-x*sy1+z*cy1;
+    const y2=y*cx1-z1*sx1, z2=y*sx1+z1*cx1;
+    return [x1,y2,z2];
   }
 
-  function col(c,a){return c==='a'?AMBER(a):c==='w'?WHITE(a):BLUE(a);}
+  function project(p,R,cx,cy){
+    const d=3.6,s=d/(d-p[2]);
+    return {x:cx+p[0]*R*s, y:cy-p[1]*R*s, z:p[2]};
+  }
 
   function draw(){
     ctx.clearRect(0,0,W,H);
     const sy=window.scrollY;
     const docH=Math.max(1,document.documentElement.scrollHeight-H);
-    const p=Math.min(1,sy/docH);            /* 0 at top → 1 at page bottom */
-    const narrow=W<1000;
+    const p=Math.min(1,sy/docH);            /* 0 top → 1 bottom of page */
 
-    /* Layer 1 — starfield, scrolls at a fraction of page speed (parallax) */
+    /* Layer 1 — starfield, drifts slower than the page */
     stars.forEach(s=>{
       const yy=((s.y*H - sy*s.depth*0.25)%H+H)%H;
-      const xx=s.x*W + Math.sin(idle*0.7+s.y*9)*6;
-      ctx.beginPath();ctx.arc(xx,yy,s.r,0,Math.PI*2);
-      ctx.fillStyle=WHITE((0.05+s.depth*0.16).toFixed(3));ctx.fill();
+      ctx.beginPath();ctx.arc(s.x*W,yy,s.r,0,Math.PI*2);
+      ctx.fillStyle=WHITE((0.04+s.depth*0.14).toFixed(3));ctx.fill();
     });
 
-    /* Layer 2 — the hologram, corkscrewing down the page as you scroll */
-    const cx=W*0.5 + (narrow?0:W*0.10*Math.sin(p*Math.PI*4));
-    const cy=H*0.5 + H*0.07*Math.cos(p*Math.PI*4);
-    const R=Math.min(W,H)*(0.40-0.05*Math.sin(p*Math.PI*2));
-    const rx=(TILT-0.10+p*0.85)+tmy*0.10;   /* board tips over as you descend */
-    const ry=rotY+idle+tmx*0.10;
-    ctx.globalAlpha=narrow?0.30:0.55;        /* burn-in level behind content */
+    /* Layer 2 — the torus: tumbles in place; scroll carries it down the page */
+    const cx=W*0.5 + Math.sin(t*0.25)*W*0.015 + tmx*W*0.01;
+    const cy=H*(0.44+0.38*p) + Math.sin(t*0.4)*H*0.008;
+    const R=Math.min(W,H)*0.30;
+    const vFlow=t*0.5 + scrollRot;           /* panels stream through the hole */
+    const rx=0.95+Math.sin(t*0.11)*0.18+tmy*0.06;
+    const ry=t*0.07+tmx*0.06;
 
-    lines.forEach(L=>{
-      const pts=L.pts.map(p=>project(p,ry,rx,R,cx,cy));
-      const zm=pts.reduce((s,q)=>s+q.z,0)/pts.length;
-      const depth=0.55+((zm+1.2)/2.4)*0.65;           /* depth fade */
-      ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
-      for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
-      ctx.strokeStyle=col(L.c,Math.min(0.85,L.base*depth*1.9).toFixed(3));
-      ctx.lineWidth=L.w*(0.7+depth*0.4);ctx.stroke();
+    /* depth-sort panels so nearer ones draw over farther ones */
+    const drawList=panels.map(P=>{
+      const um=(P.u0+P.u1)/2, vm=(P.v0+P.v1)/2;
+      const m=torusPoint(um,vm,vFlow,rx,ry);
+      return {P,z:m[2]};
+    }).sort((a,b)=>a.z-b.z);
+
+    const narrow=W<1000;
+    ctx.globalAlpha=narrow?0.45:0.8;
+
+    drawList.forEach(({P,z})=>{
+      const depth=(z+1.5)/3;                 /* 0 far → 1 near */
+      const la=0.10+depth*0.55;
+      /* panel outline: 4 edges, sampled so they curve with the surface */
+      ctx.beginPath();
+      const E=4;
+      for(let k=0;k<=E;k++){const q=project(torusPoint(P.u0+(P.u1-P.u0)*k/E,P.v0,vFlow,rx,ry),R,cx,cy);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}
+      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u1,P.v0+(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
+      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u1-(P.u1-P.u0)*k/E,P.v1,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
+      for(let k=1;k<=E;k++){const q=project(torusPoint(P.u0,P.v1-(P.v1-P.v0)*k/E,vFlow,rx,ry),R,cx,cy);ctx.lineTo(q.x,q.y);}
+      ctx.closePath();
+      /* darken panel interior so nearer panels occlude farther ones */
+      ctx.fillStyle=`rgba(7,7,15,${(0.55+depth*0.35).toFixed(3)})`;ctx.fill();
+      ctx.strokeStyle=WHITE(la.toFixed(3));ctx.lineWidth=0.7+depth*0.9;ctx.stroke();
+
+      /* stardust inside the panel */
+      P.dust.forEach(d=>{
+        const q=project(torusPoint(d[0],d[1],vFlow,rx,ry),R,cx,cy);
+        const tw=reduced?0.7:0.55+0.45*Math.sin(t*2.2+d[0]*9+d[1]*7); /* twinkle */
+        ctx.beginPath();ctx.arc(q.x,q.y,d[2]*(0.5+depth*0.9),0,Math.PI*2);
+        ctx.fillStyle=WHITE((la*0.9*tw).toFixed(3));ctx.fill();
+      });
     });
-
-    dots.forEach(D=>{
-      const q=project(D.p,ry,rx,R,cx,cy);
-      const depth=0.55+((q.z+1.2)/2.4)*0.65;
-      ctx.beginPath();ctx.arc(q.x,q.y,D.r*depth,0,Math.PI*2);
-      ctx.fillStyle=col(D.c,(0.32*depth).toFixed(3));ctx.fill();
-    });
-
-    /* pulsing amber die pads — with glow */
-    ctx.save();
-    ctx.shadowColor='rgba(240,160,48,0.6)';ctx.shadowBlur=10;
-    pads.forEach((P,i)=>{
-      const q=project(P.p,ry,rx,R,cx,cy);
-      const pulse=reduced?0.5:0.5+0.5*Math.sin(idle*3+i*1.7);
-      ctx.beginPath();ctx.arc(q.x,q.y,2.6,0,Math.PI*2);
-      ctx.fillStyle=AMBER((0.3+0.5*pulse).toFixed(3));ctx.fill();
-    });
-    ctx.restore();
-
-    drawHUD(cx,cy,R,ry,p);
     ctx.globalAlpha=1;
-  }
-
-  /* ── HUD reticle: concentric rings + ticks + micro-readouts (screen space) ── */
-  function drawHUD(cx,cy,R,ry,p){
-    const r1=R*1.12, r2=R*1.30, r3=R*0.92;
-
-    /* ring A — fine blue circle with 60 tick marks, rotates with scroll */
-    ctx.beginPath();ctx.arc(cx,cy,r1,0,Math.PI*2);
-    ctx.strokeStyle=BLUE(0.28);ctx.lineWidth=0.9;ctx.stroke();
-    for(let i=0;i<60;i++){
-      const a=ry+i*Math.PI/30;
-      const long=i%5===0, len=long?8:4;
-      ctx.beginPath();
-      ctx.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);
-      ctx.lineTo(cx+Math.cos(a)*(r1+len),cy+Math.sin(a)*(r1+len));
-      ctx.strokeStyle=long?WHITE(0.38):BLUE(0.34);ctx.lineWidth=long?1.2:0.7;ctx.stroke();
-    }
-
-    /* ring B — three amber arc segments, counter-rotating, glowing */
-    ctx.save();
-    ctx.shadowColor='rgba(240,160,48,0.5)';ctx.shadowBlur=8;
-    for(let s=0;s<3;s++){
-      const a0=-ry*0.6+s*(Math.PI*2/3);
-      ctx.beginPath();ctx.arc(cx,cy,r2,a0,a0+Math.PI*0.38);
-      ctx.strokeStyle=AMBER(0.32);ctx.lineWidth=1.8;ctx.stroke();
-    }
-    ctx.restore();
-    /* ring B carets — small amber position markers */
-    for(let s=0;s<3;s++){
-      const a=-ry*0.6+s*(Math.PI*2/3);
-      ctx.beginPath();ctx.arc(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2,2.4,0,Math.PI*2);
-      ctx.fillStyle=AMBER(0.65);ctx.fill();
-    }
-
-    /* ring C — inner dashed white circle, slow rotation */
-    ctx.save();
-    ctx.setLineDash([2,7]);ctx.lineDashOffset=-ry*40;
-    ctx.beginPath();ctx.arc(cx,cy,r3,0,Math.PI*2);
-    ctx.strokeStyle=WHITE(0.18);ctx.lineWidth=0.9;ctx.stroke();
-    ctx.restore();
-
-    /* cardinal crosshair ticks */
-    [[0,-1],[0,1],[-1,0],[1,0]].forEach(k=>{
-      ctx.beginPath();
-      ctx.moveTo(cx+k[0]*(r2+12),cy+k[1]*(r2+12));
-      ctx.lineTo(cx+k[0]*(r2+24),cy+k[1]*(r2+24));
-      ctx.strokeStyle=WHITE(0.38);ctx.lineWidth=1.2;ctx.stroke();
-    });
-
-    /* micro-readouts */
-    const deg=((ry*180/Math.PI)%360+360)%360;
-    ctx.font="11px 'Space Grotesk', sans-serif";ctx.textAlign='left';
-    ctx.fillStyle=BLUE(0.7);
-    ctx.fillText('ROT '+deg.toFixed(1).padStart(5,'0')+'°',cx+r2*0.72,cy-r2*0.74);
-    ctx.fillStyle=AMBER(0.6);
-    ctx.fillText('DW·CORE ONLINE',cx-r2*0.98,cy+r2*0.80);
-    ctx.fillStyle=WHITE(0.38);
-    ctx.fillText('DESCENT '+String(Math.round((p||0)*100)).padStart(3,'0')+'%',cx+r2*0.70,cy+r2*0.80);
   }
 
   let frame=0;
   function loop(){
-    idle+=reduced?0:0.0028;
-    targetY=window.scrollY*SCROLL_RATE;
-    rotY+=(targetY-rotY)*0.08;      /* smoothed — spins at the pace you scroll */
+    t+=reduced?0:0.016;
+    const target=window.scrollY*0.0018;
+    scrollRot+=(target-scrollRot)*0.06;      /* scroll adds extra spin, smoothed */
     tmx+=(mx-tmx)*0.05; tmy+=(my-tmy)*0.05;
-    /* self-heal if a resize event was missed (e.g. hidden tab, orientation change) */
     if(++frame%30===0){
       if(Math.abs(W-window.innerWidth)>1||Math.abs(H-window.innerHeight)>1)resize();
     }
@@ -1341,14 +1242,13 @@ footer {
   }
 
   window.addEventListener('resize',resize);
-  window.addEventListener('mousemove',e=>{
-    mx=e.clientX/W*2-1; my=e.clientY/H*2-1;
-  });
+  window.addEventListener('mousemove',e=>{mx=e.clientX/W*2-1;my=e.clientY/H*2-1;});
   document.addEventListener('mouseleave',()=>{mx=0;my=0;});
   resize();
-  if(reduced){draw();window.addEventListener('scroll',()=>{targetY=rotY=window.scrollY*SCROLL_RATE;draw();},{passive:true});}
+  if(reduced){draw();window.addEventListener('scroll',()=>{scrollRot=window.scrollY*0.0018;draw();},{passive:true});}
   else loop();
 })();
+
 
 /* ════ NAV ════ */
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60));

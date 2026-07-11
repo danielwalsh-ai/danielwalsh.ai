@@ -485,76 +485,14 @@
   else loop();
 })();
 
-/* ════ CINEMATIC CORE VIDEO ════
-   Daniel's hologram clip as the hero core — slowed right down, looping
-   seamlessly forever via two stacked copies that crossfade at the join
-   (screen-blended glows merge invisibly). Scroll speed still boosts playback.
-   The particle vortex covers loading + reduced-motion. */
-(function(){
-  const a=document.getElementById('core-video');
-  const cvs=document.getElementById('core-canvas');
-  if(!a)return;
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced){ a.remove(); return; }
-
-  const BASE=0.45;                 /* slowed: ~half speed */
-  const FADE=0.55;                 /* crossfade window, real seconds */
-  const b=a.cloneNode();           /* second layer for the seamless join */
-  b.id='core-video-b';
-  a.parentElement.insertBefore(b,a.nextSibling);
-  let active=a, standby=b, started=false, boost=0;
-
-  a.addEventListener('canplaythrough',()=>{
-    if(started)return; started=true;
-    a.playbackRate=BASE; b.playbackRate=BASE;
-    a.classList.add('on');
-    if(cvs)cvs.classList.add('retired');
-    a.play().catch(()=>{});
-  },{once:true});
-
-  let lastY=window.scrollY;
-  window.addEventListener('scroll',()=>{
-    boost=Math.min(2.5,boost+Math.abs(window.scrollY-lastY)*0.008);
-    lastY=window.scrollY;
-  },{passive:true});
-
-  setInterval(()=>{
-    if(!started)return;
-    boost*=0.9;
-    const rate=Math.min(3,BASE*(1+boost));
-    [a,b].forEach(v=>{ if(Math.abs(v.playbackRate-rate)>0.03)v.playbackRate=rate; });
-
-    /* battery: pause everything once well past the hero */
-    if(window.scrollY>innerHeight*1.3){ [a,b].forEach(v=>{if(!v.paused)v.pause();}); return; }
-    if(active.paused)active.play().catch(()=>{});
-
-    /* seamless join: as the active layer nears its end, start + fade in the
-       standby, fade out the active, then swap roles */
-    const remain=(active.duration-active.currentTime)/rate;
-    if(active.duration&&remain<=FADE&&standby.paused){
-      standby.currentTime=0;
-      standby.play().catch(()=>{});
-      standby.classList.add('on');
-      active.classList.remove('on');
-      const old=active; active=standby; standby=old;
-      setTimeout(()=>{ standby.pause(); },FADE*1000+150);
-    }
-  },100);
-})();
-
 /* ════ JARVIS DASHBOARD ════ */
 (function(){
   const $=id=>document.getElementById(id);
   if(!$('hud-time'))return;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* status bar: clock + fake load metrics (random walk) */
-  let cpu=34,mem=52;
+  /* status bar clock */
   setInterval(()=>{ $('hud-time').textContent=new Date().toLocaleTimeString('en-GB'); },1000);
-  /* cpu random walk still drives the telemetry chart */
-  setInterval(()=>{
-    cpu=Math.max(12,Math.min(88,cpu+(Math.random()-0.5)*9));
-  },850);
 
   /* streaming terminal */
   const LOGS=[
@@ -590,19 +528,6 @@
   for(let i=0;i<10;i++)addLog();
   setInterval(addLog,1400);
 
-  /* telemetry chart - rolling line */
-  const ch=$('hud-chart'),chx=ch.getContext('2d');
-  const series=Array(60).fill(40);
-  setInterval(()=>{ series.push(cpu+Math.random()*6-3); series.shift(); },400);
-  function drawChart(){
-    chx.clearRect(0,0,240,58);
-    chx.beginPath();
-    series.forEach((v,i)=>{ const x=i*4, y=54-(v/100)*48; i?chx.lineTo(x,y):chx.moveTo(x,y); });
-    chx.strokeStyle='rgba(0,229,255,0.8)'; chx.lineWidth=1.2; chx.stroke();
-    chx.lineTo(236,58); chx.lineTo(0,58); chx.closePath();
-    chx.fillStyle='rgba(0,229,255,0.07)'; chx.fill();
-  }
-
   /* audio waveform */
   const wv=$('hud-wave'),wvx=wv.getContext('2d');
   let wt=0;
@@ -632,8 +557,8 @@
   for(let i=0;i<5;i++)addDiag();
   setInterval(addDiag,2100);
 
-  function hudLoop(){ drawChart(); drawWave(); requestAnimationFrame(hudLoop); }
-  if(!reduced)hudLoop(); else {drawChart();drawWave();}
+  function hudLoop(){ drawWave(); requestAnimationFrame(hudLoop); }
+  if(!reduced)hudLoop(); else drawWave();
 
   /* mouse-tilt parallax on panels + service cards */
   if(!reduced){

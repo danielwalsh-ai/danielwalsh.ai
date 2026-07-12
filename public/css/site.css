@@ -20,6 +20,9 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
 h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+/* prevent orphan/widow words: balance headings, avoid a lone word ending a paragraph */
+h1,h2,h3,h4,.page-lede,.page-eyebrow { text-wrap: balance; }
+p,.prose p,.prose li,details.faq p { text-wrap: pretty; }
 a { color: var(--amber); }
 
 /* ─── NAV ─── */

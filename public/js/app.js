@@ -292,6 +292,7 @@
       rotX+=(autoRX-rotX)*0.06;
       if(Math.abs(d)<0.02 && Math.abs(autoRX-rotX)<0.02 && !autoDone){
         autoDone=true; autoRY=null;
+        spin=0.0045;                            /* resume gentle rotation so the globe stays alive */
         pending={lat:autoGeo.lat, lng:autoGeo.lng};
         const country=countryAt(autoGeo.lat,autoGeo.lng)||autoGeo.country;
         pinHead.textContent=country

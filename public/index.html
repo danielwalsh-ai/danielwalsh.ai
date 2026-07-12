@@ -81,6 +81,9 @@ body::before {
 /* ─── TYPOGRAPHY ─── */
 .display { font-family: 'Space Grotesk', sans-serif; }
 h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+/* prevent orphan/widow words: balance headings, avoid a lone word on a line's last row */
+h1,h2,h3,h4,.hero-title,.section-title,.section-sub,.hero-attribution { text-wrap: balance; }
+p,.hero-sub,.hero-offer p { text-wrap: pretty; }
 
 /* ─── NAV ─── */
 nav {

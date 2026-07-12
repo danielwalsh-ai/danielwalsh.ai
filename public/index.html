@@ -205,6 +205,12 @@ nav.scrolled { padding: 14px 40px; }
 
 /* ─── ROADMAP ─── */
 #roadmap { position: relative; z-index: 1; background: rgba(0,2,5,0.55); }
+.roadmap-visual {
+  display: block; width: 100%; max-width: 1120px; height: auto;
+  margin: 48px auto 8px; border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 40px rgba(0,229,255,0.08);
+}
 .roadmap {
   position: relative;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
@@ -921,6 +927,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   <div class="section-inner">
     <div class="section-label">The journey</div>
     <h2 class="section-title">Where you are now.<br>Where we take you.</h2>
+    <img class="roadmap-visual" src="/media/roadmap.jpg" alt="Roadmap in three stages: now, drowning in paperwork; first 90 days, first AI systems live; fully integrated, the business runs itself and your time is yours" loading="lazy" width="1600" height="893">
     <div class="roadmap">
       <div class="roadmap-line"></div>
       <div class="roadmap-stage">

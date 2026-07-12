@@ -203,6 +203,56 @@ nav.scrolled { padding: 14px 40px; }
 @media (max-width: 900px) { #trust-bar { padding: 28px 24px; } .trust-inner { grid-template-columns: 1fr 1fr; gap: 24px; } }
 @media (max-width: 560px) { .trust-inner { grid-template-columns: 1fr; gap: 20px; } }
 
+/* ─── ROADMAP ─── */
+#roadmap { position: relative; z-index: 1; background: rgba(0,2,5,0.55); }
+.roadmap {
+  position: relative;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  margin-top: 56px;
+}
+.roadmap-line {
+  position: absolute; top: 22px; left: 8%; right: 8%; height: 2px;
+  background: linear-gradient(90deg, rgba(240,240,248,0.25), var(--cyan) 50%, var(--amber));
+  box-shadow: 0 0 12px rgba(0,229,255,0.35);
+}
+.roadmap-stage { position: relative; text-align: left; }
+.roadmap-marker {
+  position: relative; z-index: 1;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+  background: var(--bg); margin-bottom: 22px;
+}
+.roadmap-stage:nth-child(2) .roadmap-marker { border: 1px solid rgba(240,240,248,0.35); color: var(--muted); }
+.roadmap-stage:nth-child(3) .roadmap-marker { border: 1px solid var(--cyan); color: var(--cyan); box-shadow: 0 0 16px rgba(0,229,255,0.3); }
+.roadmap-stage:nth-child(4) .roadmap-marker { border: 1px solid var(--amber); color: var(--amber); box-shadow: 0 0 16px rgba(240,160,48,0.35); }
+.roadmap-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.roadmap-stage:nth-child(2) .roadmap-tag { color: rgba(240,240,248,0.45); }
+.roadmap-stage:nth-child(3) .roadmap-tag { color: var(--cyan); }
+.roadmap-stage:nth-child(4) .roadmap-tag { color: var(--amber); }
+.roadmap-stage h4 { font-size: 20px; font-weight: 650; color: var(--white); margin-bottom: 14px; letter-spacing: -0.3px; }
+.roadmap-stage ul { list-style: none; padding: 0; margin: 0; }
+.roadmap-stage li {
+  font-size: 14.5px; line-height: 1.65; color: var(--muted);
+  padding-left: 18px; position: relative; margin-bottom: 8px;
+}
+.roadmap-stage li::before { content: ''; position: absolute; left: 0; top: 10px; width: 7px; height: 2px; }
+.roadmap-stage:nth-child(2) li::before { background: rgba(240,240,248,0.35); }
+.roadmap-stage:nth-child(3) li::before { background: var(--cyan); }
+.roadmap-stage:nth-child(4) li::before { background: var(--amber); }
+.roadmap-caption {
+  margin-top: 48px; text-align: center;
+  font-size: 16px; color: var(--muted); font-style: italic;
+}
+@media (max-width: 900px) {
+  .roadmap { grid-template-columns: 1fr; gap: 40px; }
+  .roadmap-line { top: 22px; bottom: 22px; left: 21px; right: auto; width: 2px; height: auto;
+    background: linear-gradient(180deg, rgba(240,240,248,0.25), var(--cyan) 50%, var(--amber)); }
+}
+
 /* ─── CREDENTIALS BAR (legacy, unused) ─── */
 #credentials {
   background: rgba(0,6,10,0.82); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
@@ -769,8 +819,8 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
     <div class="logo-text">danielwalsh<span>.ai</span></div>
   </a>
   <div class="nav-links">
-    <a href="#services">Services</a>
     <a href="#process">Process</a>
+    <a href="#services">Services</a>
     <a href="/about">About</a>
     <a href="/faq">FAQ</a>
     <a href="#booking">Book</a>
@@ -822,47 +872,6 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   </div>
 </div>
 
-<!-- SERVICES -->
-<section id="services">
-  <div class="section-inner">
-    <div class="services-intro">
-      <div class="section-label">What I do</div>
-      <h2 class="section-title">Four ways to transform<br>your organisation with AI.</h2>
-      <p class="section-sub">Each engagement is scoped precisely. No bloated retainers. No buzzword audits. Just outcomes.</p>
-    </div>
-    <div class="services-grid">
-      <a class="service-card" href="/services/strategy-advisory">
-        <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
-        <h3>Strategy &amp; Advisory</h3>
-        <p>A clear, board-ready AI roadmap built around your actual business model, not a template. Where to start, what to avoid, and how to measure it.</p>
-        <div class="service-price">£500 / 60-min session</div>
-        <div class="service-arrow">↗</div>
-      </a>
-      <a class="service-card" href="/services/ai-implementation">
-        <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <h3>AI Implementation</h3>
-        <p>Hands-on build and deployment of AI systems, from LLM integrations to custom pipelines. I design it, build it, and hand it over working.</p>
-        <div class="service-price">£1,500 / day</div>
-        <div class="service-arrow">↗</div>
-      </a>
-      <a class="service-card" href="/services/training-workshops">
-        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3>Training & Workshops</h3>
-        <p>Half-day or full-day sessions that turn your team from AI-curious to AI-capable. Tailored to your industry. Practical, not theoretical.</p>
-        <div class="service-price">£1,200 / day</div>
-        <div class="service-arrow">↗</div>
-      </a>
-      <a class="service-card" href="/services/fractional-ai-officer">
-        <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-        <h3>Fractional AI Officer</h3>
-        <p>Your embedded AI lead without the full-time cost. Attend your exec meetings, drive your AI agenda, and own delivery across the business.</p>
-        <div class="service-price">£5,000 / month · 25 hrs · 12-month minimum</div>
-        <div class="service-arrow">↗</div>
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- PROCESS -->
 <section id="process">
   <div class="section-inner">
@@ -903,6 +912,88 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
         <div class="globe-note">Click the globe to drop a pin &amp; join the AI newsletter</div>
         <canvas id="process-globe" style="width:100%;height:100%;position:absolute;inset:0;cursor:grab;"></canvas>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-inner">
+    <div class="section-label">The journey</div>
+    <h2 class="section-title">Where you are now.<br>Where we take you.</h2>
+    <div class="roadmap">
+      <div class="roadmap-line"></div>
+      <div class="roadmap-stage">
+        <div class="roadmap-marker">01</div>
+        <div class="roadmap-tag">Now</div>
+        <h4>Before we meet</h4>
+        <ul>
+          <li>The office grew faster than revenue</li>
+          <li>Numbers arrive weeks after the fact</li>
+          <li>Key knowledge lives in two people's heads</li>
+          <li>Evenings lost to paperwork</li>
+        </ul>
+      </div>
+      <div class="roadmap-stage">
+        <div class="roadmap-marker">02</div>
+        <div class="roadmap-tag">First 90 days</div>
+        <h4>First systems live</h4>
+        <ul>
+          <li>Your worst admin job now runs itself</li>
+          <li>Live reports land every morning</li>
+          <li>Hours coming back every week</li>
+          <li>You can see what's working and what isn't</li>
+        </ul>
+      </div>
+      <div class="roadmap-stage">
+        <div class="roadmap-marker">03</div>
+        <div class="roadmap-tag">Fully integrated</div>
+        <h4>AI runs the admin</h4>
+        <ul>
+          <li>The business runs on live numbers</li>
+          <li>Admin no longer caps your growth</li>
+          <li>The office runs whether you're in or not</li>
+          <li>Your time is yours again</li>
+        </ul>
+      </div>
+    </div>
+    <p class="roadmap-caption">The tech is the easy bit. The point is what you get back: time with the kids or grandkids, the extra holiday with your wife, and savings that can finally go towards the dream car.</p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="services-intro">
+      <div class="section-label">What I do</div>
+      <h2 class="section-title">Four ways to transform<br>your organisation with AI.</h2>
+      <p class="section-sub">Every job is scoped plainly before we start. Full details on each service page.</p>
+    </div>
+    <div class="services-grid">
+      <a class="service-card" href="/services/strategy-advisory">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+        <h3>Strategy &amp; Advisory</h3>
+        <p>We find where AI actually pays in your business, and where it doesn't. You leave with a clear plan you could hand to your team the same day, not a deck that sits in a drawer.</p>
+        <div class="service-arrow">↗</div>
+      </a>
+      <a class="service-card" href="/services/ai-implementation">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>AI Implementation</h3>
+        <p>I design the system, build it and hand it over working. The paperwork that keeps you at the desk after everyone else has gone home gets done by software. That's evenings back with the kids or grandkids, not the keyboard.</p>
+        <div class="service-arrow">↗</div>
+      </a>
+      <a class="service-card" href="/services/training-workshops">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Training & Workshops</h3>
+        <p>Practical sessions on your real work, not theory. Your team stops needing you for every answer, and the business keeps running while you take that week away with your wife you keep putting off.</p>
+        <div class="service-arrow">↗</div>
+      </a>
+      <a class="service-card" href="/services/fractional-ai-officer">
+        <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <h3>Fractional AI Officer</h3>
+        <p>Your AI lead inside the business, month after month, without the full time cost. The savings land in the P&amp;L and stay there. Some clients put them back into the business. Some finally order the dream car.</p>
+        <div class="service-arrow">↗</div>
+      </a>
     </div>
   </div>
 </section>

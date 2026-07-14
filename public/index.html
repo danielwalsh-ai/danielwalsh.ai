@@ -199,11 +199,11 @@ nav.scrolled { padding: 14px 40px; }
 
 /* ─── ROADMAP ─── */
 #roadmap { position: relative; z-index: 1; background: rgba(0,2,5,0.55); }
-.roadmap-visual {
-  display: block; width: 100%; max-width: 1120px; height: auto;
-  margin: 48px auto 8px; border-radius: 10px;
-  border: 1px solid var(--border);
-  box-shadow: 0 0 40px rgba(0,229,255,0.08);
+.stage-photo {
+  display: block; width: 100%; height: auto;
+  border-radius: 8px; border: 1px solid var(--border);
+  box-shadow: 0 0 24px rgba(0,229,255,0.06);
+  margin-bottom: 18px;
 }
 .roadmap {
   position: relative;
@@ -920,11 +920,11 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
   <div class="section-inner">
     <div class="section-label">The journey</div>
     <h2 class="section-title">Where you are now.<br>Where we take you.</h2>
-    <img class="roadmap-visual" src="/media/roadmap.jpg?v=2" alt="Three stages of the journey: a business owner buried in paperwork late at night, then reviewing a live dashboard, then walking across his haulage yard to his family at the end of the day" decoding="async" width="1600" height="893">
     <div class="roadmap">
       <div class="roadmap-line"></div>
       <div class="roadmap-stage">
         <div class="roadmap-marker">01</div>
+        <img class="stage-photo" src="/media/roadmap-1.jpg" alt="A business owner at his desk, overwhelmed by stacks of paperwork" decoding="async" width="900" height="507">
         <div class="roadmap-tag">Now</div>
         <h4>Before we meet</h4>
         <ul>
@@ -936,6 +936,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       </div>
       <div class="roadmap-stage">
         <div class="roadmap-marker">02</div>
+        <img class="stage-photo" src="/media/roadmap-2.jpg" alt="The same business owner at a clear desk, working from a live AI dashboard" decoding="async" width="900" height="507">
         <div class="roadmap-tag">First 90 days</div>
         <h4>First systems live</h4>
         <ul>
@@ -947,6 +948,7 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       </div>
       <div class="roadmap-stage">
         <div class="roadmap-marker">03</div>
+        <img class="stage-photo" src="/media/roadmap-3.jpg" alt="The business owner relaxing at home with his family, the car on the drive" decoding="async" width="900" height="507">
         <div class="roadmap-tag">Fully integrated</div>
         <h4>AI runs the admin</h4>
         <ul>

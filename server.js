@@ -290,6 +290,47 @@ app.post('/api/globe/pin', pinLimiter, async (req, res) => {
   }
 });
 
+// POST /api/tools/margin-lead — Margin vs Volume calculator lead capture.
+// Browser CSP blocks direct calls to Make, so the webhook is forwarded server-side.
+const toolLeadLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { error: 'Too many submissions' } });
+app.post('/api/tools/margin-lead', toolLeadLimiter, async (req, res) => {
+  const { name, email, turnover, margin, target, currentProfit, marginNeededPct, turnoverNeeded, volumeUpliftPct } = req.body || {};
+  if (!email || typeof email !== 'string' || email.length > 255 || !/^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  const num = v => (typeof v === 'number' && isFinite(v)) ? v : null;
+  const payload = {
+    source: 'margin-vs-volume-tool',
+    submittedAt: new Date().toISOString(),
+    name: typeof name === 'string' ? name.slice(0, 120).replace(/[<>]/g, '') : '',
+    email,
+    turnover: num(turnover), margin: num(margin), target: num(target),
+    currentProfit: num(currentProfit), marginNeededPct: num(marginNeededPct),
+    turnoverNeeded: num(turnoverNeeded), volumeUpliftPct: num(volumeUpliftPct),
+  };
+  // Make sends the visitor their numbers; the alert email is the backstop if it's down
+  if (process.env.MARGIN_TOOL_WEBHOOK_URL) {
+    fetch(process.env.MARGIN_TOOL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(err => console.error('Margin tool webhook error:', err.message));
+  } else {
+    console.warn('MARGIN_TOOL_WEBHOOK_URL not set — margin tool lead not forwarded to Make');
+  }
+  if (resend) {
+    resend.emails.send({
+      from: 'danielwalsh.ai <hello@danielwalsh.ai>',
+      to: 'hello@danielwalsh.ai',
+      subject: `New margin tool lead: ${email}`,
+      html: `<p><strong>${payload.name || 'No name'}</strong> (${email}) ran the Margin vs Volume tool.</p>
+             <p>Turnover £${payload.turnover ?? '—'}/mo · margin ${payload.margin ?? '—'}% · target £${payload.target ?? '—'}/mo profit.</p>
+             <p>Margin route: ${payload.marginNeededPct ?? '—'}% needed · Volume route: £${payload.turnoverNeeded ?? '—'}/mo (+${payload.volumeUpliftPct ?? '—'}%).</p>`,
+    }).catch(err => console.error('Margin tool alert email failed:', err.message));
+  }
+  res.json({ success: true });
+});
+
 /* ════════════════════════════════════
    API — NEWSLETTER
 ════════════════════════════════════ */

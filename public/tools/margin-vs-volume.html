@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07070f">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Margin vs Volume Calculator | Daniel Walsh</title>
+<meta name="description" content="Free calculator: the two ways to hit a profit target — lift your margin or chase more volume — and which lever works harder for your numbers.">
+<link rel="canonical" href="https://danielwalsh.ai/tools/margin-vs-volume">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Margin vs Volume: Profit Lever Calculator">
+<meta property="og:description" content="See how many points of margin, or how much extra turnover, it takes to hit your profit target.">
+<meta property="og:url" content="https://danielwalsh.ai/tools/margin-vs-volume">
+<meta property="og:site_name" content="danielwalsh.ai">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://danielwalsh.ai/" },
+    { "@type": "ListItem", "position": 2, "name": "Margin vs Volume", "item": "https://danielwalsh.ai/tools/margin-vs-volume" }
+  ]
+}
+</script>
+<style>
+  main { max-width: 1040px; }
+
+  .tool-section {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 22px 24px; margin-top: 20px;
+    box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06);
+  }
+  .sec-label {
+    font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; font-weight: 600;
+  }
+
+  .inputs { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .inputs label { display: block; font-size: 12.5px; color: var(--body); margin-bottom: 7px; font-weight: 500; }
+  .field { position: relative; }
+  .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 15px; pointer-events: none; }
+  .suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 15px; pointer-events: none; }
+  input[type=number] {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    color: var(--white); font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 500;
+    padding: 12px 14px; border-radius: var(--radius); outline: none; transition: border-color .15s;
+  }
+  input[type=number].pad-l { padding-left: 26px; }
+  input[type=number].pad-r { padding-right: 32px; }
+  input[type=number]:focus { border-color: var(--amber); }
+  input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .current {
+    margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .current .k { font-size: 13px; color: var(--muted); }
+  .current .v { font-family: 'Space Grotesk', sans-serif; color: var(--white); font-size: 22px; font-weight: 600; }
+
+  .routes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .route-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px;
+    box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06);
+  }
+  .route-card.margin { border-color: var(--border-amber); box-shadow: 0 0 18px rgba(240,160,48,0.10), inset 0 0 0 1px rgba(240,160,48,0.08); }
+  .route-card .tag { font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
+  .route-card.margin .tag { color: var(--amber); }
+  .route-card.volume .tag { color: var(--cyan); }
+  .big { font-family: 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 700; line-height: 1.05; color: var(--white); letter-spacing: -1px; }
+  .route-card.margin .big { color: var(--amber); }
+  .delta { font-size: 14px; color: var(--body); margin-top: 8px; }
+  .delta strong { color: var(--white); font-weight: 600; }
+  .route-foot { font-size: 12.5px; color: var(--muted); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .warn { color: var(--amber); }
+
+  .insight-line { font-family: 'Space Grotesk', sans-serif; font-size: 19px; color: var(--white); font-weight: 500; margin-bottom: 20px; }
+  .insight-line b { color: var(--amber); font-weight: 700; }
+  .chart { display: flex; align-items: flex-end; gap: 14px; height: 170px; padding-top: 8px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; }
+  .bar { width: 100%; max-width: 70px; background: linear-gradient(180deg, rgba(61,90,254,0.55), rgba(61,90,254,0.16)); border-radius: var(--radius) var(--radius) 0 0; position: relative; transition: height .2s; }
+  .bar .val { position: absolute; top: -22px; left: 0; right: 0; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--white); font-weight: 600; }
+  .bar-lbl { font-size: 12px; color: var(--muted); text-align: center; }
+
+  .explorer { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
+  .lever { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
+  .lever h3 { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  .lever.m h3 { color: var(--amber); }
+  .lever.v h3 { color: var(--cyan); }
+  .lever .hint { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .slider-val { font-family: 'Space Grotesk', sans-serif; font-size: 15px; color: var(--white); font-weight: 600; margin-bottom: 10px; }
+  input[type=range] { width: 100%; -webkit-appearance: none; appearance: none; height: 5px; border-radius: 3px; background: rgba(240,240,248,0.12); outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--amber); cursor: pointer; border: 3px solid var(--bg2); }
+  input[type=range].blue::-webkit-slider-thumb { background: var(--blue, #3d5afe); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--amber); cursor: pointer; border: 3px solid var(--bg2); }
+  input[type=range].blue::-moz-range-thumb { background: #3d5afe; }
+  .result { margin-top: 16px; }
+  .result .p { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: var(--white); }
+  .progress { height: 7px; border-radius: 4px; background: rgba(240,240,248,0.10); margin-top: 12px; overflow: hidden; }
+  .progress .fill { height: 100%; border-radius: 4px; background: var(--amber); width: 0%; transition: width .15s; }
+  .status { font-size: 12.5px; margin-top: 8px; color: var(--muted); }
+  .status.hit { color: #94c21f; }
+
+  .note { font-size: 12px; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+
+  .capture {
+    background: var(--bg3); border: 1px solid var(--border-amber); border-radius: var(--radius-lg);
+    padding: 28px 24px; margin-top: 20px;
+    box-shadow: 0 0 18px rgba(240,160,48,0.08), inset 0 0 0 1px rgba(240,160,48,0.06);
+  }
+  .capture .lead { font-family: 'Space Grotesk', sans-serif; font-size: 19px; color: var(--white); font-weight: 500; margin-bottom: 6px; }
+  .capture .leadsub { font-size: 13.5px; color: var(--body); margin-bottom: 18px; max-width: 560px; }
+  .cap-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+  .cap-row label { display: block; font-size: 12.5px; color: var(--body); margin-bottom: 7px; font-weight: 500; }
+  .cap-row input[type=email], .cap-row input[type=text] {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--white);
+    font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; border-radius: var(--radius); outline: none;
+  }
+  .cap-row input:focus { border-color: var(--amber); }
+  .consent { font-size: 11.5px; color: var(--muted); margin-top: 12px; }
+  .cap-msg { font-size: 13.5px; margin-top: 12px; display: none; }
+  .cap-msg.ok { color: #94c21f; display: block; }
+  .cap-msg.err { color: var(--amber); display: block; }
+
+  @media (max-width: 720px) {
+    .inputs, .routes, .explorer, .cap-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark">DW</div>
+    <div class="logo-text">danielwalsh<span>.ai</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="/#services">Services</a>
+    <a href="/#process">Process</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+  </div>
+  <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="nav-linkedin" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+  <a href="/#booking" class="nav-cta">Book a session →</a>
+</nav>
+
+<main>
+  <div class="breadcrumbs"><a href="/">Home</a> · Margin vs Volume</div>
+  <span class="page-eyebrow">Free tool</span>
+  <h1>Margin vs Volume</h1>
+  <p class="page-lede">The two ways to hit a profit target, and which one works harder.</p>
+
+  <section class="tool-section">
+    <div class="sec-label">[ your numbers ]</div>
+    <div class="inputs">
+      <div>
+        <label for="turnover">Monthly turnover</label>
+        <div class="field">
+          <span class="prefix">£</span>
+          <input type="number" id="turnover" class="pad-l" value="50000" min="0" step="1000">
+        </div>
+      </div>
+      <div>
+        <label for="margin">Current margin</label>
+        <div class="field">
+          <input type="number" id="margin" class="pad-r" value="8" min="0.1" max="100" step="0.1">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+      <div>
+        <label for="target">Target monthly profit</label>
+        <div class="field">
+          <span class="prefix">£</span>
+          <input type="number" id="target" class="pad-l" value="6000" min="0" step="500">
+        </div>
+      </div>
+    </div>
+    <div class="current">
+      <span class="k">Current monthly profit</span>
+      <span class="v" id="currentProfit">£4,000</span>
+      <span class="k" id="upliftNote"></span>
+    </div>
+  </section>
+
+  <div class="routes">
+    <div class="route-card margin">
+      <div class="tag">Lift the margin</div>
+      <div class="big" id="marginNeeded">12%</div>
+      <div class="delta" id="marginDelta">That's <strong>+4 points</strong> on your current margin, turnover unchanged.</div>
+      <div class="route-foot">A price rise or cost cut that holds volume. Usually the lower-effort lever.</div>
+    </div>
+    <div class="route-card volume">
+      <div class="tag">Chase the volume</div>
+      <div class="big" id="volumeNeeded">£75,000</div>
+      <div class="delta" id="volumeDelta">That's <strong>+50%</strong> turnover (+£25,000), margin unchanged.</div>
+      <div class="route-foot">More customers, stock, staff and hassle to earn the same profit.</div>
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <div class="sec-label">[ the trade-off ]</div>
+    <div class="insight-line">At an <b id="insMargin">8%</b> margin, every <b>1 point</b> of margin is worth roughly <b id="insVolume">12.5%</b> extra volume.</div>
+    <div class="chart" id="chart"></div>
+    <div class="note">Each bar shows the volume increase you'd need to match that many points of added margin. The thinner your margin, the more punishing the volume route becomes.</div>
+  </section>
+
+  <section class="tool-section">
+    <div class="sec-label">[ explore either lever ]</div>
+    <div class="explorer">
+      <div class="lever m">
+        <h3>Margin lever</h3>
+        <div class="hint">Turnover held at current level.</div>
+        <div class="slider-val" id="mSliderVal">Margin: 8.0%</div>
+        <input type="range" id="mSlider" min="0" max="100" value="8" step="0.1" aria-label="Margin percentage">
+        <div class="result">
+          <div class="p" id="mProfit">£4,000</div>
+          <div class="progress"><div class="fill" id="mFill"></div></div>
+          <div class="status" id="mStatus"></div>
+        </div>
+      </div>
+      <div class="lever v">
+        <h3>Volume lever</h3>
+        <div class="hint">Margin held at current level.</div>
+        <div class="slider-val" id="vSliderVal">Turnover: £50,000</div>
+        <input type="range" id="vSlider" class="blue" min="0" max="200000" value="50000" step="500" aria-label="Monthly turnover">
+        <div class="result">
+          <div class="p" id="vProfit">£4,000</div>
+          <div class="progress"><div class="fill" id="vFill"></div></div>
+          <div class="status" id="vStatus"></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Model: margin is the share of turnover kept as profit; volume grows at a constant margin. It ignores fixed-cost leverage and price elasticity, so treat it as the back-of-envelope case, deliberately generous to the volume route.</div>
+  </section>
+
+  <section class="capture">
+    <div class="lead">Want these numbers sent over, plus a 15-minute teardown?</div>
+    <div class="leadsub">I'll send your figures back with a quick read on which lever actually fits your business: margin, volume, or the right mix. No pitch unless you ask for one.</div>
+    <div class="cap-row">
+      <div><label for="capName">Name</label><input type="text" id="capName" placeholder="Your name" autocomplete="name"></div>
+      <div><label for="capEmail">Email</label><input type="email" id="capEmail" placeholder="you@company.co.uk" autocomplete="email"></div>
+      <button class="btn-primary" id="capBtn" type="button">Send my numbers</button>
+    </div>
+    <div class="consent">Used only to send your results and follow up once. No list, no spam.</div>
+    <div class="cap-msg" id="capMsg" role="status"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="logo-mark">DW</div>
+        <span class="footer-wordmark">danielwalsh<span>.ai</span></span>
+      </div>
+      <p class="footer-tagline">Oxford · Google · MIT certified<br>AI consultancy · Worldwide</p>
+      <a href="mailto:hello@danielwalsh.ai" class="footer-email">hello@danielwalsh.ai</a>
+      <a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="footer-linkedin" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <a href="/services/strategy-advisory">Strategy &amp; Advisory</a>
+        <a href="/services/ai-implementation">AI Implementation</a>
+        <a href="/services/training-workshops">Training &amp; Workshops</a>
+        <a href="/services/fractional-ai-officer">Fractional AI Officer</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <a href="/about">About</a>
+        <a href="/faq">FAQ</a>
+        <a href="/tools/margin-vs-volume">Margin vs Volume tool</a>
+        <a href="/#process">How it works</a>
+        <a href="/#booking">Book a session</a>
+        <a href="mailto:hello@danielwalsh.ai">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Daniel Walsh AI Consultancy Ltd. All rights reserved.</span>
+    <span><a href="mailto:hello@danielwalsh.ai">hello@danielwalsh.ai</a></span>
+  </div>
+</footer>
+
+<script src="/js/margin-vs-volume.js"></script>
+</body>
+</html>

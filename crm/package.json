@@ -1,0 +1,10 @@
+{
+  "name": "dw-crm",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copy app files
-COPY server.js newsletter.js ./
+COPY server.js newsletter.js blog.js ./
 COPY public/ ./public/
 
 # Non-root user for security

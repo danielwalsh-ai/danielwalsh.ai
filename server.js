@@ -11,6 +11,7 @@ const constants = require('gocardless-nodejs/constants');
 const Anthropic = require('@anthropic-ai/sdk');
 const crypto = require('crypto');
 const newsletter = require('./newsletter');
+const blog = require('./blog');
 require('dotenv').config();
 
 const app = express();
@@ -114,6 +115,16 @@ async function initDB() {
       lng        REAL NOT NULL,
       email      VARCHAR(255) NOT NULL,
       created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS blog_posts (
+      id           SERIAL PRIMARY KEY,
+      slug         TEXT UNIQUE NOT NULL,
+      title        TEXT NOT NULL,
+      description  TEXT,
+      body_html    TEXT NOT NULL,
+      source_url   TEXT,
+      published_at TIMESTAMPTZ DEFAULT NOW()
     );
   `);
   console.log('✓ Database ready');
@@ -699,6 +710,11 @@ async function notifyMake(booking) {
 }
 
 /* ════════════════════════════════════
+   BLOG (server-rendered; published from the Airtable "Blog Posts" table)
+════════════════════════════════════ */
+blog.register(app, db);
+
+/* ════════════════════════════════════
    HEALTH CHECK
 ════════════════════════════════════ */
 app.get('/health', (req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));
@@ -715,4 +731,5 @@ initDB()
   })
   .finally(() => {
     app.listen(PORT, () => console.log(`✓ danielwalsh.ai server running on port ${PORT}`));
+    blog.startPoller(db);
   });

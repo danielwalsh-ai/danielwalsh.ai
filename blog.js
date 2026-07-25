@@ -75,6 +75,8 @@ const FOOTER = `
         <a href="/about">About</a>
         <a href="/faq">FAQ</a>
         <a href="/blog">Blog</a>
+        <a href="/ai-for-construction">AI for construction</a>
+        <a href="/ai-for-haulage">AI for haulage</a>
         <a href="/tools/margin-vs-volume">Margin vs Volume tool</a>
         <a href="/#process">How it works</a>
         <a href="/#booking">Book a session</a>
@@ -197,6 +199,8 @@ function register(app, db) {
       ['/services/fractional-ai-officer', 'monthly', '0.9'],
       ['/about', 'monthly', '0.8'],
       ['/faq', 'monthly', '0.8'],
+      ['/ai-for-construction', 'monthly', '0.9'],
+      ['/ai-for-haulage', 'monthly', '0.9'],
       ['/blog', 'daily', '0.8'],
       ['/tools/margin-vs-volume', 'monthly', '0.7'],
     ];

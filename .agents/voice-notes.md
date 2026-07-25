@@ -6,7 +6,7 @@ How Daniel actually writes and talks. Any content (LinkedIn, email, ads, site co
 
 - **Take it or leave it.** Never desperate to convince. States it plainly and lets the reader decide. This calm is the selling advantage in a market full of pushy AI hype.
 - **Honest, on purpose.** Uses words to build trust because he genuinely is honest. Will tell you when something won't work.
-- **Operator, not consultant.** Daniel owns three companies: Tranzparts (truck and trailer PARTS, not haulage), Crossman Walsh (construction), and a software company. He does NOT run a transport/haulage firm — the Fox Group haulage fleet is a CLIENT he built AI reporting for (wagon earnings, VOR). Say "built for a real business first" or name the client work as client work. Never claim he runs a transport company. Lead with the operator truth, stated accurately.
+- **Operator, not consultant.** Daniel owns three companies: Tranzparts (truck and trailer PARTS, not haulage), Crossman Walsh (construction), and a software company. He does NOT run a transport/haulage firm — the Fox Group haulage fleet is a CLIENT he built AI reporting for (wagon earnings, VOR). Say "built for a real business first" or name the client work as client work. Never claim he runs a transport company, but DO claim deep hands-on haulage experience — he works inside the Fox Group weekly (wagon earnings, VOR, fleet costs) and is very experienced in the sector. "Works hands-on in haulage every week" is the approved phrasing. Lead with the operator truth, stated accurately.
 
 ## How the sentences sound
 

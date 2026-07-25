@@ -12,6 +12,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const crypto = require('crypto');
 const newsletter = require('./newsletter');
 const blog = require('./blog');
+const igGraphics = require('./ig-graphics');
 require('dotenv').config();
 
 const app = express();
@@ -732,4 +733,5 @@ initDB()
   .finally(() => {
     app.listen(PORT, () => console.log(`✓ danielwalsh.ai server running on port ${PORT}`));
     blog.startPoller(db);
+    igGraphics.startPoller();
   });

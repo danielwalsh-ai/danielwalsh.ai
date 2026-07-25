@@ -7,11 +7,13 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copy app files
-COPY server.js newsletter.js blog.js ./
+COPY server.js newsletter.js blog.js ig-graphics.js ./
+COPY assets/ ./assets/
 COPY public/ ./public/
 
-# Non-root user for security
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+# Non-root user for security; ig-auto dir must stay writable for generated graphics
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 \
+  && mkdir -p public/media/ig-auto && chown -R nodejs:nodejs public/media/ig-auto
 USER nodejs
 
 EXPOSE 3000

@@ -8,6 +8,27 @@ const BLOG_TABLE = 'Blog Posts';
 const SITE = 'https://danielwalsh.ai';
 const POLL_MS = 10 * 60 * 1000;
 
+// IndexNow: tell Bing/DuckDuckGo/Copilot about new URLs within hours instead of
+// waiting weeks for a crawl. The key is public by design (served from /<key>.txt).
+const INDEXNOW_KEY = 'fc41aef879141861dec87e8aa1a77f71';
+async function pingIndexNow(urls) {
+  try {
+    await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host: 'danielwalsh.ai',
+        key: INDEXNOW_KEY,
+        keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`,
+        urlList: urls,
+      }),
+    });
+    console.log('✓ IndexNow pinged:', urls.length, 'url(s)');
+  } catch (err) {
+    console.error('IndexNow ping failed:', err.message);
+  }
+}
+
 const esc = s => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -245,6 +266,7 @@ async function publishApproved(db) {
         body: JSON.stringify({ fields: { Status: 'Published', 'Post URL': `${SITE}/blog/${slug}` }, typecast: true }),
       });
       console.log('✓ Blog published:', slug);
+      pingIndexNow([`${SITE}/blog/${slug}`, `${SITE}/blog`]);
     }
   } catch (err) {
     console.error('Blog poll error:', err.message);

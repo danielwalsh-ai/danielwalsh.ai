@@ -46,6 +46,8 @@ Professional AI consultancy site for Daniel Walsh (KF Ltd, trading as danielwals
 - Content pipeline lives in the Airtable **Content Calendar** table: Claude drafts rows (caption, script, visual notes), Daniel approves/records, Make posts Approved rows (scenario to be built once the Instagram for Business connection exists).
 - Post graphics: 1080×1350 portrait, full HUD styling (black canvas, cyan grid + brackets, one amber accent), DW monogram + danielwalsh.ai footer on every graphic.
 - Growth: content only. **No follower-buying, no follow/unfollow, no engagement bots — ever.** Ramp: graphics → Daniel's voiceover reels → face-to-camera.
+- Captions: tag companies and sources in the story with their Instagram @handle to extend reach, and credit the source before the hashtags ("Story via @bbcnews."). Verified handles: @openai @bbcnews @constructionenquirer @techcrunch @google @microsoft @nvidia. Anything else gets named WITHOUT a tag — verify a handle exists before adding it to this list (a dead tag looks worse than none).
+- Cadence: hourly Make sweep posts at most 1 due Approved row per run (08:00–21:00); baseline one post/day via Scheduled Date, but breaking stories approved via the "POST NOW" email link go out within the hour.
 - Media library: Google Drive folder "danielwalsh.ai — Media" (raw assets); finished per-post assets attach to the calendar row; `public/media/` only for images the website serves.
 
 ### Decision log — do not relitigate

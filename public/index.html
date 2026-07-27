@@ -265,6 +265,8 @@ nav.scrolled { padding: 14px 40px; }
   .roadmap { grid-template-columns: 1fr; gap: 40px; }
   .roadmap-line { top: 22px; bottom: 22px; left: 21px; right: auto; width: 2px; height: auto;
     background: linear-gradient(180deg, rgba(240,240,248,0.25), var(--cyan) 50%, var(--amber)); }
+  .roadmap-stage { padding-left: 66px; }
+  .roadmap-marker { position: absolute; left: 0; top: 0; margin-bottom: 0; }
 }
 
 /* ─── CREDENTIALS BAR (legacy, unused) ─── */
@@ -609,7 +611,6 @@ section { padding: 80px 40px; }
   .booking-layout{grid-template-columns:1fr;}
   .booking-info-panel{position:static;}
   .process-grid{grid-template-columns:1fr;}
-  .process-visual{display:none;}
   .footer-inner{flex-direction:column;gap:40px;padding:48px 32px 32px;}
   .footer-cols{gap:40px;}
   .settings-grid{grid-template-columns:1fr;}
@@ -653,7 +654,8 @@ section { padding: 80px 40px; }
 
   /* ── Process ── */
   .process-grid{grid-template-columns:1fr;gap:32px;}
-  .process-visual{display:none;}
+  .process-visual{min-height:320px;}
+  .globe-note{white-space:normal;text-align:center;max-width:82%;}
   .process-steps{gap:0;}
   .step{padding:20px 0;gap:16px;}
   .step-num{width:32px;height:32px;font-size:12px;}

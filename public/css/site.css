@@ -52,8 +52,9 @@ nav {
   cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
 }
 .nav-cta:hover { background: #ffb84d; transform: translateY(-1px); }
-.nav-linkedin { color: var(--muted); display: inline-flex; transition: color .2s; }
-.nav-linkedin:hover { color: var(--white); }
+.nav-social { display: flex; align-items: center; gap: 14px; }
+.nav-linkedin, .nav-instagram { display: inline-flex; align-items: center; opacity: 0.85; transition: opacity .2s; }
+.nav-linkedin:hover, .nav-instagram:hover { opacity: 1; }
 
 /* ─── PAGE LAYOUT ─── */
 main { max-width: 880px; margin: 0 auto; padding: 150px 40px 80px; }
@@ -152,7 +153,7 @@ footer { border-top: 1px solid var(--border); background: var(--bg2); margin-top
 /* ─── MOBILE NAV MENU ─── */
 .nav-toggle {
   display: none; flex-direction: column; justify-content: center; gap: 5px;
-  width: 40px; height: 38px; padding: 0 9px; cursor: pointer;
+  width: 40px; height: 38px; padding: 0 9px; cursor: pointer; flex-shrink: 0;
   background: none; border: 1px solid rgba(0,229,255,0.3); border-radius: 8px;
 }
 .nav-toggle span { display: block; height: 2px; width: 100%; background: var(--cyan); border-radius: 2px; transition: transform .2s, opacity .2s; }
@@ -178,6 +179,8 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
   .footer-inner { flex-direction: column; gap: 40px; padding: 48px 24px 32px; }
 }
 @media (max-width: 560px) {
+  nav { padding: 14px 14px; }
+  .nav-social { gap: 10px; }
   main { padding: 120px 20px 48px; }
   h1 { letter-spacing: -1px; }
   .price-panel { padding: 22px 20px; }

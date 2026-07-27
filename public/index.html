@@ -190,7 +190,7 @@ nav.scrolled { padding: 14px 40px; }
   display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
 }
 .trust-item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center;
   gap: 14px; padding: 36px 28px; min-height: 210px;
   border: 1px solid var(--border); border-radius: 14px;
   background: rgba(0,229,255,0.025);
@@ -201,7 +201,8 @@ nav.scrolled { padding: 14px 40px; }
 .trust-icon svg { width: 26px; height: 26px; stroke: var(--amber); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .trust-item p { font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.65; color: var(--muted); margin: 0; max-width: 340px; }
 .trust-item strong { display: block; color: var(--white); font-weight: 600; font-size: 14.5px; margin-bottom: 4px; }
-.cert-logos { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 4px; }
+.cert-logos { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 4px; }
+.cert-logos-row { display: flex; align-items: center; justify-content: center; gap: 24px; }
 .cert-logos img { opacity: 0.92; transition: opacity 0.2s; }
 .cert-logos img:hover { opacity: 1; }
 .cert-logo-google { height: 26px; }
@@ -877,9 +878,11 @@ nav { box-shadow: 0 1px 0 rgba(0,229,255,0.15), 0 6px 24px rgba(0,229,255,0.05);
       <div>
         <p><strong>Certified by Google, Oxford and MIT.</strong></p>
         <div class="cert-logos">
-          <img src="/media/logos/google.svg?v=2" alt="Google" class="cert-logo-google">
           <img src="/media/logos/oxford.svg?v=2" alt="University of Oxford" class="cert-logo-oxford">
-          <img src="/media/logos/mit.svg?v=2" alt="MIT" class="cert-logo-mit">
+          <div class="cert-logos-row">
+            <img src="/media/logos/google.svg?v=2" alt="Google" class="cert-logo-google">
+            <img src="/media/logos/mit.svg?v=2" alt="MIT" class="cert-logo-mit">
+          </div>
         </div>
       </div>
     </div>

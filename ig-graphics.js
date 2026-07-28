@@ -72,7 +72,8 @@ function renderGraphic({ title, caption, pillar }) {
   ctx.font = '28px "Space Grotesk Medium"';
   const spaced = label.split('').join('  ');
   ctx.textAlign = 'center';
-  ctx.fillText(spaced, W / 2, 150);
+  // y >= 185: Instagram's square grid crop removes the top/bottom 135px of a 4:5 post
+  ctx.fillText(spaced, W / 2, 195);
   ctx.textAlign = 'left';
 
   // Headline: white Space Grotesk bold, wrapped, auto-shrinks to fit
@@ -96,28 +97,35 @@ function renderGraphic({ title, caption, pillar }) {
   lines.forEach((l, i) => ctx.fillText(l, 110, headTop + size + i * lineH));
 
   // Sub-text: whole sentences from the caption's first paragraph, grey Inter.
-  // Never cut mid-sentence: fit as many complete sentences as the budget allows.
+  // Fit is measured in WRAPPED LINES, and only whole sentences are admitted —
+  // so no sentence is ever cut mid-way and no wrapped line is ever dropped.
   const para = (String(caption || '').split(/\n/).filter(Boolean)[0] || '')
     .replace(/\s+[—–]\s+/g, ': ');
   const sentences = para.match(/[^.!?]+[.!?]+["')\]]*\s*/g) || (para ? [para] : []);
+  ctx.font = '34px "Inter"';
+  const MAX_SUB_LINES = 5;
   let sub = '';
   for (const s of sentences) {
-    if (sub && (sub + s).length > 230) break;
-    sub += s;
+    const test = (sub + s).trim();
+    if (sub && wrapText(ctx, test, W - 220).length > MAX_SUB_LINES) break;
+    sub = test;
   }
-  sub = sub.trim();
-  // single overlong sentence: back off to the last full word and mark the cut
-  if (sub.length > 260) sub = sub.slice(0, 250).replace(/\s+\S*$/, '') + ' …';
+  // a single sentence that alone exceeds the budget: keep whole words up to the
+  // line budget and mark the elision honestly
+  if (sub && wrapText(ctx, sub, W - 220).length > MAX_SUB_LINES) {
+    const kept = wrapText(ctx, sub, W - 220).slice(0, MAX_SUB_LINES).join(' ');
+    sub = kept.replace(/\s+\S*$/, '') + ' …';
+  }
   if (sub) {
-    ctx.font = '34px "Inter"';
     ctx.fillStyle = BODY;
-    const subLines = wrapText(ctx, sub, W - 220).slice(0, 5);
+    const subLines = wrapText(ctx, sub, W - 220);
     const subTop = headTop + size + (lines.length - 1) * lineH + 90;
     subLines.forEach((l, i) => ctx.fillText(l, 110, subTop + i * 52));
   }
 
-  // Footer: DW monogram (amber rounded square, dark text) + site URL
-  const mSize = 76, mx = 110, my = H - 190;
+  // Footer: DW monogram (amber rounded square, dark text) + site URL.
+  // Kept above H-135 so the square grid crop never touches it.
+  const mSize = 76, mx = 110, my = H - 240;
   ctx.fillStyle = AMBER;
   ctx.beginPath();
   ctx.roundRect(mx, my, mSize, mSize, 16);

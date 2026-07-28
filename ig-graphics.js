@@ -95,12 +95,23 @@ function renderGraphic({ title, caption, pillar }) {
   ctx.fillStyle = WHITE;
   lines.forEach((l, i) => ctx.fillText(l, 110, headTop + size + i * lineH));
 
-  // Sub-text: first sentence-ish of the caption, grey Inter
-  const sub = String(caption || '').split(/\n/).filter(Boolean)[0] || '';
+  // Sub-text: whole sentences from the caption's first paragraph, grey Inter.
+  // Never cut mid-sentence: fit as many complete sentences as the budget allows.
+  const para = (String(caption || '').split(/\n/).filter(Boolean)[0] || '')
+    .replace(/\s+[—–]\s+/g, ': ');
+  const sentences = para.match(/[^.!?]+[.!?]+["')\]]*\s*/g) || (para ? [para] : []);
+  let sub = '';
+  for (const s of sentences) {
+    if (sub && (sub + s).length > 230) break;
+    sub += s;
+  }
+  sub = sub.trim();
+  // single overlong sentence: back off to the last full word and mark the cut
+  if (sub.length > 260) sub = sub.slice(0, 250).replace(/\s+\S*$/, '') + ' …';
   if (sub) {
     ctx.font = '34px "Inter"';
     ctx.fillStyle = BODY;
-    const subLines = wrapText(ctx, sub.slice(0, 220), W - 220).slice(0, 4);
+    const subLines = wrapText(ctx, sub, W - 220).slice(0, 5);
     const subTop = headTop + size + (lines.length - 1) * lineH + 90;
     subLines.forEach((l, i) => ctx.fillText(l, 110, subTop + i * 52));
   }

@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07070f">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>Margin vs Volume Calculator | Daniel Walsh</title>
-<meta name="description" content="Free calculator: the two ways to hit a profit target — lift your margin or chase more volume — and which lever works harder for your numbers.">
-<link rel="canonical" href="https://danielwalsh.ai/tools/margin-vs-volume">
+<title>Compound Interest Calculator | Daniel Walsh</title>
+<meta name="description" content="Free calculator: what a starting pot plus a monthly amount grows into, how the growth splits against what you paid in, and what waiting costs you.">
+<link rel="canonical" href="https://danielwalsh.ai/tools/compound-interest">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Margin vs Volume: Profit Lever Calculator">
-<meta property="og:description" content="See how many points of margin, or how much extra turnover, it takes to hit your profit target.">
-<meta property="og:url" content="https://danielwalsh.ai/tools/margin-vs-volume">
+<meta property="og:title" content="Compound Interest Calculator">
+<meta property="og:description" content="See what your money does while you work: final pot, growth vs paid-in, and the real cost of starting late.">
+<meta property="og:url" content="https://danielwalsh.ai/tools/compound-interest">
 <meta property="og:site_name" content="danielwalsh.ai">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://danielwalsh.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Margin vs Volume", "item": "https://danielwalsh.ai/tools/margin-vs-volume" }
+    { "@type": "ListItem", "position": 2, "name": "Compound Interest", "item": "https://danielwalsh.ai/tools/compound-interest" }
   ]
 }
 </script>
@@ -39,7 +39,7 @@
     text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; font-weight: 600;
   }
 
-  .inputs { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .inputs { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
   .inputs label { display: block; font-size: 12.5px; color: var(--body); margin-bottom: 7px; font-weight: 500; }
   .field { position: relative; }
   .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 15px; pointer-events: none; }
@@ -66,24 +66,30 @@
     background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px;
     box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06);
   }
-  .route-card.margin { border-color: var(--border-amber); box-shadow: 0 0 18px rgba(240,160,48,0.10), inset 0 0 0 1px rgba(240,160,48,0.08); }
+  .route-card.pot { border-color: var(--border-amber); box-shadow: 0 0 18px rgba(240,160,48,0.10), inset 0 0 0 1px rgba(240,160,48,0.08); }
   .route-card .tag { font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
-  .route-card.margin .tag { color: var(--amber); }
-  .route-card.volume .tag { color: var(--cyan); }
+  .route-card.pot .tag { color: var(--amber); }
+  .route-card.paid .tag { color: var(--cyan); }
   .big { font-family: 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 700; line-height: 1.05; color: var(--white); letter-spacing: -1px; }
-  .route-card.margin .big { color: var(--amber); }
+  .route-card.pot .big { color: var(--amber); }
   .delta { font-size: 14px; color: var(--body); margin-top: 8px; }
   .delta strong { color: var(--white); font-weight: 600; }
   .route-foot { font-size: 12.5px; color: var(--muted); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-  .warn { color: var(--amber); }
 
   .insight-line { font-family: 'Space Grotesk', sans-serif; font-size: 19px; color: var(--white); font-weight: 500; margin-bottom: 20px; }
   .insight-line b { color: var(--amber); font-weight: 700; }
-  .chart { display: flex; align-items: flex-end; gap: 14px; height: 170px; padding-top: 8px; }
+  .chart { display: flex; align-items: flex-end; gap: 14px; height: 190px; padding-top: 26px; }
   .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; }
-  .bar { width: 100%; max-width: 70px; background: linear-gradient(180deg, rgba(61,90,254,0.55), rgba(61,90,254,0.16)); border-radius: var(--radius) var(--radius) 0 0; position: relative; transition: height .2s; }
-  .bar .val { position: absolute; top: -22px; left: 0; right: 0; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--white); font-weight: 600; }
+  .stack { width: 100%; max-width: 70px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .stack .val { position: absolute; top: -22px; left: 0; right: 0; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--white); font-weight: 600; }
+  .seg-growth { width: 100%; background: linear-gradient(180deg, rgba(240,160,48,0.85), rgba(240,160,48,0.35)); border-radius: var(--radius) var(--radius) 0 0; transition: height .2s; }
+  .seg-paid { width: 100%; background: linear-gradient(180deg, rgba(61,90,254,0.55), rgba(61,90,254,0.16)); transition: height .2s; }
+  .stack.no-growth .seg-paid { border-radius: var(--radius) var(--radius) 0 0; }
   .bar-lbl { font-size: 12px; color: var(--muted); text-align: center; }
+  .legend { display: flex; gap: 18px; margin-top: 14px; font-size: 12px; color: var(--muted); }
+  .legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .legend .sw.g { background: rgba(240,160,48,0.7); }
+  .legend .sw.p { background: rgba(61,90,254,0.5); }
 
   .explorer { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
   .lever { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
@@ -99,10 +105,8 @@
   input[type=range].blue::-moz-range-thumb { background: #3d5afe; }
   .result { margin-top: 16px; }
   .result .p { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: var(--white); }
-  .progress { height: 7px; border-radius: 4px; background: rgba(240,240,248,0.10); margin-top: 12px; overflow: hidden; }
-  .progress .fill { height: 100%; border-radius: 4px; background: var(--amber); width: 0%; transition: width .15s; }
-  .status { font-size: 12.5px; margin-top: 8px; color: var(--muted); }
-  .status.hit { color: #94c21f; }
+  .result .sub { font-size: 12.5px; margin-top: 8px; color: var(--muted); }
+  .result .sub strong { color: var(--amber); font-weight: 600; }
 
   .note { font-size: 12px; color: var(--muted); margin-top: 16px; line-height: 1.6; }
   .why-ai h2 { font-size: 21px; letter-spacing: -0.3px; color: var(--white); margin: 0 0 14px; }
@@ -128,6 +132,9 @@
   .cap-msg { font-size: 13.5px; margin-top: 12px; display: none; }
   .cap-msg.ok { color: #94c21f; display: block; }
   .cap-msg.err { color: var(--amber); display: block; }
+
+  .more-tools { font-size: 13px; color: var(--muted); margin-top: 18px; }
+  .more-tools a { color: var(--cyan); text-decoration: none; }
 
   @media (max-width: 720px) {
     .inputs, .routes, .explorer, .cap-row { grid-template-columns: 1fr; }
@@ -155,113 +162,124 @@
 </nav>
 
 <main>
-  <div class="breadcrumbs"><a href="/">Home</a> · Margin vs Volume</div>
+  <div class="breadcrumbs"><a href="/">Home</a> · Compound Interest</div>
   <span class="page-eyebrow">Free tool</span>
-  <h1>Margin vs Volume</h1>
-  <p class="page-lede">The two ways to hit a profit target, and which one works harder.</p>
+  <h1>Compound Interest</h1>
+  <p class="page-lede">What your money does while you work, and what waiting costs you.</p>
 
   <section class="tool-section">
     <div class="sec-label">[ your numbers ]</div>
     <div class="inputs">
       <div>
-        <label for="turnover">Monthly turnover</label>
+        <label for="startPot">Starting pot</label>
         <div class="field">
           <span class="prefix">£</span>
-          <input type="number" id="turnover" class="pad-l" value="50000" min="0" step="1000">
+          <input type="number" id="startPot" class="pad-l" value="10000" min="0" step="1000">
         </div>
       </div>
       <div>
-        <label for="margin">Current margin</label>
+        <label for="monthly">Added monthly</label>
         <div class="field">
-          <input type="number" id="margin" class="pad-r" value="8" min="0.1" max="100" step="0.1">
+          <span class="prefix">£</span>
+          <input type="number" id="monthly" class="pad-l" value="500" min="0" step="50">
+        </div>
+      </div>
+      <div>
+        <label for="rate">Annual growth</label>
+        <div class="field">
+          <input type="number" id="rate" class="pad-r" value="7" min="0" max="30" step="0.1">
           <span class="suffix">%</span>
         </div>
       </div>
       <div>
-        <label for="target">Target monthly profit</label>
+        <label for="years">Years</label>
         <div class="field">
-          <span class="prefix">£</span>
-          <input type="number" id="target" class="pad-l" value="6000" min="0" step="500">
+          <input type="number" id="years" class="pad-r" value="20" min="1" max="50" step="1">
+          <span class="suffix">yrs</span>
         </div>
       </div>
     </div>
     <div class="current">
-      <span class="k">Current monthly profit</span>
-      <span class="v" id="currentProfit">£4,000</span>
-      <span class="k" id="upliftNote"></span>
+      <span class="k">Total you'd pay in over the period</span>
+      <span class="v" id="paidInLine">£130,000</span>
+      <span class="k" id="doubleNote"></span>
     </div>
   </section>
 
   <div class="routes">
-    <div class="route-card margin">
-      <div class="tag">Lift the margin</div>
-      <div class="big" id="marginNeeded">12%</div>
-      <div class="delta" id="marginDelta">That's <strong>+4 points</strong> on your current margin, turnover unchanged.</div>
-      <div class="route-foot">A price rise or cost cut that holds volume. Usually the lower-effort lever.</div>
+    <div class="route-card pot">
+      <div class="tag">Where you end up</div>
+      <div class="big" id="finalPot">£271,000</div>
+      <div class="delta" id="finalDelta">That's <strong>2.1×</strong> what you paid in.</div>
+      <div class="route-foot">Monthly compounding at your growth rate, contributions added each month.</div>
     </div>
-    <div class="route-card volume">
-      <div class="tag">Chase the volume</div>
-      <div class="big" id="volumeNeeded">£75,000</div>
-      <div class="delta" id="volumeDelta">That's <strong>+50%</strong> turnover (+£25,000), margin unchanged.</div>
-      <div class="route-foot">More customers, stock, staff and hassle to earn the same profit.</div>
+    <div class="route-card paid">
+      <div class="tag">How it splits</div>
+      <div class="big" id="growthAmt">£141,000</div>
+      <div class="delta" id="splitDelta">is pure growth, on top of the <strong>£130,000</strong> you put in.</div>
+      <div class="route-foot">The longer it runs, the more the growth share takes over. Time does the heavy lifting.</div>
     </div>
   </div>
 
   <section class="tool-section">
-    <div class="sec-label">[ the trade-off ]</div>
-    <div class="insight-line">At an <b id="insMargin">8%</b> margin, every <b>1 point</b> of margin is worth roughly <b id="insVolume">12.5%</b> extra volume.</div>
+    <div class="sec-label">[ how it builds ]</div>
+    <div class="insight-line" id="crossLine">From year <b>9</b>, the pot earns more each year than you pay into it.</div>
     <div class="chart" id="chart"></div>
-    <div class="note">Each bar shows the volume increase you'd need to match that many points of added margin. The thinner your margin, the more punishing the volume route becomes.</div>
+    <div class="legend">
+      <span><span class="sw p"></span>What you paid in</span>
+      <span><span class="sw g"></span>Growth on top</span>
+    </div>
+    <div class="note">Each bar is the pot at that point, split into your money and the growth riding on it. Early on it's mostly you; later it's mostly the compounding.</div>
   </section>
 
   <section class="tool-section">
     <div class="sec-label">[ explore either lever ]</div>
     <div class="explorer">
       <div class="lever m">
-        <h3>Margin lever</h3>
-        <div class="hint">Turnover held at current level.</div>
-        <div class="slider-val" id="mSliderVal">Margin: 8.0%</div>
-        <input type="range" id="mSlider" min="0" max="100" value="8" step="0.1" aria-label="Margin percentage">
+        <h3>Growth rate</h3>
+        <div class="hint">Same money in, different rate.</div>
+        <div class="slider-val" id="rSliderVal">Rate: 7.0%</div>
+        <input type="range" id="rSlider" min="0" max="15" value="7" step="0.1" aria-label="Annual growth rate">
         <div class="result">
-          <div class="p" id="mProfit">£4,000</div>
-          <div class="progress"><div class="fill" id="mFill"></div></div>
-          <div class="status" id="mStatus"></div>
+          <div class="p" id="rPot">£271,000</div>
+          <div class="sub" id="rNote"></div>
         </div>
       </div>
       <div class="lever v">
-        <h3>Volume lever</h3>
-        <div class="hint">Margin held at current level.</div>
-        <div class="slider-val" id="vSliderVal">Turnover: £50,000</div>
-        <input type="range" id="vSlider" class="blue" min="0" max="200000" value="50000" step="500" aria-label="Monthly turnover">
+        <h3>The cost of waiting</h3>
+        <div class="hint">Start later, finish on the same date.</div>
+        <div class="slider-val" id="wSliderVal">Start in: 5 years</div>
+        <input type="range" id="wSlider" class="blue" min="0" max="10" value="5" step="1" aria-label="Years before starting">
         <div class="result">
-          <div class="p" id="vProfit">£4,000</div>
-          <div class="progress"><div class="fill" id="vFill"></div></div>
-          <div class="status" id="vStatus"></div>
+          <div class="p" id="wPot">£171,000</div>
+          <div class="sub" id="wNote"></div>
         </div>
       </div>
     </div>
-    <div class="note">Model: margin is the share of turnover kept as profit; volume grows at a constant margin. It ignores fixed-cost leverage and price elasticity, so treat it as the back-of-envelope case, deliberately generous to the volume route.</div>
+    <div class="note">Model: growth compounds monthly at a constant rate, with contributions added at the end of each month. Real returns move around and this ignores fees, tax and inflation — treat it as the back-of-envelope case. Not financial advice.</div>
   </section>
 
   <section class="tool-section why-ai">
     <div class="sec-label">[ the honest bit ]</div>
-    <h2>"Just lift the margin" is easier said than done</h2>
-    <p>If you could put your prices up tomorrow, you'd have done it already. Most operationally heavy firms can't. Rates are set by the market, contracts are locked in, and there's always someone willing to do the job cheaper. So volume becomes the plan by default: more customers, more staff, more kit, more admin, more late nights.</p>
-    <p><strong>This is exactly where AI earns its keep.</strong> The numbers above show why the volume route punishes you: every extra pound of turnover drags cost and hassle in with it. AI attacks that drag. When quoting, scheduling, paperwork and reporting run themselves, extra volume stops meaning extra headcount. And because your cost per job falls, your margin quietly rises without a single price increase.</p>
-    <p>That's the third lever this calculator can't show you: <strong>grow the volume without growing the overhead</strong>, and take the margin gain as a side effect.</p>
+    <h2>Compounding doesn't only work on savings</h2>
+    <p>Every business owner nods along to compound interest and then runs their firm on straight lines. But your business compounds too, in both directions. A process that wastes an hour a day quietly compounds into a member of staff you didn't need to hire. A margin point you never claw back compounds into the van, the yard, the pension you funded for someone else.</p>
+    <p><strong>The same maths runs the other way.</strong> Automate the quoting, the chasing, the paperwork, and the hours you get back don't just save money once — they free you to win work, which funds more improvement, which frees more hours. That's a compounding loop, and it's the reason a few percent of efficiency found this year is worth far more than the same percent found in five years.</p>
+    <p>The chart above already told you the punchline: <strong>the expensive thing isn't the rate, it's the waiting.</strong></p>
   </section>
 
   <section class="capture">
-    <div class="lead">Want these numbers sent over, plus a 15-minute teardown?</div>
-    <div class="leadsub">I'll send your figures back with a quick read on which lever actually fits your business: margin, volume, or the right mix. No pitch unless you ask for one.</div>
+    <div class="lead">Want this projection sent over?</div>
+    <div class="leadsub">I'll email you these numbers so you have them on file, and if you tell me a bit about your business I'll show you where the same compounding logic applies to it. No pitch unless you ask for one.</div>
     <div class="cap-row">
       <div><label for="capName">Name</label><input type="text" id="capName" placeholder="Your name" autocomplete="name"></div>
       <div><label for="capEmail">Email</label><input type="email" id="capEmail" placeholder="you@company.co.uk" autocomplete="email"></div>
-      <button class="btn-primary" id="capBtn" type="button">Send my numbers</button>
+      <button class="btn-primary" id="capBtn" type="button">Send my projection</button>
     </div>
     <div class="consent">Used only to send your results and follow up once. No list, no spam.</div>
     <div class="cap-msg" id="capMsg" role="status"></div>
   </section>
+
+  <div class="more-tools">More free tools: <a href="/tools/margin-vs-volume">Margin vs Volume — which profit lever works harder for your numbers →</a></div>
 </main>
 
 <footer>
@@ -305,6 +323,6 @@
   </div>
 </footer>
 
-<script src="/js/margin-vs-volume.js"></script>
+<script src="/js/compound-interest.js"></script>
 </body>
 </html>

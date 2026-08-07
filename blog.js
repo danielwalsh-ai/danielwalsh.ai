@@ -100,6 +100,7 @@ const FOOTER = `
         <a href="/ai-for-construction">AI for construction</a>
         <a href="/ai-for-haulage">AI for haulage</a>
         <a href="/tools/margin-vs-volume">Margin vs Volume tool</a>
+        <a href="/tools/compound-interest">Compound Interest tool</a>
         <a href="https://uk.trustpilot.com/review/danielwalsh.ai" target="_blank" rel="noopener">Review us on Trustpilot</a>
         <a href="/#process">How it works</a>
         <a href="/#booking">Book a session</a>
@@ -226,6 +227,7 @@ function register(app, db) {
       ['/ai-for-haulage', 'monthly', '0.9'],
       ['/blog', 'daily', '0.8'],
       ['/tools/margin-vs-volume', 'monthly', '0.7'],
+      ['/tools/compound-interest', 'monthly', '0.7'],
     ];
     let slugs = [];
     try {

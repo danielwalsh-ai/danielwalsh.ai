@@ -343,6 +343,70 @@ app.post('/api/tools/margin-lead', toolLeadLimiter, async (req, res) => {
   res.json({ success: true });
 });
 
+// POST /api/tools/compound-lead — Compound Interest calculator lead capture.
+// Unlike the margin tool, the visitor's numbers email is sent directly via Resend,
+// so this works with no Make scenario; the webhook forward is optional CRM intake.
+app.post('/api/tools/compound-lead', toolLeadLimiter, async (req, res) => {
+  const { name, email, startPot, monthly, ratePct, years, finalPot, paidIn, growth, crossoverYear } = req.body || {};
+  if (!email || typeof email !== 'string' || email.length > 255 || !/^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  const num = v => (typeof v === 'number' && isFinite(v)) ? v : null;
+  const payload = {
+    source: 'compound-interest-tool',
+    submittedAt: new Date().toISOString(),
+    name: typeof name === 'string' ? name.slice(0, 120).replace(/[<>]/g, '') : '',
+    email,
+    startPot: num(startPot), monthly: num(monthly), ratePct: num(ratePct), years: num(years),
+    finalPot: num(finalPot), paidIn: num(paidIn), growth: num(growth), crossoverYear: num(crossoverYear),
+  };
+  if (process.env.COMPOUND_TOOL_WEBHOOK_URL) {
+    fetch(process.env.COMPOUND_TOOL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(err => console.error('Compound tool webhook error:', err.message));
+  }
+  if (resend) {
+    const gbp = v => v === null ? '—' : '£' + Math.round(v).toLocaleString('en-GB');
+    const firstName = payload.name ? payload.name.split(/\s+/)[0] : '';
+    // Visitor gets their projection back — dark HUD styling, one amber CTA
+    resend.emails.send({
+      from: 'Daniel Walsh <hello@danielwalsh.ai>',
+      to: email,
+      subject: 'Your compound interest projection',
+      html: `<div style="background:#000000;padding:32px 24px;font-family:Arial,Helvetica,sans-serif;">
+        <div style="max-width:560px;margin:0 auto;background:#040C12;border:1px solid rgba(0,229,255,0.25);border-radius:10px;padding:28px;">
+          <div style="font-size:11px;letter-spacing:2px;color:#00E5FF;margin-bottom:18px;">[ YOUR PROJECTION ]</div>
+          <p style="color:#FFFFFF;font-size:16px;margin:0 0 16px;">${firstName ? firstName + ', here' : 'Here'} are the numbers you ran on danielwalsh.ai:</p>
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;font-size:14px;">
+            <tr><td style="color:#9AA0B5;padding:6px 0;">Starting pot</td><td style="color:#FFFFFF;text-align:right;">${gbp(payload.startPot)}</td></tr>
+            <tr><td style="color:#9AA0B5;padding:6px 0;">Added monthly</td><td style="color:#FFFFFF;text-align:right;">${gbp(payload.monthly)}</td></tr>
+            <tr><td style="color:#9AA0B5;padding:6px 0;">Growth rate</td><td style="color:#FFFFFF;text-align:right;">${payload.ratePct ?? '—'}% over ${payload.years ?? '—'} years</td></tr>
+            <tr><td style="color:#9AA0B5;padding:10px 0;border-top:1px solid rgba(0,229,255,0.15);">Total paid in</td><td style="color:#FFFFFF;text-align:right;border-top:1px solid rgba(0,229,255,0.15);">${gbp(payload.paidIn)}</td></tr>
+            <tr><td style="color:#9AA0B5;padding:6px 0;">Growth on top</td><td style="color:#FFFFFF;text-align:right;">${gbp(payload.growth)}</td></tr>
+            <tr><td style="color:#F0A030;padding:10px 0;font-weight:bold;font-size:16px;border-top:1px solid rgba(0,229,255,0.15);">Where you end up</td><td style="color:#F0A030;text-align:right;font-weight:bold;font-size:18px;border-top:1px solid rgba(0,229,255,0.15);">${gbp(payload.finalPot)}</td></tr>
+          </table>
+          ${payload.crossoverYear ? `<p style="color:#9AA0B5;font-size:13px;margin:16px 0 0;">From year ${payload.crossoverYear}, the pot earns more each year than you pay into it.</p>` : ''}
+          <p style="color:#9AA0B5;font-size:13px;margin:18px 0 0;line-height:1.6;">The same compounding logic applies to a business: hours saved fund growth, which frees more hours. If you want to see where it applies to yours, reply to this email — no pitch unless you ask.</p>
+          <p style="margin:22px 0 0;"><a href="https://danielwalsh.ai/#booking" style="background:#F0A030;color:#07070F;text-decoration:none;font-weight:bold;font-size:14px;padding:12px 22px;border-radius:6px;display:inline-block;">Book a session →</a></p>
+        </div>
+        <p style="color:#5B6078;font-size:11px;text-align:center;margin:18px 0 0;">danielwalsh.ai · Based in the UK, working worldwide · Figures are illustrative, not financial advice.</p>
+      </div>`,
+    }).catch(err => console.error('Compound tool visitor email failed:', err.message));
+
+    resend.emails.send({
+      from: 'danielwalsh.ai <hello@danielwalsh.ai>',
+      to: 'hello@danielwalsh.ai',
+      subject: `New compound tool lead: ${email}`,
+      html: `<p><strong>${payload.name || 'No name'}</strong> (${email}) ran the Compound Interest tool.</p>
+             <p>Start £${payload.startPot ?? '—'} · £${payload.monthly ?? '—'}/mo · ${payload.ratePct ?? '—'}% · ${payload.years ?? '—'} yrs.</p>
+             <p>Ends at £${payload.finalPot ?? '—'} (paid in £${payload.paidIn ?? '—'}, growth £${payload.growth ?? '—'}).</p>`,
+    }).catch(err => console.error('Compound tool alert email failed:', err.message));
+  }
+  res.json({ success: true });
+});
+
 /* ════════════════════════════════════
    API — NEWSLETTER
 ════════════════════════════════════ */

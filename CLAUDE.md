@@ -59,7 +59,7 @@ Professional AI consultancy site for Daniel Walsh (KF Ltd, trading as danielwals
 - Pricing (correct, do not change without instruction): Strategy & Advisory £500/60-min session · AI Implementation £1,500/day · Training & Workshops £1,200/day · Fractional AI Officer £5,000/month (25 hrs, 12-month minimum). Prices appear on the site, not on social.
 - Service cards: strict 2×2 grid.
 - Credentials bar: Google, Oxford, MIT — no "Soon" badges.
-- Nav includes "Free tools" → `/tools/margin-vs-volume` (desktop; mobile reaches it via footer). Second tool: `/tools/compound-interest` (footer + cross-links; its lead email goes to the visitor server-side via Resend — no Make scenario needed, optional `COMPOUND_TOOL_WEBHOOK_URL` forwards to CRM intake).
+- Nav includes "Free tools" → `/tools/` (tile hub page; every new tool gets a tile there plus a footer link). Tools: `/tools/margin-vs-volume`, `/tools/compound-interest` (compound lead email goes to the visitor server-side via Resend — no Make scenario needed, optional `COMPOUND_TOOL_WEBHOOK_URL` forwards to CRM intake).
 
 ## Conventions
 

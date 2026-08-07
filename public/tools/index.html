@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07070f">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>AI Strategy &amp; Advisory: £500 per session | Daniel Walsh</title>
-<meta name="description" content="Focused 60-minute AI strategy sessions for businesses worldwide. Opportunity mapping, roadmaps, build-vs-buy decisions and vendor evaluation from an Oxford, Google &amp; MIT-certified consultant. £500 per session.">
-<link rel="canonical" href="https://danielwalsh.ai/services/strategy-advisory">
+<title>Free Tools | Daniel Walsh</title>
+<meta name="description" content="Free calculators for business owners: which profit lever works harder for your numbers, and what your money does while you work.">
+<link rel="canonical" href="https://danielwalsh.ai/tools/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AI Strategy &amp; Advisory | Daniel Walsh AI Consultancy">
-<meta property="og:description" content="Focused 60-minute AI strategy sessions for businesses worldwide. £500 per session.">
-<meta property="og:url" content="https://danielwalsh.ai/services/strategy-advisory">
+<meta property="og:title" content="Free Tools for Business Owners">
+<meta property="og:description" content="Run your own numbers: margin vs volume, compound interest, and more to come.">
+<meta property="og:url" content="https://danielwalsh.ai/tools/">
 <meta property="og:site_name" content="danielwalsh.ai">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -19,26 +19,61 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "AI Strategy & Advisory",
-  "serviceType": "AI strategy consulting",
-  "description": "60-minute AI strategy and advisory sessions for businesses worldwide: opportunity mapping, AI roadmaps, build-vs-buy decisions and vendor evaluation.",
-  "areaServed": "Worldwide",
-  "provider": { "@type": "ProfessionalService", "name": "Daniel Walsh AI Consultancy", "url": "https://danielwalsh.ai" },
-  "offers": { "@type": "Offer", "price": "500", "priceCurrency": "GBP", "description": "Per 60-minute session" }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://danielwalsh.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://danielwalsh.ai/#services" },
-    { "@type": "ListItem", "position": 3, "name": "Strategy & Advisory", "item": "https://danielwalsh.ai/services/strategy-advisory" }
+    { "@type": "ListItem", "position": 2, "name": "Free Tools", "item": "https://danielwalsh.ai/tools/" }
   ]
 }
 </script>
+<style>
+  main { max-width: 1040px; }
+
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 26px; }
+  .tile {
+    display: block; text-decoration: none;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 26px 26px 22px; position: relative;
+    box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06);
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+  }
+  .tile:hover {
+    border-color: var(--border-amber); transform: translateY(-2px);
+    box-shadow: 0 0 22px rgba(240,160,48,0.12), inset 0 0 0 1px rgba(240,160,48,0.08);
+  }
+  .tile .sec-label {
+    font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--cyan); margin-bottom: 14px; font-weight: 600;
+  }
+  .tile h2 {
+    font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700;
+    color: var(--white); letter-spacing: -0.5px; margin: 0 0 8px;
+  }
+  .tile .pitch { font-size: 14px; color: var(--body); line-height: 1.65; margin: 0 0 18px; min-height: 46px; }
+  .tile .stat { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .tile .stat b { color: var(--amber); font-weight: 600; }
+  .tile .go {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--amber);
+  }
+  .tile:hover .go { text-decoration: underline; }
+
+  .mini { display: flex; align-items: flex-end; gap: 6px; height: 44px; margin-bottom: 18px; }
+  .mini span { flex: 1; max-width: 26px; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, rgba(61,90,254,0.55), rgba(61,90,254,0.16)); }
+  .mini span.a { background: linear-gradient(180deg, rgba(240,160,48,0.8), rgba(240,160,48,0.3)); }
+
+  .coming {
+    border-style: dashed; opacity: .75;
+  }
+  .coming .go { color: var(--muted); }
+  .coming:hover { border-color: var(--border); transform: none; box-shadow: 0 0 14px rgba(0,229,255,0.06), inset 0 0 0 1px rgba(0,229,255,0.06); }
+
+  .note { font-size: 12.5px; color: var(--muted); margin-top: 22px; line-height: 1.6; }
+
+  @media (max-width: 720px) {
+    .tiles { grid-template-columns: 1fr; }
+    .tile .pitch { min-height: 0; }
+  }
+</style>
 </head>
 <body>
 
@@ -52,7 +87,7 @@
     <a href="/#process">Process</a>
     <a href="/about">About</a>
     <a href="/faq">FAQ</a>
-    <a href="/tools/">Free tools</a>
+    <a href="/tools/" aria-current="page">Free tools</a>
     <a href="/blog">Blog</a>
   </div>
   <div class="nav-social"><a href="https://www.linkedin.com/in/daniel-walsh-7885aa3a" target="_blank" rel="noopener" class="nav-linkedin" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="4" fill="#0A66C2"/><path fill="#fff" d="M7.12 9.4H4.62V19h2.5zM5.87 8.2a1.45 1.45 0 1 0 0-2.9 1.45 1.45 0 0 0 0 2.9zM19.4 13.55c0-2.7-1.44-3.95-3.36-3.95-1.55 0-2.24.85-2.63 1.45V9.4h-2.5V19h2.5v-5.1c0-1.35.62-2.15 1.8-2.15 1.14 0 1.69.8 1.69 2.15V19h2.5z"/></svg></a><a href="https://www.instagram.com/danielwalsh.ai/" target="_blank" rel="noopener" class="nav-instagram" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ig-nav" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="24" height="24" rx="6" fill="url(#ig-nav)"/><g fill="none" stroke="#fff" stroke-width="1.7"><rect x="5.4" y="5.4" width="13.2" height="13.2" rx="3.6"/><circle cx="12" cy="12" r="3.1"/></g><circle cx="16.7" cy="7.3" r="1.1" fill="#fff"/></svg></a></div>
@@ -61,54 +96,31 @@
 </nav>
 
 <main>
-  <div class="breadcrumbs"><a href="/">Home</a> / <a href="/#services">Services</a> / Strategy &amp; Advisory</div>
-  <div class="page-eyebrow">Strategy &amp; Advisory</div>
-  <h1>AI strategy that starts with your business, not the technology.</h1>
-  <p class="page-lede">A focused 60-minute session that cuts through the noise. We work out where AI genuinely fits your organisation, what it'll cost, and what to do first.</p>
+  <div class="breadcrumbs"><a href="/">Home</a> · Free tools</div>
+  <span class="page-eyebrow">Free tools</span>
+  <h1>Run your own numbers</h1>
+  <p class="page-lede">No sign-up to use them. Built for owners who want the maths, not the sales pitch.</p>
 
-  <div class="price-panel">
-    <div>
-      <div class="amount">£500</div>
-      <div class="unit">per 60-minute session · video call · all time zones</div>
-    </div>
-    <a href="/#booking" class="btn-primary">Book a session →</a>
+  <div class="tiles">
+    <a class="tile" href="/tools/margin-vs-volume">
+      <div class="sec-label">[ profit levers ]</div>
+      <h2>Margin vs Volume</h2>
+      <p class="pitch">Two ways to hit a profit target: lift the margin or chase more turnover. See which lever works harder for your numbers.</p>
+      <div class="mini"><span class="a" style="height:16%"></span><span style="height:34%"></span><span style="height:52%"></span><span style="height:74%"></span><span style="height:100%"></span></div>
+      <div class="stat">At an 8% margin, <b>1 point</b> of margin ≈ <b>12.5%</b> more volume.</div>
+      <div class="go">Run the calculator →</div>
+    </a>
+    <a class="tile" href="/tools/compound-interest">
+      <div class="sec-label">[ compounding ]</div>
+      <h2>Compound Interest</h2>
+      <p class="pitch">What a starting pot plus a monthly amount grows into, how the growth splits against what you paid in, and what waiting costs.</p>
+      <div class="mini"><span style="height:22%"></span><span style="height:38%"></span><span style="height:56%"></span><span class="a" style="height:78%"></span><span class="a" style="height:100%"></span></div>
+      <div class="stat">£10k + £500/mo at 7% for 20 years ends at <b>£300,851</b>.</div>
+      <div class="go">Run the calculator →</div>
+    </a>
   </div>
 
-  <div class="prose">
-    <h2>Who this is for</h2>
-    <p>Business owners, directors and senior managers who know AI matters but want a clear, honest answer to one question: <strong>"what should we actually do?"</strong> Maybe you've been pitched a dozen tools and read all the headlines, and you still don't have a plan you'd put money behind. One session can replace months of second-guessing.</p>
-
-    <h2>What we cover</h2>
-    <ul>
-      <li><strong>Opportunity mapping.</strong> Where AI can remove cost, time or risk in your specific operation, ranked by payback.</li>
-      <li><strong>Build vs buy.</strong> Whether an off-the-shelf tool, a custom build, or no AI at all is the right answer for each opportunity.</li>
-      <li><strong>Vendor and tool evaluation.</strong> An independent view on the products you're being sold, with no reseller commission behind it.</li>
-      <li><strong>Roadmap and sequencing.</strong> What to do first, what to defer, and what to ignore entirely.</li>
-      <li><strong>Risk and governance.</strong> Data protection, UK GDPR considerations, and keeping humans accountable for the decisions that matter.</li>
-    </ul>
-
-    <h2>What you leave with</h2>
-    <p>A written summary of the session within 24 hours: the opportunities we identified, the recommended sequence, indicative costs, and the specific next step for each one. It's yours to act on, with me or without me.</p>
-
-    <h2>Why one hour is enough</h2>
-    <p>Most organisations don't need a six-week discovery engagement to know where to start. They need an experienced outsider to ask the right questions, translate the technology into commercial terms, and commit to a recommendation. That's what this session is for. If your situation genuinely needs deeper work, I'll tell you, and you'll only ever pay for what the problem requires.</p>
-  </div>
-
-  <div class="cta-band">
-    <h2>Not sure this is the right service?</h2>
-    <p>Book a free 30-minute discovery call instead. No pitch, no pressure.</p>
-    <a href="/#booking" class="btn-primary">Book a free discovery call →</a>
-  </div>
-
-  <div class="related">
-    <h2>Related services</h2>
-    <div class="related-grid">
-      <a href="/services/ai-implementation">AI Implementation<span>Hands-on delivery · £1,500/day</span></a>
-      <a href="/services/training-workshops">Training &amp; Workshops<span>Upskill your team · £1,200/day</span></a>
-      <a href="/services/fractional-ai-officer">Fractional AI Officer<span>Ongoing leadership · £5,000/month</span></a>
-      <a href="/about">About Daniel<span>Google, Oxford &amp; MIT certified</span></a>
-    </div>
-  </div>
+  <p class="note">More tools land here as they're built. If there's a number you keep working out on the back of an envelope, <a href="mailto:hello@danielwalsh.ai" style="color:var(--cyan);">tell me</a> and I'll consider building it.</p>
 </main>
 
 <footer>
